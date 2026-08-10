@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Fraunces, Inter } from "next/font/google";
 import "./globals.css";
-import { brand, primary as property } from "@/lib/content";
+import { brand } from "@/lib/content";
 
 const display = Fraunces({
   variable: "--font-display",
@@ -17,11 +17,25 @@ const body = Inter({
 
 export const metadata: Metadata = {
   metadataBase: new URL(`https://${brand.domain}`),
-  title: `${property.name} — ${brand.name}`,
-  description: property.headline,
+  title: {
+    default: `${brand.name} — ${brand.tagline}`,
+    template: `%s`,
+  },
+  description:
+    "A collection of hand-picked vacation homes and suites on the Oregon Coast — each with a hot tub. Browse our homes and book direct.",
+  keywords: [
+    "Oregon Coast vacation rentals",
+    "Lincoln City vacation rentals",
+    "beach house rental Oregon",
+    "vacation homes with hot tub",
+    "Step Away Lodging",
+    "book direct vacation rental",
+  ],
+  alternates: { canonical: "/" },
   openGraph: {
-    title: `${property.name} — ${brand.name}`,
-    description: property.headline,
+    title: `${brand.name} — ${brand.tagline}`,
+    description:
+      "Hand-picked vacation homes and suites on the Oregon Coast. Browse our homes and book direct.",
     url: `https://${brand.domain}`,
     siteName: brand.name,
     type: "website",
