@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import SearchBar from "@/components/SearchBar";
 import OwnerRezWidget from "@/components/OwnerRezWidget";
 import { brand, searchWidget } from "@/lib/content";
 
@@ -14,7 +14,7 @@ export const metadata: Metadata = {
 
 function fmt(d?: string) {
   if (!d) return null;
-  const date = new Date(d + "T00:00:00");
+  const date = new Date(d); // handles MM/DD/YYYY (OwnerRez format)
   if (isNaN(date.getTime())) return null;
   return date.toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" });
 }
@@ -42,18 +42,14 @@ export default async function SearchPage({
             {summary}
             {guests ? <span className="text-white/70"> · {guests} guest{Number(guests) > 1 ? "s" : ""}</span> : null}
           </h1>
-          <div className="mt-8">
-            <SearchBar initialArrival={arrival} initialDeparture={departure} initialGuests={guests ?? "2"} />
-          </div>
+          <p className="mt-4 text-white/75">Live availability across all our homes — adjust your dates below and book direct.</p>
+          <Link href="/" className="mt-4 inline-block text-sm text-[var(--sand)] transition hover:text-white">← Back to home</Link>
         </div>
       </section>
 
-      {/* Live availability across all homes */}
+      {/* The OwnerRez availability search + results (its own date fields carry the search) */}
       <section className="mx-auto max-w-5xl px-5 py-12 sm:py-16">
         <div className="rounded-2xl border border-[var(--border)] bg-white p-5 shadow-sm sm:p-8">
-          <p className="mb-4 text-center text-sm text-[var(--muted)]">
-            Live availability for all {`${""}`}homes — pick your dates below to see what&apos;s open, then book direct.
-          </p>
           <OwnerRezWidget widget={searchWidget} />
         </div>
       </section>

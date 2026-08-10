@@ -21,13 +21,20 @@ export default function SearchBar({
 
   const today = new Date().toISOString().slice(0, 10);
 
+  // OwnerRez expects US-format dates (MM/DD/YYYY) in its or_arrival/or_departure
+  // params; the native date input gives YYYY-MM-DD, so convert.
+  const toMdy = (iso: string) => {
+    const [y, m, d] = iso.split("-");
+    return y && m && d ? `${m}/${d}/${y}` : iso;
+  };
+
   function submit(e: React.FormEvent) {
     e.preventDefault();
     // OwnerRez's search widget reads `or_arrival` / `or_departure` from the page
     // URL and auto-runs the search — so results come straight from OwnerRez.
     const params = new URLSearchParams();
-    if (arrival) params.set("or_arrival", arrival);
-    if (departure) params.set("or_departure", departure);
+    if (arrival) params.set("or_arrival", toMdy(arrival));
+    if (departure) params.set("or_departure", toMdy(departure));
     if (guests) params.set("or_adults", guests);
     router.push(`/search?${params.toString()}`);
   }
