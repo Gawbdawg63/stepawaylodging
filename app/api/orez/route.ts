@@ -39,6 +39,29 @@ export async function GET(req: NextRequest) {
     authHeader = "Basic " + Buffer.from(`${token}:`).toString("base64");
   }
 
+  // Optional: test a quote (POST) to check availability + pricing for a property.
+  if (sp.get("quote")) {
+    const body = {
+      property_id: Number(sp.get("quote")),
+      arrival: sp.get("arrival"),
+      departure: sp.get("departure"),
+      adults: Number(sp.get("adults") ?? "2"),
+    };
+    try {
+      const res = await fetch(`${BASE}/v2/quotes`, {
+        method: "POST",
+        headers: { Authorization: authHeader, Accept: "application/json", "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      });
+      const text = await res.text();
+      let parsed: unknown;
+      try { parsed = JSON.parse(text); } catch { parsed = text.slice(0, 3000); }
+      return NextResponse.json({ status: res.status, ok: res.ok, sent: body, body: parsed });
+    } catch (e) {
+      return NextResponse.json({ error: String(e) }, { status: 500 });
+    }
+  }
+
   const path = sp.get("path") || "/v2/properties";
   try {
     const res = await fetch(`${BASE}${path}`, {
