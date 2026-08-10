@@ -1,23 +1,39 @@
 "use client";
 
-import Script from "next/script";
+import { useEffect, useRef } from "react";
 import { primary, ownerRezScript, type OwnerRezWidgetConfig } from "@/lib/content";
 
 /**
  * Embeds an OwnerRez widget — a per-home booking/inquiry popup, or the
- * portfolio-wide availability/property search. The widget.js script scans the
- * page for `.ownerrez-widget` divs and mounts the widget into them. Bookings &
- * payments are handled by OwnerRez.
+ * portfolio-wide availability/property search.
  *
- * Attribute names are lowercase on purpose: the browser lowercases data-*
- * attributes anyway, and that lowercase form is what OwnerRez's widget.js reads.
- * `data-propertyid` is omitted for the search widget (no propertyId).
+ * OwnerRez's widget.js scans the DOM for `.ownerrez-widget` divs only when it
+ * executes. On client-side navigation the script is already loaded and never
+ * re-runs, leaving the new page's widget blank. So we (re-)append the loader
+ * script on mount — appending a <script> element always re-executes it, which
+ * makes OwnerRez re-scan and mount the widget that's currently on the page.
+ *
+ * Attribute names are lowercase on purpose: browsers lowercase data-* anyway,
+ * and that's the form OwnerRez reads. `data-propertyid` is omitted for the
+ * search widget (it has no propertyId).
  */
 export default function OwnerRezWidget({
   widget = primary.ownerRez,
 }: {
   widget?: OwnerRezWidgetConfig;
 }) {
+  const inited = useRef(false);
+
+  useEffect(() => {
+    // Guard against React strict-mode's double effect invocation in dev.
+    if (inited.current) return;
+    inited.current = true;
+    const s = document.createElement("script");
+    s.src = ownerRezScript;
+    s.async = true;
+    document.body.appendChild(s);
+  }, []);
+
   return (
     <div className="orez-embed">
       <div
@@ -26,7 +42,6 @@ export default function OwnerRezWidget({
         data-widget-type={widget.widgetType}
         data-widgetid={widget.widgetId}
       />
-      <Script src={ownerRezScript} strategy="afterInteractive" />
     </div>
   );
 }

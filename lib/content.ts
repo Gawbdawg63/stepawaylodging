@@ -248,6 +248,18 @@ export const combos: OwnerRezWidgetConfig[] = [
 ];
 
 // -----------------------------------------------------------------------------
+// Central Oregon expansion — announce the move inland and invite owners to apply.
+// -----------------------------------------------------------------------------
+export const centralOregon = {
+  eyebrow: "Now expanding",
+  heading: "Step Away Lodging is coming to Central Oregon",
+  body: "We're bringing our hands-on, local hospitality inland — to the high desert, the Cascades, and the towns in between. The same attentive care and book-direct advantage our coastal owners rely on is heading east.",
+  places: ["Bend", "Sunriver", "Redmond", "Sisters", "La Pine"],
+  ownerLine: "Have a home in Central Oregon?",
+  ctaLabel: "Apply to have us manage it",
+};
+
+// -----------------------------------------------------------------------------
 // Owner recruitment — the pitch to get more owners to hire Step Away Lodging
 // as their property manager, plus the "list your home" lead form.
 // -----------------------------------------------------------------------------

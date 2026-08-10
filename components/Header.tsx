@@ -7,18 +7,30 @@ import { brand } from "@/lib/content";
 export type NavLink = { href: string; label: string };
 
 const defaultLinks: NavLink[] = [
-  { href: "/#homes", label: "Our Homes" },
-  { href: "/#owners", label: "For Owners" },
+  { href: "/homes", label: "Our Homes" },
+  { href: "/central-oregon", label: "Central Oregon" },
+  { href: "/events", label: "Events" },
+  { href: "/blog", label: "Blog" },
+  { href: "/owners", label: "For Owners" },
 ];
+
+// Route links (/...) use Next Link for client navigation; hash links (#...) use
+// a plain anchor so in-page smooth scrolling works.
+function NavItem({ href, className, onClick, children }: { href: string; className?: string; onClick?: () => void; children: React.ReactNode }) {
+  if (href.startsWith("#")) {
+    return <a href={href} className={className} onClick={onClick}>{children}</a>;
+  }
+  return <Link href={href} className={className} onClick={onClick}>{children}</Link>;
+}
 
 export default function Header({
   links = defaultLinks,
-  cta = { href: "/#book", label: "Check availability" },
+  cta = { href: "/#search", label: "Check availability" },
   eyebrow,
 }: {
   links?: NavLink[];
   cta?: NavLink;
-  eyebrow?: string; // small text under the brand name (e.g. a property name)
+  eyebrow?: string;
 }) {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
@@ -33,9 +45,7 @@ export default function Header({
   return (
     <header
       className={`fixed inset-x-0 top-0 z-50 transition-colors duration-300 ${
-        scrolled
-          ? "bg-[var(--sea)]/95 backdrop-blur supports-[backdrop-filter]:bg-[var(--sea)]/80 shadow-sm"
-          : "bg-transparent"
+        scrolled ? "bg-[var(--sea)]/95 backdrop-blur supports-[backdrop-filter]:bg-[var(--sea)]/80 shadow-sm" : "bg-transparent"
       }`}
     >
       <div className="mx-auto flex max-w-6xl items-center justify-between px-5 py-4">
@@ -46,25 +56,20 @@ export default function Header({
           ) : (
             <span className="flex flex-col">
               <span className="font-display text-lg font-semibold tracking-wide">{brand.name}</span>
-              {eyebrow && (
-                <span className="text-[11px] uppercase tracking-[0.2em] text-white/70">{eyebrow}</span>
-              )}
+              {eyebrow && <span className="text-[11px] uppercase tracking-[0.2em] text-white/70">{eyebrow}</span>}
             </span>
           )}
         </Link>
 
-        <nav className="hidden items-center gap-7 md:flex">
+        <nav className="hidden items-center gap-6 md:flex">
           {links.map((l) => (
-            <a key={l.href} href={l.href} className="text-sm font-medium text-white/85 transition hover:text-white">
+            <NavItem key={l.href} href={l.href} className="text-sm font-medium text-white/85 transition hover:text-white">
               {l.label}
-            </a>
+            </NavItem>
           ))}
-          <a
-            href={cta.href}
-            className="rounded-full bg-[var(--sand)] px-5 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-[var(--sand-600)]"
-          >
+          <NavItem href={cta.href} className="rounded-full bg-[var(--sand)] px-5 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-[var(--sand-600)]">
             {cta.label}
-          </a>
+          </NavItem>
         </nav>
 
         <button aria-label="Menu" className="md:hidden text-white" onClick={() => setOpen((v) => !v)}>
@@ -78,14 +83,9 @@ export default function Header({
         <div className="md:hidden bg-[var(--sea)]/98 backdrop-blur">
           <nav className="mx-auto flex max-w-6xl flex-col gap-1 px-5 pb-4">
             {[...links, cta].map((l) => (
-              <a
-                key={l.href}
-                href={l.href}
-                onClick={() => setOpen(false)}
-                className="rounded-lg px-2 py-3 text-white/90 transition hover:bg-white/10"
-              >
+              <NavItem key={l.href} href={l.href} onClick={() => setOpen(false)} className="rounded-lg px-2 py-3 text-white/90 transition hover:bg-white/10">
                 {l.label}
-              </a>
+              </NavItem>
             ))}
           </nav>
         </div>
