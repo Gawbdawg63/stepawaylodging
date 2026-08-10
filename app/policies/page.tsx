@@ -2,8 +2,22 @@ import type { Metadata } from "next";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import PageHero from "@/components/PageHero";
+import JsonLd from "@/components/JsonLd";
 import { policyGroups } from "@/lib/policies";
 import { brand } from "@/lib/content";
+
+// FAQPage structured data → eligible for expandable Q&A rich results in Google.
+const faqJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: policyGroups.flatMap((g) =>
+    g.items.map((item) => ({
+      "@type": "Question",
+      name: item.q,
+      acceptedAnswer: { "@type": "Answer", text: item.a },
+    }))
+  ),
+};
 
 export const metadata: Metadata = {
   title: `Policies & FAQ — ${brand.name}`,
@@ -14,6 +28,7 @@ export const metadata: Metadata = {
 export default function PoliciesPage() {
   return (
     <div>
+      <JsonLd data={faqJsonLd} />
       <Header />
       <PageHero eyebrow="Good to know" title="Policies & FAQ" subtitle="Everything you need to know before your stay — booking, check-in, house rules, and more." />
 
