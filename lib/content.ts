@@ -50,6 +50,12 @@ export const searchWidget = {
   widgetType: "Availability/Property Search",
 };
 
+// Guest reviews widget (all properties).
+export const reviewsWidget = {
+  widgetId: "3a66a8e87fa14aeebb3d5fe623ae7018",
+  widgetType: "Reviews",
+};
+
 export type OwnerRezWidgetConfig = {
   propertyId?: string; // omitted for the portfolio search widget
   widgetId: string;
@@ -169,7 +175,7 @@ export const properties: Property[] = [
       widgetId: "72bbd801b62846889ece089470cebb22",
       widgetType: "Americana Popup - Booking/Inquiry",
     },
-    photos: gallery("americana", 12, "Americana coastal cottage"),
+    photos: gallery("americana", 24, "Americana coastal cottage"),
   },
   {
     slug: "americanas-paris-suite",
@@ -190,7 +196,7 @@ export const properties: Property[] = [
       widgetId: "ce203413e8c740d2b2046f15d25f0ee9",
       widgetType: "Americana's Paris Suite Popup - Booking/Inquiry",
     },
-    photos: gallery("americanas-paris-suite", 12, "Americana's Paris Suite"),
+    photos: gallery("americanas-paris-suite", 19, "Americana's Paris Suite"),
   },
   {
     slug: "barefoot-bungalow",
@@ -211,7 +217,7 @@ export const properties: Property[] = [
       widgetId: "2d8c1d9f7e9f459d93c0484173fd3e9c",
       widgetType: "Barefoot Bungalow Popup - Booking/Inquiry",
     },
-    photos: gallery("barefoot-bungalow", 12, "Barefoot Bungalow beachside cottage"),
+    photos: gallery("barefoot-bungalow", 24, "Barefoot Bungalow beachside cottage"),
   },
   {
     slug: "barefoot-carriage-house",
@@ -232,7 +238,7 @@ export const properties: Property[] = [
       widgetId: "2e0ad12a0e134f14aeb6a99b56751cb2",
       widgetType: "Barefoot Bungalow's Carriage House Popup - Booking/Inquiry",
     },
-    photos: gallery("barefoot-carriage-house", 12, "Barefoot Carriage House"),
+    photos: gallery("barefoot-carriage-house", 18, "Barefoot Carriage House"),
   },
   {
     slug: "beach-bungalow-by-the-sea",
@@ -253,7 +259,7 @@ export const properties: Property[] = [
       widgetId: "9d0b4815ce894c16bfdbd0dbfeac3409",
       widgetType: "Beach Bungalow By The Sea Popup - Booking/Inquiry",
     },
-    photos: gallery("beach-bungalow-by-the-sea", 12, "Beach Bungalow by the Sea cottage"),
+    photos: gallery("beach-bungalow-by-the-sea", 24, "Beach Bungalow by the Sea cottage"),
   },
   {
     slug: "ebb-and-flow",
@@ -274,7 +280,7 @@ export const properties: Property[] = [
       widgetId: "fdcf2a21287a4560b9be2828f44936fe",
       widgetType: "Ebb And Flow Popup - Booking/Inquiry",
     },
-    photos: gallery("ebb-and-flow", 12, "Ebb and Flow oceanfront cottage"),
+    photos: gallery("ebb-and-flow", 24, "Ebb and Flow oceanfront cottage"),
   },
 ];
 

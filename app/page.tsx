@@ -1,9 +1,10 @@
 import Link from "next/link";
 import Header from "@/components/Header";
 import SearchBar from "@/components/SearchBar";
+import OwnerRezWidget from "@/components/OwnerRezWidget";
 import Footer from "@/components/Footer";
 import JsonLd from "@/components/JsonLd";
-import { brand, properties } from "@/lib/content";
+import { brand, properties, reviewsWidget } from "@/lib/content";
 import { siteJsonLd } from "@/lib/seo";
 
 const num = (n: number) => (Number.isInteger(n) ? String(n) : n.toFixed(1));
@@ -68,6 +69,17 @@ export default function Home() {
               </div>
             </Link>
           ))}
+        </div>
+      </section>
+
+      {/* REVIEWS */}
+      <section className="border-t border-[var(--border)] bg-[var(--background)]">
+        <div className="mx-auto max-w-4xl px-5 py-16 text-center sm:py-20">
+          <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[var(--sand-600)]">Guest reviews</p>
+          <h2 className="mt-2 font-display text-3xl text-[var(--sea)] sm:text-4xl">Loved by our guests</h2>
+          <div className="mt-8 text-left">
+            <OwnerRezWidget widget={reviewsWidget} />
+          </div>
         </div>
       </section>
 

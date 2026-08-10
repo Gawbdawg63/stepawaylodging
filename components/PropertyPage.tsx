@@ -3,7 +3,7 @@ import Header from "@/components/Header";
 import Gallery from "@/components/Gallery";
 import OwnerRezWidget from "@/components/OwnerRezWidget";
 import Footer from "@/components/Footer";
-import type { Property } from "@/lib/content";
+import { reviewsWidget, type Property } from "@/lib/content";
 
 function Icon({ name }: { name: string }) {
   const common = { width: 28, height: 28, viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: 1.6, strokeLinecap: "round" as const, strokeLinejoin: "round" as const };
@@ -168,6 +168,17 @@ export default function PropertyPage({ property }: { property: Property }) {
           </div>
         </section>
       )}
+
+      {/* REVIEWS */}
+      <section id="reviews" className="bg-white">
+        <div className="mx-auto max-w-4xl px-5 py-16 text-center sm:py-20">
+          <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[var(--sand-600)]">Guest reviews</p>
+          <h2 className="mt-2 font-display text-3xl text-[var(--sea)] sm:text-4xl">What our guests say</h2>
+          <div className="mt-8 text-left">
+            <OwnerRezWidget widget={reviewsWidget} />
+          </div>
+        </div>
+      </section>
 
       {/* BOOK */}
       <section id="book" className="mx-auto max-w-3xl px-5 py-20 text-center sm:py-28">
