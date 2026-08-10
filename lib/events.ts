@@ -38,6 +38,7 @@ export const events: LcEvent[] = [
       "Staying at a Step Away Lodging home puts you steps from the sand, so you can head out at dawn when the floats are freshest and the beach is quiet.",
     ],
     theme: { from: "#0f766e", to: "#134e4a", icon: "float" },
+    photo: "events/glass-floats.jpg",
   },
   {
     slug: "retro-expo",
@@ -53,6 +54,7 @@ export const events: LcEvent[] = [
       "It's the perfect rainy-season excuse to browse, hunt for that perfect mid-century piece, and warm up with coffee between stops.",
     ],
     theme: { from: "#9a3412", to: "#7c2d12", icon: "vintage" },
+    photo: "events/retro-expo.jpg",
   },
   {
     slug: "festival-of-illusions",
@@ -68,6 +70,7 @@ export const events: LcEvent[] = [
       "It's a great rainy-day plan and a memorable outing for kids and grown-ups alike, right in the heart of Lincoln City.",
     ],
     theme: { from: "#6d28d9", to: "#4c1d95", icon: "magic" },
+    photo: "events/festival-of-illusions.jpg",
   },
   {
     slug: "marie-lamfrom-float-drop",
@@ -83,6 +86,7 @@ export const events: LcEvent[] = [
       "Time your stay for the drop and join the fun of finding a collector's float with a story behind it.",
     ],
     theme: { from: "#0e7490", to: "#155e75", icon: "float" },
+    photo: "events/glass-floats.jpg",
   },
   {
     slug: "summer-kite-festival",
@@ -113,6 +117,7 @@ export const events: LcEvent[] = [
       "Bring a bucket and a shovel — this one's as fun to join as it is to admire.",
     ],
     theme: { from: "#ca8a04", to: "#a16207", icon: "sandcastle" },
+    photo: "events/sandcastle-contest.jpg",
   },
   {
     slug: "nesika-illahee-powwow",
@@ -158,6 +163,7 @@ export const events: LcEvent[] = [
       "It's a spooky-season twist on the classic hunt and a treat for the whole family over the long weekend.",
     ],
     theme: { from: "#7e22ce", to: "#581c87", icon: "moon" },
+    photo: "events/glass-floats.jpg",
   },
   {
     slug: "restoration-powwow",
