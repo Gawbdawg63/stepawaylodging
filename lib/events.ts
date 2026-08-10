@@ -86,7 +86,7 @@ export const events: LcEvent[] = [
       "Time your stay for the drop and join the fun of finding a collector's float with a story behind it.",
     ],
     theme: { from: "#0e7490", to: "#155e75", icon: "float" },
-    photo: "events/glass-floats.jpg",
+    photo: "events/glass-float-drop.jpg",
   },
   {
     slug: "summer-kite-festival",
@@ -102,6 +102,7 @@ export const events: LcEvent[] = [
       "It's free, it's family-friendly, and it's pure Oregon-coast magic. (For 2026, the festival moves to Chinook Winds Casino Resort while its usual beach site is under construction.)",
     ],
     theme: { from: "#0284c7", to: "#0369a1", icon: "kite" },
+    photo: "events/kite-festival.jpg",
   },
   {
     slug: "sandcastle-contest",
@@ -133,6 +134,7 @@ export const events: LcEvent[] = [
       "It's a moving, welcoming celebration of Native culture and a highlight of the coastal summer, a short drive inland from Lincoln City.",
     ],
     theme: { from: "#b91c1c", to: "#7f1d1d", icon: "drum" },
+    photo: "events/pow-wow.jpg",
   },
   {
     slug: "fall-kite-festival",
@@ -148,6 +150,7 @@ export const events: LcEvent[] = [
       "Cooler air, smaller crowds, and dramatic skies make the fall festival a local favorite.",
     ],
     theme: { from: "#c2410c", to: "#9a3412", icon: "kite" },
+    photo: "events/kite-festival.jpg",
   },
   {
     slug: "halloween-glass-float-drop",
@@ -163,7 +166,7 @@ export const events: LcEvent[] = [
       "It's a spooky-season twist on the classic hunt and a treat for the whole family over the long weekend.",
     ],
     theme: { from: "#7e22ce", to: "#581c87", icon: "moon" },
-    photo: "events/glass-floats.jpg",
+    photo: "events/glass-float-drop.jpg",
   },
   {
     slug: "restoration-powwow",
@@ -179,6 +182,7 @@ export const events: LcEvent[] = [
       "Drumming, dancing, and regalia make it a powerful, welcoming event to close out the coastal year.",
     ],
     theme: { from: "#1d4ed8", to: "#1e3a8a", icon: "drum" },
+    photo: "events/pow-wow.jpg",
   },
 ];
 

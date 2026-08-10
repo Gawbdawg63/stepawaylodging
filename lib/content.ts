@@ -13,8 +13,8 @@
 export const brand = {
   name: "Step Away Lodging",
   tagline: "Vacation homes on the Oregon Coast",
-  logo: "", // filename in /public (white version for the dark header); blank = text
-  logoWidth: 190,
+  logo: "logo.png", // white wordmark, shown in the dark header
+  logoWidth: 210,
   phone: "",
   email: "",
   domain: "stepawaylodging.com",
