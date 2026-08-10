@@ -129,6 +129,27 @@ export default function PropertyPage({ property }: { property: Property }) {
         </section>
       )}
 
+      {/* LOCATION */}
+      <section id="location" className="bg-white">
+        <div className="mx-auto max-w-6xl px-5 py-16 sm:py-20">
+          <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[var(--sand-600)]">Location</p>
+          <h2 className="mt-2 font-display text-3xl text-[var(--sea)] sm:text-4xl">Where you&apos;ll be</h2>
+          <p className="mt-3 text-[var(--muted)]">{property.location}</p>
+          <div className="mt-8 overflow-hidden rounded-2xl border border-[var(--border)]">
+            <iframe
+              title={`Map of ${property.name}`}
+              src={`https://www.google.com/maps?q=${encodeURIComponent(property.mapQuery ?? property.location)}&z=13&output=embed`}
+              className="h-[360px] w-full sm:h-[420px]"
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+            />
+          </div>
+          <p className="mt-3 text-xs text-[var(--muted)]">
+            Approximate area shown. The exact address is provided after booking.
+          </p>
+        </div>
+      </section>
+
       {/* AREA */}
       {property.area && (
         <section id="area" className="bg-[var(--sea)] text-white">

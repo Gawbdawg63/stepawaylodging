@@ -18,6 +18,11 @@ export const brand = {
   phone: "(541) 921-8885",
   email: "stay@stepawaylodging.com",
   domain: "stepawaylodging.com",
+  social: {
+    facebook: "https://www.facebook.com/profile.php?id=61582624966628",
+    instagram: "https://www.instagram.com/stepawaylodging",
+    pinterest: "", // add when available
+  },
 };
 
 export const ownerRezScript = "https://app.ownerrez.com/widget.js";
@@ -57,6 +62,7 @@ export type Property = {
   slug: string;
   name: string;
   location: string;
+  mapQuery?: string; // town/area for the location map (not the exact address)
   headline: string;
   blurb: string; // short line for the homepage card
   card: string; // thumbnail path under /public for the homepage grid
@@ -85,6 +91,7 @@ export const properties: Property[] = [
     headline: "Three floors of coastal living with ocean views from every level — and a private hot tub.",
     blurb: "Three-level home with ocean views from every floor, a private hot tub, and multiple decks.",
     card: "homes/ocean-peak-ridge.jpg",
+    mapQuery: "Olivia Beach, Lincoln City, OR",
     description: [
       "Perched in the charming Olivia Beach community in Lincoln City, Ocean Peak Ridge offers three floors of coastal living with beautiful west and southwest ocean views from every level. The open living area centers on a cozy fireplace and a Smart TV, and opens straight onto an ocean-view deck.",
       "The master suite is a retreat of its own — a king bed, a spa bathroom with rainfall shower and deep soaking tub, and a private ocean-view deck. Two more bedrooms, flexible sleeping in the living spaces, and a fully equipped kitchen give everyone room to spread out. Step onto the multiple decks for the ocean air, then unwind in the private hot tub as the sun goes down.",
@@ -150,6 +157,7 @@ export const properties: Property[] = [
     headline: "A spacious four-story coastal cottage with hot tub and easy beach access.",
     blurb: "Four-story family cottage with hot tub access and direct beach proximity.",
     card: "homes/americana.jpg",
+    mapQuery: "Lincoln Beach, Oregon",
     description: [
       "It's never too early to start planning the perfect family vacation, and Americana is built for lifelong memories. This classic four-story beach home has southern exposure, a white-railed staircase, and an expansive front deck with seating and a swing.",
       "Inside are beach-cottage furnishings, an open layout, a fireplace, and a Smart TV. The main floor holds the living area, full kitchen, dining, and grilling deck; the second floor three bedrooms including a king master suite; and the third another queen bedroom plus a loft with games and an ocean-view deck. A private hot tub room, outdoor shower, and four beach cruisers complete it.",
@@ -170,6 +178,7 @@ export const properties: Property[] = [
     headline: "A private suite with a king bed, hot tub, and access to seven miles of Oregon beach.",
     blurb: "Romantic private suite for two with a king bed and hot tub access.",
     card: "homes/americanas-paris-suite.jpg",
+    mapQuery: "Lincoln Beach, Oregon",
     description: [
       "A charming suite for two, Americana's Paris Suite pairs a king bed and a cozy fireplace with a kitchenette and a private deck — a warm, romantic retreat.",
       "Tucked below the main Americana home, it shares access to the serene hot tub room and outdoor shower, moments from the Oregon coastline. Booking requires the main house to be vacant.",
@@ -190,6 +199,7 @@ export const properties: Property[] = [
     headline: "A spacious beachside cottage with an open floor plan, hot tub, and steps to the sand.",
     blurb: "Open-plan beachside cottage with hot tub, steps from the community deck and ocean.",
     card: "homes/barefoot-bungalow.jpg",
+    mapQuery: "Bella Beach, Oregon",
     description: [
       "Be our guest at Barefoot Bungalow — a well-appointed home with an open floor plan made for families. A fully equipped kitchen, a big Smart TV with Roku, and a gas fireplace anchor the living space.",
       "The main-floor master suite has a king bed and a claw-foot soaking tub; upstairs are two more bedrooms with flexible sleeping. You're steps from the community green and a three-minute stroll to the main beach entrance, with beach toys, a grill, and a private back deck with a multi-jet hot tub.",
@@ -210,6 +220,7 @@ export const properties: Property[] = [
     headline: "A cozy private carriage house with a queen bed, hot tub, and coastline at your door.",
     blurb: "Cozy private carriage house for two with a queen bed and hot tub.",
     card: "homes/barefoot-carriage-house.jpg",
+    mapQuery: "Bella Beach, Oregon",
     description: [
       "Unwind in the Barefoot Carriage House, a cozy retreat for two with a queen bed, a private deck, a mini fridge, and a hot tub to soak in after a day on the sand.",
       "Set beside the main Barefoot Bungalow, it puts seven miles of Oregon coastline at your doorstep. Booking requires the main home to be vacant.",
@@ -230,6 +241,7 @@ export const properties: Property[] = [
     headline: "A one-level Nantucket-style cottage with a hot tub, made for easy coastal relaxation.",
     blurb: "One-level Nantucket-style cottage with hot tub — great for couples or small families.",
     card: "homes/beach-bungalow-by-the-sea.jpg",
+    mapQuery: "Bella Beach, Oregon",
     description: [
       "Just a few homes back from the Pacific on Bella Beach's main street, Beach Bungalow…by the Sea is a single-level, Nantucket-style cottage with everything you need for couples or a small family. Elevated wood ceilings, a gas fireplace, and custom furnishings give the open living room real warmth.",
       "The master suite has a queen bed with glass doors to the deck; the second bedroom a king. Both open to a large back deck with a hot tub. The kitchen has granite counters and stainless appliances, and the 450-square-foot rear deck faces south amid native coastal plantings.",
@@ -250,6 +262,7 @@ export const properties: Property[] = [
     headline: "An oceanfront cottage with a hot tub, kayaks, and direct access to Siletz Bay.",
     blurb: "Oceanfront cottage with hot tub, kayaks, and direct Siletz Bay access.",
     card: "homes/ebb-and-flow.jpg",
+    mapQuery: "Siletz Bay, Lincoln City, OR",
     description: [
       "Clean, simple, private, and romantic — Ebb and Flow is everything you want in a coastal cottage. The main level opens up with a kitchen, dining, and family room in hardwood floors and sweeping Siletz Bay views; upstairs is a king master suite with a private bath and a daybed.",
       "Right on the bay in Lincoln City, it comes with beach access, crab traps (with instructions), beach bikes, and a garage with a ping-pong table — minutes from restaurants, golf, Chinook Winds, and the outlet stores. Hunt glass floats, kayak, clam, and build beach fires from your doorstep.",

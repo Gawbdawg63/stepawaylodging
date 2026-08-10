@@ -54,6 +54,7 @@ export function siteJsonLd() {
     address: { "@type": "PostalAddress", addressRegion: "OR", addressCountry: "US" },
     ...(brand.phone ? { telephone: brand.phone } : {}),
     ...(brand.email ? { email: brand.email } : {}),
+    sameAs: [brand.social.facebook, brand.social.instagram, brand.social.pinterest].filter(Boolean),
     makesOffer: properties.map((p) => ({
       "@type": "Offer",
       itemOffered: {
