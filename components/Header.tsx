@@ -8,6 +8,7 @@ const links = [
   { href: "#about", label: "The Home" },
   { href: "#amenities", label: "Amenities" },
   { href: "#area", label: "The Area" },
+  { href: "#owners", label: "For Owners" },
   { href: "#book", label: "Book" },
 ];
 

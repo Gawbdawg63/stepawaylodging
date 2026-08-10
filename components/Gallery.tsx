@@ -1,4 +1,6 @@
-import { photos } from "@/lib/content";
+import { primary } from "@/lib/content";
+
+const photos = primary.photos;
 
 // A tasteful placeholder tile used until real photos are added to /public/photos.
 function Placeholder({ label, className = "" }: { label: string; className?: string }) {

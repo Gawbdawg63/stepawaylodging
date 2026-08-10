@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Fraunces, Inter } from "next/font/google";
 import "./globals.css";
-import { brand, property } from "@/lib/content";
+import { brand, primary as property } from "@/lib/content";
 
 const display = Fraunces({
   variable: "--font-display",

@@ -1,14 +1,20 @@
 "use client";
 
 import Script from "next/script";
-import { ownerRez } from "@/lib/content";
+import { primary, ownerRezScript, type Property } from "@/lib/content";
 
 /**
- * Embeds the OwnerRez booking/inquiry widget for Ocean Peak Ridge.
+ * Embeds an OwnerRez booking/inquiry widget for a property.
  * The widget.js script scans the page for `.ownerrez-widget` divs and mounts
  * the booking popup into them. Bookings & payments are handled by OwnerRez.
+ * Defaults to the primary home; pass `widget` to render a different property's.
  */
-export default function OwnerRezWidget() {
+export default function OwnerRezWidget({
+  widget = primary.ownerRez,
+}: {
+  widget?: Property["ownerRez"];
+}) {
+  const ownerRez = { ...widget, scriptSrc: ownerRezScript };
   return (
     <div className="orez-embed">
       {/* Attribute names are lowercase on purpose: the browser lowercases

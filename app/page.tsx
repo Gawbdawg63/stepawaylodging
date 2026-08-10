@@ -1,7 +1,8 @@
 import Header from "@/components/Header";
 import Gallery from "@/components/Gallery";
 import OwnerRezWidget from "@/components/OwnerRezWidget";
-import { brand, property } from "@/lib/content";
+import OwnerCTA from "@/components/OwnerCTA";
+import { brand, primary as property } from "@/lib/content";
 
 // --- small inline icons for highlights ---
 function Icon({ name }: { name: string }) {
@@ -184,6 +185,9 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {/* ---------------- OWNERS / PROPERTY MANAGEMENT ---------------- */}
+      <OwnerCTA />
 
       {/* ---------------- FOOTER ---------------- */}
       <footer className="mt-auto bg-[var(--sea-700)] text-white/80">
