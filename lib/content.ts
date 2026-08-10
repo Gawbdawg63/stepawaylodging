@@ -22,6 +22,23 @@ export const brand = {
 
 export const ownerRezScript = "https://app.ownerrez.com/widget.js";
 
+// Brand story shown on /our-story (the owner's own copy).
+export const story = {
+  tagline: "Find Your Place to Unwind",
+  paragraphs: [
+    "Step away from the everyday and discover your place to truly relax. At Step Away Lodging, we offer thoughtfully curated vacation rentals that blend comfort, character, and the welcoming touches of home.",
+    "Whether you're visiting for a coastal escape or a high-desert retreat, you'll enjoy a peaceful atmosphere, genuine hospitality, and the space to simply be. From romantic getaways and family retreats to pet-friendly cottages and group stays, each property is professionally managed and personally cared for to ensure a seamless, stress-free experience.",
+    "Explore Oregon's stunning landscapes — from sandy shores to mountain trails — and feel confident knowing your stay is supported by a local team who truly cares.",
+  ],
+  closing: "Recharge your spirit and experience the art of staying well — your perfect Oregon stay begins here.",
+  values: [
+    { title: "Thoughtfully curated", text: "Homes chosen for comfort, character, and the welcoming touches of home." },
+    { title: "Personally cared for", text: "Every property is professionally managed and personally looked after." },
+    { title: "Coast & high desert", text: "From sandy shores to mountain trails, across Oregon's best landscapes." },
+    { title: "A local team who cares", text: "Genuine hospitality and real support throughout your stay." },
+  ],
+};
+
 // Portfolio-wide availability / property search widget (shown on the homepage).
 export const searchWidget = {
   widgetId: "95d5ae94b0fb47c485679d98580cc919",
@@ -279,14 +296,14 @@ export const centralOregon = {
 // -----------------------------------------------------------------------------
 export const owners = {
   eyebrow: "For homeowners",
-  heading: "Let us manage your vacation rental",
+  heading: "Property management that feels personal",
   subhead:
-    "Own a coastal home? Step Away Lodging handles everything — listings, bookings, guest care, cleaning, and pricing — so your place earns more while you do less.",
+    "With 30 years in the short-term rental industry, Step Away Lodging helps homeowners turn their vacation or investment properties into rewarding, stress-free rentals. Our personalized, full-service boutique management keeps your home cared for, your guests delighted, and your financial goals on track.",
   valueProps: [
-    { title: "More bookings, better rates", text: "Professional listings, smart pricing, and direct bookings that keep more revenue in your pocket." },
-    { title: "Truly hands-off", text: "Guest messaging, check-ins, cleaning, and maintenance are all handled — you just collect." },
-    { title: "Local & hands-on", text: "We know this coast. Your home gets attentive, on-the-ground care, not a call center." },
-    { title: "Full transparency", text: "Clear reporting and an owner dashboard so you always know how your home is performing." },
+    { title: "30 years of experience", text: "We know the short-term rental business inside and out." },
+    { title: "Full-service & boutique", text: "Personalized management — listings, guest care, cleaning, and pricing, all handled." },
+    { title: "Family owned & operated", text: "A local team that treats your home like our own." },
+    { title: "Seamless & profitable", text: "Your property cared for, your guests delighted, and your financial goals achieved." },
   ],
   // Paste a Formspree or Web3Forms endpoint URL to receive submissions by email.
   // If blank, the form opens the visitor's email app addressed to brand.email.

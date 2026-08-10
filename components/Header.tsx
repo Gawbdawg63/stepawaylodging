@@ -8,9 +8,9 @@ export type NavLink = { href: string; label: string };
 
 const defaultLinks: NavLink[] = [
   { href: "/homes", label: "Our Homes" },
-  { href: "/central-oregon", label: "Central Oregon" },
+  { href: "/our-story", label: "Our Story" },
   { href: "/events", label: "Events" },
-  { href: "/blog", label: "Blog" },
+  { href: "/central-oregon", label: "Central Oregon" },
   { href: "/owners", label: "For Owners" },
 ];
 

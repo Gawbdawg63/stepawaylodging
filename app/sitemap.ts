@@ -6,7 +6,7 @@ import { posts } from "@/lib/blog";
 export default function sitemap(): MetadataRoute.Sitemap {
   const base = `https://${brand.domain}`;
   const now = new Date();
-  const staticPaths = ["", "/homes", "/central-oregon", "/owners", "/events", "/blog", "/policies"];
+  const staticPaths = ["", "/homes", "/our-story", "/central-oregon", "/owners", "/events", "/blog", "/policies"];
 
   const entry = (path: string, priority: number) => ({
     url: `${base}${path}`,

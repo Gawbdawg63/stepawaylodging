@@ -3,6 +3,7 @@ import { brand } from "@/lib/content";
 
 const footerLinks = [
   { href: "/homes", label: "Our Homes" },
+  { href: "/our-story", label: "Our Story" },
   { href: "/events", label: "Events" },
   { href: "/blog", label: "Blog" },
   { href: "/central-oregon", label: "Central Oregon" },
