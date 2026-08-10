@@ -30,12 +30,15 @@ export default function Home() {
 
       {/* ---------------- HERO ---------------- */}
       <section className="relative flex min-h-[92vh] items-center justify-center overflow-hidden">
-        {/* Background: swap for a real hero photo by adding one to /public/photos */}
+        {/* Hero photo + dark overlay for legible white text */}
+        <div
+          className="absolute inset-0 bg-cover bg-center"
+          style={{ backgroundImage: "url('/photos/photo-01.jpg')" }}
+        />
         <div
           className="absolute inset-0"
-          style={{ background: "linear-gradient(160deg, #0b2a2b 0%, var(--sea-700) 40%, var(--sea) 100%)" }}
+          style={{ background: "linear-gradient(165deg, rgba(11,42,43,0.74) 0%, rgba(15,56,57,0.55) 45%, rgba(20,73,74,0.74) 100%)" }}
         />
-        <div className="absolute inset-0 opacity-30" style={{ background: "radial-gradient(90% 60% at 70% 10%, #ffffff 0%, transparent 55%)" }} />
         <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-[var(--background)] to-transparent" />
 
         <div className="relative mx-auto max-w-3xl px-5 pt-24 text-center text-white">
@@ -128,9 +131,11 @@ export default function Home() {
               </div>
             </div>
           </div>
-          <div
-            className="min-h-[320px] rounded-3xl border border-[var(--border)]"
-            style={{ background: "linear-gradient(140deg, var(--sea) 0%, var(--sea-700) 60%, #0b2a2b 100%)" }}
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/photos/photo-14.jpg"
+            alt="Covered ocean-view deck with dining table at Ocean Peak Ridge"
+            className="min-h-[320px] w-full rounded-3xl border border-[var(--border)] object-cover"
           />
         </div>
       </section>
