@@ -7,6 +7,7 @@ const footerLinks = [
   { href: "/blog", label: "Blog" },
   { href: "/central-oregon", label: "Central Oregon" },
   { href: "/owners", label: "For Owners" },
+  { href: "/policies", label: "Policies" },
 ];
 
 export default function Footer({ subtitle }: { subtitle?: string }) {
