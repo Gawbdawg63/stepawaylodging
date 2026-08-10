@@ -1,26 +1,55 @@
 @import "tailwindcss";
 
+/* ===========================================================================
+   Step Away Lodging — theme
+   Coastal Pacific NW palette: deep sea green, warm sand/gold, cream.
+   =========================================================================== */
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #f8f5ef; /* cream */
+  --foreground: #1c2b2a; /* deep pine-ink */
+  --sea: #14494a; /* deep sea green (primary) */
+  --sea-700: #0f3839;
+  --sea-100: #dfeceb;
+  --sand: #c08a3e; /* warm gold accent */
+  --sand-600: #a8752f;
+  --muted: #5c6a68;
+  --card: #ffffff;
+  --border: #e6ddcf;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-sea: var(--sea);
+  --color-sea-700: var(--sea-700);
+  --color-sea-100: var(--sea-100);
+  --color-sand: var(--sand);
+  --color-sand-600: var(--sand-600);
+  --color-muted: var(--muted);
+  --color-card: var(--card);
+  --color-border: var(--border);
+  --font-display: var(--font-display);
+  --font-sans: var(--font-body);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 5rem; /* offset sticky header when jumping to anchors */
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-body), ui-sans-serif, system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+.font-display {
+  font-family: var(--font-display), Georgia, "Times New Roman", serif;
+}
+
+/* Give the OwnerRez widget button room to breathe and match the site. */
+.ownerrez-widget {
+  display: inline-block;
 }
