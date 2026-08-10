@@ -134,10 +134,11 @@ export const properties: Property[] = [
     blurb: "Four-story family cottage with hot tub access and direct beach proximity.",
     card: "homes/americana.jpg",
     description: [
-      "A spacious four-story coastal cottage in Lincoln Beach, Oregon, Americana offers room for the whole family with hot tub access and quick, easy access to the beach.",
+      "It's never too early to start planning the perfect family vacation, and Americana is built for lifelong memories. This classic four-story beach home has southern exposure, a white-railed staircase, and an expansive front deck with seating and a swing.",
+      "Inside are beach-cottage furnishings, an open layout, a fireplace, and a Smart TV. The main floor holds the living area, full kitchen, dining, and grilling deck; the second floor three bedrooms including a king master suite; and the third another queen bedroom plus a loft with games and an ocean-view deck. A private hot tub room, outdoor shower, and four beach cruisers complete it.",
     ],
     stats: { sleeps: 10, bedrooms: 4, bathrooms: 2.5 },
-    amenities: ["Private hot tub", "Beach access", "Fully equipped kitchen", "Room for the whole family"],
+    amenities: ["Private hot tub", "Fireplace", "Fully equipped kitchen", "Smart TV & streaming", "Four beach cruisers", "Outdoor grill", "Washer & dryer", "Multiple ocean-view decks", "Outdoor shower", "Foosball & board games", "Fast Wi-Fi", "Garage & free parking"],
     ownerRez: {
       propertyId: "85235096f05c492f91c74bbfdeb88858",
       widgetId: "72bbd801b62846889ece089470cebb22",
@@ -153,10 +154,11 @@ export const properties: Property[] = [
     blurb: "Romantic private suite for two with a king bed and hot tub access.",
     card: "homes/americanas-paris-suite.jpg",
     description: [
-      "A private suite with a king bed and hot tub, Americana's Paris Suite offers direct access to a seven-mile stretch of Oregon beach — an intimate coastal escape for two.",
+      "A charming suite for two, Americana's Paris Suite pairs a king bed and a cozy fireplace with a kitchenette and a private deck — a warm, romantic retreat.",
+      "Tucked below the main Americana home, it shares access to the serene hot tub room and outdoor shower, moments from the Oregon coastline. Booking requires the main house to be vacant.",
     ],
     stats: { sleeps: 2, bedrooms: 1, bathrooms: 1 },
-    amenities: ["King bed", "Private hot tub", "Beach access", "Perfect for couples"],
+    amenities: ["King bed", "Private hot tub", "Fireplace", "Kitchenette", "Private deck", "Smart TV", "Outdoor shower", "Private entrance", "Beach access", "Fast Wi-Fi", "Free parking", "Linens & towels"],
     ownerRez: {
       propertyId: "41372be2b0504a2e89f2c223f600107c",
       widgetId: "ce203413e8c740d2b2046f15d25f0ee9",
@@ -172,10 +174,11 @@ export const properties: Property[] = [
     blurb: "Open-plan beachside cottage with hot tub, steps from the community deck and ocean.",
     card: "homes/barefoot-bungalow.jpg",
     description: [
-      "A spacious beachside cottage with an open floor plan and hot tub access, Barefoot Bungalow is just steps from the community deck and the Pacific Ocean.",
+      "Be our guest at Barefoot Bungalow — a well-appointed home with an open floor plan made for families. A fully equipped kitchen, a big Smart TV with Roku, and a gas fireplace anchor the living space.",
+      "The main-floor master suite has a king bed and a claw-foot soaking tub; upstairs are two more bedrooms with flexible sleeping. You're steps from the community green and a three-minute stroll to the main beach entrance, with beach toys, a grill, and a private back deck with a multi-jet hot tub.",
     ],
     stats: { sleeps: 8, bedrooms: 3, bathrooms: 2.5 },
-    amenities: ["Private hot tub", "Open floor plan", "Steps to the beach", "Community deck"],
+    amenities: ["Private hot tub", "Gas fireplace", "Claw-foot soaking tub", "Fully equipped kitchen", "Smart TV with Roku", "Beach toys", "Gas grill", "Washer & dryer", "3-minute walk to the beach", "Fast Wi-Fi", "Free parking", "Linens & towels"],
     ownerRez: {
       propertyId: "730b592c0d68475a892eca3315061bdd",
       widgetId: "2d8c1d9f7e9f459d93c0484173fd3e9c",
@@ -191,10 +194,11 @@ export const properties: Property[] = [
     blurb: "Cozy private carriage house for two with a queen bed and hot tub.",
     card: "homes/barefoot-carriage-house.jpg",
     description: [
-      "A cozy private carriage house with a queen bed and hot tub, offering easy access to seven miles of Oregon coastline — a snug retreat for two.",
+      "Unwind in the Barefoot Carriage House, a cozy retreat for two with a queen bed, a private deck, a mini fridge, and a hot tub to soak in after a day on the sand.",
+      "Set beside the main Barefoot Bungalow, it puts seven miles of Oregon coastline at your doorstep. Booking requires the main home to be vacant.",
     ],
     stats: { sleeps: 2, bedrooms: 1, bathrooms: 1 },
-    amenities: ["Queen bed", "Private hot tub", "Beach access", "Perfect for couples"],
+    amenities: ["Queen bed", "Private hot tub", "Private deck", "Mini refrigerator", "Smart TV", "Full bath with shower", "Private entrance", "Ceiling fans", "Beach access", "Fast Wi-Fi", "Free parking", "Linens & towels"],
     ownerRez: {
       propertyId: "8b0f20fc5a46444fa7dfe6bc90c3442b",
       widgetId: "2e0ad12a0e134f14aeb6a99b56751cb2",
@@ -210,10 +214,11 @@ export const properties: Property[] = [
     blurb: "One-level Nantucket-style cottage with hot tub — great for couples or small families.",
     card: "homes/beach-bungalow-by-the-sea.jpg",
     description: [
-      "A one-level Nantucket-style cottage with a hot tub, Beach Bungalow…by the Sea is perfect for couples or small families seeking coastal relaxation near the Pacific.",
+      "Just a few homes back from the Pacific on Bella Beach's main street, Beach Bungalow…by the Sea is a single-level, Nantucket-style cottage with everything you need for couples or a small family. Elevated wood ceilings, a gas fireplace, and custom furnishings give the open living room real warmth.",
+      "The master suite has a queen bed with glass doors to the deck; the second bedroom a king. Both open to a large back deck with a hot tub. The kitchen has granite counters and stainless appliances, and the 450-square-foot rear deck faces south amid native coastal plantings.",
     ],
     stats: { sleeps: 4, bedrooms: 2, bathrooms: 2 },
-    amenities: ["Private hot tub", "Single-level living", "Near the Pacific", "Great for small families"],
+    amenities: ["Private hot tub", "Gas fireplace", "Single-level living", "Granite & stainless kitchen", "Smart TV with Roku", "Outdoor grill", "Washer & dryer", "Outdoor shower", "Steps to the Pacific", "Fast Wi-Fi", "Free parking", "Linens & towels"],
     ownerRez: {
       propertyId: "a348008a78cc4c77b012f5e639b42b15",
       widgetId: "9d0b4815ce894c16bfdbd0dbfeac3409",
@@ -229,10 +234,11 @@ export const properties: Property[] = [
     blurb: "Oceanfront cottage with hot tub, kayaks, and direct Siletz Bay access.",
     card: "homes/ebb-and-flow.jpg",
     description: [
-      "An oceanfront cottage with a hot tub and kayaks, Ebb and Flow offers direct access to Siletz Bay — the perfect base for coastal relaxation and on-the-water adventure.",
+      "Clean, simple, private, and romantic — Ebb and Flow is everything you want in a coastal cottage. The main level opens up with a kitchen, dining, and family room in hardwood floors and sweeping Siletz Bay views; upstairs is a king master suite with a private bath and a daybed.",
+      "Right on the bay in Lincoln City, it comes with beach access, crab traps (with instructions), beach bikes, and a garage with a ping-pong table — minutes from restaurants, golf, Chinook Winds, and the outlet stores. Hunt glass floats, kayak, clam, and build beach fires from your doorstep.",
     ],
     stats: { sleeps: 10, bedrooms: 3, bathrooms: 2 },
-    amenities: ["Private hot tub", "Kayaks included", "Direct Siletz Bay access", "Oceanfront setting"],
+    amenities: ["Oceanfront on Siletz Bay", "Private hot tub", "Fireplace", "Full kitchen", "Kayaks & crab traps", "Beach bikes", "Ping-pong table", "Smart TV with Roku", "Washer & dryer", "Outdoor grill", "Pet-friendly", "Garage & free parking"],
     ownerRez: {
       propertyId: "ca2e9772b178412ba479fdb0e9a3e4d8",
       widgetId: "fdcf2a21287a4560b9be2828f44936fe",
