@@ -3,8 +3,8 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import PageHero from "@/components/PageHero";
 import HomesGrid from "@/components/HomesGrid";
-import OwnerRezWidget from "@/components/OwnerRezWidget";
-import { brand, searchWidget } from "@/lib/content";
+import SearchBar from "@/components/SearchBar";
+import { brand } from "@/lib/content";
 
 export const metadata: Metadata = {
   title: `Our Homes — ${brand.name}`,
@@ -24,10 +24,8 @@ export default function HomesPage() {
 
       {/* Availability search */}
       <section id="search" className="scroll-mt-20 bg-white">
-        <div className="mx-auto max-w-4xl px-5 py-12 sm:py-14">
-          <div className="rounded-2xl border border-[var(--border)] bg-[var(--background)] p-6 shadow-sm sm:p-8">
-            <OwnerRezWidget widget={searchWidget} />
-          </div>
+        <div className="mx-auto max-w-4xl px-5 py-10 sm:py-12">
+          <SearchBar />
         </div>
       </section>
 

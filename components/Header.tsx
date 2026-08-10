@@ -25,7 +25,7 @@ function NavItem({ href, className, onClick, children }: { href: string; classNa
 
 export default function Header({
   links = defaultLinks,
-  cta = { href: "/#search", label: "Check availability" },
+  cta = { href: "/search", label: "Check availability" },
   eyebrow,
 }: {
   links?: NavLink[];

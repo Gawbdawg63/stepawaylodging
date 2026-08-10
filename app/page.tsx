@@ -1,9 +1,9 @@
 import Link from "next/link";
 import Header from "@/components/Header";
-import OwnerRezWidget from "@/components/OwnerRezWidget";
+import SearchBar from "@/components/SearchBar";
 import Footer from "@/components/Footer";
 import JsonLd from "@/components/JsonLd";
-import { brand, properties, searchWidget } from "@/lib/content";
+import { brand, properties } from "@/lib/content";
 import { siteJsonLd } from "@/lib/seo";
 
 const num = (n: number) => (Number.isInteger(n) ? String(n) : n.toFixed(1));
@@ -35,20 +35,11 @@ export default function Home() {
           <p className="mx-auto mt-6 max-w-xl text-lg text-white/85">
             Hand-picked coastal homes and suites — each with a hot tub, all along Oregon&apos;s central coast. Book direct.
           </p>
-          <div className="mt-10 flex flex-wrap items-center justify-center gap-3">
-            <Link href="/homes" className="rounded-full bg-[var(--sand)] px-8 py-3.5 font-semibold text-white shadow-lg transition hover:bg-[var(--sand-600)]">Browse our homes</Link>
-            <a href="#search" className="rounded-full border border-white/30 px-8 py-3.5 font-semibold text-white transition hover:bg-white/10">Check availability</a>
+          <div className="mt-10">
+            <SearchBar />
           </div>
-        </div>
-      </section>
-
-      {/* AVAILABILITY SEARCH */}
-      <section id="search" className="scroll-mt-20 bg-white">
-        <div className="mx-auto max-w-4xl px-5 py-16 text-center sm:py-20">
-          <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[var(--sand-600)]">Check availability</p>
-          <h2 className="mt-2 font-display text-3xl text-[var(--sea)] sm:text-4xl">Search all our homes at once</h2>
-          <div className="mt-8 rounded-2xl border border-[var(--border)] bg-[var(--background)] p-6 shadow-sm sm:p-8">
-            <OwnerRezWidget widget={searchWidget} />
+          <div className="mt-5">
+            <Link href="/homes" className="text-sm font-semibold text-white/85 underline-offset-4 transition hover:text-white hover:underline">or browse all {properties.length} homes →</Link>
           </div>
         </div>
       </section>
