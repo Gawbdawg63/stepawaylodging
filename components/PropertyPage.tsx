@@ -1,11 +1,10 @@
 import Link from "next/link";
 import Header from "@/components/Header";
 import Gallery from "@/components/Gallery";
-import PriceChecker from "@/components/PriceChecker";
-import InquiryForm from "@/components/InquiryForm";
+import OwnerRezWidget from "@/components/OwnerRezWidget";
 import Reviews from "@/components/Reviews";
 import Footer from "@/components/Footer";
-import { brand, owners, type Property } from "@/lib/content";
+import { type Property } from "@/lib/content";
 import { getReviews, reviewMatchesHome } from "@/lib/reviews";
 
 function Icon({ name }: { name: string }) {
@@ -176,24 +175,15 @@ export default async function PropertyPage({ property }: { property: Property })
       )}
 
       {/* PRICE + BOOK */}
-      <section id="book" className="mx-auto max-w-4xl px-5 py-20 text-center sm:py-24">
+      <section id="book" className="mx-auto max-w-3xl px-5 py-20 text-center sm:py-24">
         <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[var(--sand-600)]">Reserve your stay</p>
         <h2 className="mt-2 font-display text-3xl text-[var(--sea)] sm:text-4xl">Check dates & book {property.name}</h2>
         <p className="mx-auto mt-5 max-w-xl text-[var(--muted)]">
-          Pick your dates for an instant price and book direct, or send us a quick inquiry — we&apos;re happy to help.
+          Enter your dates to see the price, then book instantly or send an inquiry — all handled securely through our reservation system.
         </p>
 
-        <div className="mt-10">
-          <PriceChecker slug={property.slug} maxGuests={stats.sleeps} booking={property.ownerRez} />
-        </div>
-
-        <div className="mt-6">
-          <InquiryForm
-            propertyName={property.name}
-            maxGuests={stats.sleeps}
-            formEndpoint={owners.formEndpoint}
-            email={brand.email}
-          />
+        <div className="mx-auto mt-10 max-w-2xl rounded-2xl border border-[var(--border)] bg-white p-5 text-left shadow-sm sm:p-7">
+          <OwnerRezWidget widget={property.ownerRez} />
         </div>
       </section>
 
