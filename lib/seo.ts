@@ -41,11 +41,14 @@ export function propertyJsonLd(p: Property) {
 }
 
 // Structured data for the whole brand (schema.org LodgingBusiness + home list).
-export function siteJsonLd() {
+export function siteJsonLd(average?: number | null, count?: number | null) {
   return {
     "@context": "https://schema.org",
     "@type": "LodgingBusiness",
     name: brand.name,
+    ...(average && count
+      ? { aggregateRating: { "@type": "AggregateRating", ratingValue: average, reviewCount: count, bestRating: 5 } }
+      : {}),
     description:
       "Hand-picked vacation homes and suites on the Oregon Coast, each with a hot tub. Book direct with Step Away Lodging.",
     url: BASE,

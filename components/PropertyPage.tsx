@@ -2,8 +2,10 @@ import Link from "next/link";
 import Header from "@/components/Header";
 import Gallery from "@/components/Gallery";
 import OwnerRezWidget from "@/components/OwnerRezWidget";
+import Reviews from "@/components/Reviews";
 import Footer from "@/components/Footer";
-import { reviewsWidget, type Property } from "@/lib/content";
+import type { Property } from "@/lib/content";
+import { getReviews, reviewMatchesHome } from "@/lib/reviews";
 
 function Icon({ name }: { name: string }) {
   const common = { width: 28, height: 28, viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: 1.6, strokeLinecap: "round" as const, strokeLinejoin: "round" as const };
@@ -30,9 +32,12 @@ const propertyLinks = [
   { href: "#book", label: "Book" },
 ];
 
-export default function PropertyPage({ property }: { property: Property }) {
+export default async function PropertyPage({ property }: { property: Property }) {
   const { stats } = property;
   const heroPhoto = property.photos[0]?.file ?? property.card;
+
+  const { average, count, reviews } = await getReviews();
+  const homeReviews = reviews.filter((r) => reviewMatchesHome(r.property, property.name));
 
   return (
     <div id="top">
@@ -169,17 +174,6 @@ export default function PropertyPage({ property }: { property: Property }) {
         </section>
       )}
 
-      {/* REVIEWS */}
-      <section id="reviews" className="bg-white">
-        <div className="mx-auto max-w-4xl px-5 py-16 text-center sm:py-20">
-          <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[var(--sand-600)]">Guest reviews</p>
-          <h2 className="mt-2 font-display text-3xl text-[var(--sea)] sm:text-4xl">What our guests say</h2>
-          <div className="mt-8 text-left">
-            <OwnerRezWidget widget={reviewsWidget} />
-          </div>
-        </div>
-      </section>
-
       {/* BOOK */}
       <section id="book" className="mx-auto max-w-3xl px-5 py-20 text-center sm:py-28">
         <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[var(--sand-600)]">Reserve your stay</p>
@@ -194,6 +188,15 @@ export default function PropertyPage({ property }: { property: Property }) {
           </div>
         </div>
       </section>
+
+      {/* REVIEWS — this home's reviews (falls back to recent collection reviews) */}
+      <Reviews
+        heading={homeReviews.length ? `What guests say about ${property.name}` : "Loved by our guests"}
+        average={average}
+        count={count}
+        reviews={homeReviews.length ? homeReviews : reviews.slice(0, 6)}
+        note={homeReviews.length ? "Overall rating across all Step Away Lodging homes." : "Recent reviews from guests across our collection of coastal homes."}
+      />
 
       <Footer subtitle={`${property.name} · ${property.location}`} />
     </div>

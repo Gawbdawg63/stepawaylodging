@@ -1,11 +1,12 @@
 import Link from "next/link";
 import Header from "@/components/Header";
 import SearchBar from "@/components/SearchBar";
-import OwnerRezWidget from "@/components/OwnerRezWidget";
+import Reviews from "@/components/Reviews";
 import Footer from "@/components/Footer";
 import JsonLd from "@/components/JsonLd";
-import { brand, properties, reviewsWidget } from "@/lib/content";
+import { brand, properties } from "@/lib/content";
 import { siteJsonLd } from "@/lib/seo";
+import { getReviews } from "@/lib/reviews";
 
 const num = (n: number) => (Number.isInteger(n) ? String(n) : n.toFixed(1));
 
@@ -16,12 +17,13 @@ const explore = [
   { href: "/blog", title: "The Journal", text: "Local guides and tips for the central Oregon coast." },
 ];
 
-export default function Home() {
+export default async function Home() {
   const featured = properties.slice(0, 3);
+  const { average, count, reviews } = await getReviews();
 
   return (
     <div id="top">
-      <JsonLd data={siteJsonLd()} />
+      <JsonLd data={siteJsonLd(average, count)} />
       <Header />
 
       {/* HERO */}
@@ -73,15 +75,7 @@ export default function Home() {
       </section>
 
       {/* REVIEWS */}
-      <section className="border-t border-[var(--border)] bg-[var(--background)]">
-        <div className="mx-auto max-w-4xl px-5 py-16 text-center sm:py-20">
-          <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[var(--sand-600)]">Guest reviews</p>
-          <h2 className="mt-2 font-display text-3xl text-[var(--sea)] sm:text-4xl">Loved by our guests</h2>
-          <div className="mt-8 text-left">
-            <OwnerRezWidget widget={reviewsWidget} />
-          </div>
-        </div>
-      </section>
+      <Reviews heading="Loved by our guests" average={average} count={count} reviews={reviews} />
 
       {/* EXPLORE */}
       <section className="border-t border-[var(--border)] bg-white">
