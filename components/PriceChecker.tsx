@@ -9,6 +9,12 @@ type Status = "idle" | "loading" | "done" | "error";
 const money = (n: number) =>
   `$${n.toLocaleString("en-US", { minimumFractionDigits: Number.isInteger(n) ? 0 : 2, maximumFractionDigits: 2 })}`;
 
+// OwnerRez booking widget wants US-format dates in or_arrival / or_departure.
+const toMdy = (iso: string) => {
+  const [y, m, d] = iso.split("-");
+  return y && m && d ? `${m}/${d}/${y}` : iso;
+};
+
 export default function PriceChecker({ slug, maxGuests }: { slug: string; maxGuests: number }) {
   const [arrival, setArrival] = useState("");
   const [departure, setDeparture] = useState("");
@@ -83,7 +89,12 @@ export default function PriceChecker({ slug, maxGuests }: { slug: string; maxGue
               <div className="shrink-0 text-right">
                 <div className="font-display text-3xl text-[var(--sea)]">{money(quote.total)}</div>
                 <div className="text-sm text-[var(--muted)]">total{quote.nights ? ` · ${quote.nights} night${quote.nights > 1 ? "s" : ""}` : ""}</div>
-                <a href="#book" className="mt-3 inline-block rounded-full bg-[var(--sea)] px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-[var(--sea-700)]">Book these dates</a>
+                <a
+                  href={`?or_arrival=${encodeURIComponent(toMdy(arrival))}&or_departure=${encodeURIComponent(toMdy(departure))}&or_adults=${guests}#reserve`}
+                  className="mt-3 inline-block rounded-full bg-[var(--sea)] px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-[var(--sea-700)]"
+                >
+                  Book these dates
+                </a>
               </div>
             </div>
           ) : (

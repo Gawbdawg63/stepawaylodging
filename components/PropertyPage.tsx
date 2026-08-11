@@ -187,7 +187,7 @@ export default async function PropertyPage({ property }: { property: Property })
           <PriceChecker slug={property.slug} maxGuests={stats.sleeps} />
         </div>
 
-        <div className="mt-6 flex justify-center">
+        <div id="reserve" className="mt-6 flex scroll-mt-24 justify-center">
           <div className="w-full rounded-2xl border border-[var(--border)] bg-white p-6 shadow-sm sm:p-8">
             <OwnerRezWidget widget={property.ownerRez} />
             <p className="mt-4 text-xs text-[var(--muted)]">Have a question first? Use the inquiry form above.</p>

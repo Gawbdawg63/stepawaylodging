@@ -29,6 +29,15 @@ export default function OwnerRezWidget({
     const seq = SEQ++;
     const params = new URLSearchParams({ seq: String(seq) });
     if (widget.propertyId) params.set("propertyKey", widget.propertyId);
+    // Carry pre-filled dates from the page URL into the booking widget, so
+    // "Book these dates" on the price checker lands on the right dates.
+    if (widget.propertyId) {
+      const page = new URLSearchParams(window.location.search);
+      for (const k of ["or_arrival", "or_departure", "or_adults"]) {
+        const v = page.get(k);
+        if (v) params.set(k, v);
+      }
+    }
     setSrc(`https://app.ownerrez.com/widgets/${widget.widgetId}?${params.toString()}`);
 
     function onMessage(e: MessageEvent) {
