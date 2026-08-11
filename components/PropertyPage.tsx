@@ -143,7 +143,7 @@ export default async function PropertyPage({ property }: { property: Property })
           <div className="mt-8 overflow-hidden rounded-2xl border border-[var(--border)]">
             <iframe
               title={`Map of ${property.name}`}
-              src={`https://www.google.com/maps?q=${encodeURIComponent(property.mapQuery ?? property.location)}&z=13&output=embed`}
+              src={`https://www.google.com/maps?q=${encodeURIComponent(property.mapQuery ?? property.location)}&z=15&output=embed`}
               className="h-[360px] w-full sm:h-[420px]"
               loading="lazy"
               referrerPolicy="no-referrer-when-downgrade"
