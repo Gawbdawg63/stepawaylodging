@@ -1,61 +1,67 @@
 "use client";
 
-import { useEffect } from "react";
-import { primary, ownerRezScript, type OwnerRezWidgetConfig } from "@/lib/content";
+import { useEffect, useRef, useState } from "react";
+import { primary, type OwnerRezWidgetConfig } from "@/lib/content";
 
-declare global {
-  interface Window {
-    OwnerRez?: { loadWidgets?: () => void; loadDefaultWidgets?: () => void };
-  }
-}
+// A page-wide counter so each embedded widget gets a unique `seq`, which OwnerRez
+// echoes back in its height messages so we can resize the right iframe.
+let SEQ = 0;
 
 /**
- * Embeds an OwnerRez widget — a per-home booking/inquiry popup, the portfolio
- * availability search, or the reviews widget.
+ * Embeds an OwnerRez widget (booking/inquiry, availability search, or reviews)
+ * by rendering its hosted iframe directly — bypassing OwnerRez's widget.js
+ * loader, which unreliably fails to mount widgets that are added after page load
+ * or during client-side navigation (leaving a blank box).
  *
- * The loader script (widget.js) auto-scans the page for `.ownerrez-widget` divs
- * only on its own load event. When we add it dynamically that event has often
- * already passed — and on client-side navigation the script is already loaded —
- * so the widget silently stays blank. We fix that by explicitly (re)running
- * OwnerRez's own scan once the script is ready, and immediately if it's already
- * loaded. This also handles multiple widgets sharing one loader on a page.
+ * The hosted widget page auto-posts its content height to the parent window; we
+ * listen for that message and size the iframe to fit, matching on the `seq` we
+ * put in the URL so multiple widgets on one page each resize correctly.
  */
-function runScan() {
-  const or = window.OwnerRez;
-  if (or?.loadWidgets) or.loadWidgets();
-  else or?.loadDefaultWidgets?.();
-}
-
 export default function OwnerRezWidget({
   widget = primary.ownerRez,
 }: {
   widget?: OwnerRezWidgetConfig;
 }) {
+  const ref = useRef<HTMLIFrameElement>(null);
+  const [src, setSrc] = useState<string | undefined>(undefined);
+
   useEffect(() => {
-    if (window.OwnerRez) {
-      runScan();
-      return;
+    const seq = SEQ++;
+    const params = new URLSearchParams({ seq: String(seq) });
+    if (widget.propertyId) params.set("propertyKey", widget.propertyId);
+    setSrc(`https://app.ownerrez.com/widgets/${widget.widgetId}?${params.toString()}`);
+
+    function onMessage(e: MessageEvent) {
+      if (typeof e.origin === "string" && !e.origin.includes("ownerrez")) return;
+      let d: unknown = e.data;
+      if (typeof d === "string") {
+        try {
+          d = JSON.parse(d);
+        } catch {
+          return;
+        }
+      }
+      if (d && typeof d === "object") {
+        const m = d as { height?: number; seq?: number | string };
+        if (m.height && String(m.seq) === String(seq) && ref.current) {
+          ref.current.style.height = Math.max(Number(m.height), 200) + "px";
+        }
+      }
     }
-    const existing = document.querySelector<HTMLScriptElement>("script[data-orez-loader]");
-    if (existing) {
-      existing.addEventListener("load", runScan);
-      return () => existing.removeEventListener("load", runScan);
-    }
-    const s = document.createElement("script");
-    s.src = ownerRezScript;
-    s.async = true;
-    s.setAttribute("data-orez-loader", "");
-    s.addEventListener("load", runScan);
-    document.body.appendChild(s);
-  }, [widget.widgetId]);
+
+    window.addEventListener("message", onMessage);
+    return () => window.removeEventListener("message", onMessage);
+  }, [widget.widgetId, widget.propertyId]);
 
   return (
     <div className="orez-embed">
-      <div
-        className="ownerrez-widget"
-        data-propertyid={widget.propertyId}
-        data-widget-type={widget.widgetType}
-        data-widgetid={widget.widgetId}
+      <iframe
+        ref={ref}
+        src={src}
+        title="Step Away Lodging — OwnerRez"
+        className="w-full"
+        style={{ border: 0, minHeight: 620, width: "100%" }}
+        scrolling="no"
       />
     </div>
   );
