@@ -15,7 +15,15 @@ const toMdy = (iso: string) => {
   return y && m && d ? `${m}/${d}/${y}` : iso;
 };
 
-export default function PriceChecker({ slug, maxGuests }: { slug: string; maxGuests: number }) {
+export default function PriceChecker({
+  slug,
+  maxGuests,
+  booking,
+}: {
+  slug: string;
+  maxGuests: number;
+  booking: { widgetId: string; propertyId?: string };
+}) {
   const [arrival, setArrival] = useState("");
   const [departure, setDeparture] = useState("");
   const [guests, setGuests] = useState("2");
@@ -90,10 +98,18 @@ export default function PriceChecker({ slug, maxGuests }: { slug: string; maxGue
                 <div className="font-display text-3xl text-[var(--sea)]">{money(quote.total)}</div>
                 <div className="text-sm text-[var(--muted)]">total{quote.nights ? ` · ${quote.nights} night${quote.nights > 1 ? "s" : ""}` : ""}</div>
                 <a
-                  href={`?or_arrival=${encodeURIComponent(toMdy(arrival))}&or_departure=${encodeURIComponent(toMdy(departure))}&or_adults=${guests}#reserve`}
-                  className="mt-3 inline-block rounded-full bg-[var(--sea)] px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-[var(--sea-700)]"
+                  href={`https://app.ownerrez.com/widgets/${booking.widgetId}?${new URLSearchParams({
+                    ...(booking.propertyId ? { propertyKey: booking.propertyId } : {}),
+                    or_arrival: toMdy(arrival),
+                    or_departure: toMdy(departure),
+                    or_adults: guests,
+                  }).toString()}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mt-3 inline-flex items-center gap-1.5 rounded-full bg-[var(--sea)] px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-[var(--sea-700)]"
                 >
                   Book these dates
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M7 17 17 7M9 7h8v8" /></svg>
                 </a>
               </div>
             </div>
