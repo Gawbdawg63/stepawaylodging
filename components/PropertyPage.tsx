@@ -2,6 +2,7 @@ import Link from "next/link";
 import Header from "@/components/Header";
 import Gallery from "@/components/Gallery";
 import OwnerRezWidget from "@/components/OwnerRezWidget";
+import PriceChecker from "@/components/PriceChecker";
 import Reviews from "@/components/Reviews";
 import Footer from "@/components/Footer";
 import type { Property } from "@/lib/content";
@@ -174,17 +175,22 @@ export default async function PropertyPage({ property }: { property: Property })
         </section>
       )}
 
-      {/* BOOK */}
-      <section id="book" className="mx-auto max-w-3xl px-5 py-20 text-center sm:py-28">
+      {/* PRICE + BOOK */}
+      <section id="book" className="mx-auto max-w-4xl px-5 py-20 text-center sm:py-24">
         <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[var(--sand-600)]">Reserve your stay</p>
         <h2 className="mt-2 font-display text-3xl text-[var(--sea)] sm:text-4xl">Check dates & book {property.name}</h2>
         <p className="mx-auto mt-5 max-w-xl text-[var(--muted)]">
-          Booking and secure payment are handled directly through our reservation system. Select your dates below to see availability and request your stay.
+          Pick your dates for an instant price, then book securely below. Everything runs through our reservation system.
         </p>
-        <div className="mt-10 flex justify-center">
-          <div className="w-full rounded-2xl border border-[var(--border)] bg-white p-8 shadow-sm">
+
+        <div className="mt-10">
+          <PriceChecker slug={property.slug} maxGuests={stats.sleeps} />
+        </div>
+
+        <div className="mt-6 flex justify-center">
+          <div className="w-full rounded-2xl border border-[var(--border)] bg-white p-6 shadow-sm sm:p-8">
             <OwnerRezWidget widget={property.ownerRez} />
-            <p className="mt-4 text-xs text-[var(--muted)]">Have a question first? Use the form above to send an inquiry.</p>
+            <p className="mt-4 text-xs text-[var(--muted)]">Have a question first? Use the inquiry form above.</p>
           </div>
         </div>
       </section>

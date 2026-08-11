@@ -85,6 +85,50 @@ export async function searchAvailability(
   return { ok: true, rows };
 }
 
+// A single home's price for specific dates, with the charge breakdown.
+export type QuoteResult = {
+  available: boolean;
+  total: number | null;
+  nights: number;
+  charges: { label: string; amount: number }[];
+};
+
+export async function getQuote(
+  slug: string,
+  arrival: string,
+  departure: string,
+  adults = 2
+): Promise<QuoteResult> {
+  const nights = nightsBetween(arrival, departure);
+  const id = PROPERTY_IDS[slug];
+  const auth = authHeader();
+  if (!id || !auth || !arrival || !departure) {
+    return { available: false, total: null, nights, charges: [] };
+  }
+  try {
+    const res = await fetch(`${BASE}/v2/quotes`, {
+      method: "POST",
+      headers: { Authorization: auth, Accept: "application/json", "Content-Type": "application/json" },
+      body: JSON.stringify({ property_id: id, arrival, departure, adults }),
+      cache: "no-store",
+    });
+    if (!res.ok) return { available: false, total: null, nights, charges: [] };
+    const data = (await res.json()) as {
+      charges?: { amount?: number; description?: string; title?: string; name?: string; type?: string }[];
+    };
+    const charges = (data.charges ?? [])
+      .map((c) => ({
+        label: c.description || c.title || c.name || c.type || "Charge",
+        amount: typeof c.amount === "number" ? c.amount : 0,
+      }))
+      .filter((c) => c.amount);
+    const total = charges.reduce((s, c) => s + c.amount, 0);
+    return { available: total > 0, total: total > 0 ? total : null, nights, charges };
+  } catch {
+    return { available: false, total: null, nights, charges: [] };
+  }
+}
+
 export function nightsBetween(arrival: string, departure: string): number {
   const a = new Date(arrival + "T00:00:00");
   const d = new Date(departure + "T00:00:00");

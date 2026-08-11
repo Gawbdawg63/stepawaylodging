@@ -3,8 +3,12 @@
 import { useCallback, useEffect, useState } from "react";
 import type { Photo } from "@/lib/content";
 
+const VISIBLE = 12;
+
 export default function Gallery({ photos }: { photos: Photo[] }) {
   const [open, setOpen] = useState<number | null>(null);
+  const [showAll, setShowAll] = useState(false);
+  const shown = showAll ? photos : photos.slice(0, VISIBLE);
   const close = useCallback(() => setOpen(null), []);
   const prev = useCallback(
     () => setOpen((o) => (o === null ? o : (o - 1 + photos.length) % photos.length)),
@@ -41,7 +45,7 @@ export default function Gallery({ photos }: { photos: Photo[] }) {
       </div>
 
       <div className="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-4">
-        {photos.map((p, i) => (
+        {shown.map((p, i) => (
           <button
             key={p.file}
             onClick={() => setOpen(i)}
@@ -55,6 +59,17 @@ export default function Gallery({ photos }: { photos: Photo[] }) {
           </button>
         ))}
       </div>
+
+      {!showAll && photos.length > VISIBLE && (
+        <div className="mt-6 text-center">
+          <button
+            onClick={() => setShowAll(true)}
+            className="rounded-full border border-[var(--sea)] px-7 py-3 font-semibold text-[var(--sea)] transition hover:bg-[var(--sea)] hover:text-white"
+          >
+            View all {photos.length} photos
+          </button>
+        </div>
+      )}
 
       {open !== null && (
         <div
