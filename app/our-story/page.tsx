@@ -35,6 +35,19 @@ export default function OurStoryPage() {
         </p>
       </section>
 
+      {/* Family story */}
+      <section className="bg-white">
+        <div className="mx-auto max-w-3xl px-5 py-16 sm:py-20">
+          <p className="text-center text-sm font-semibold uppercase tracking-[0.18em] text-[var(--sand-600)]">Family owned & operated</p>
+          <h2 className="mt-2 text-center font-display text-3xl text-[var(--sea)] sm:text-4xl">{story.family.heading}</h2>
+          <div className="mt-8 space-y-5 text-lg leading-relaxed text-[var(--foreground)]/90">
+            {story.family.paragraphs.map((p, i) => (
+              <p key={i}>{p}</p>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* Values */}
       <section className="border-y border-[var(--border)] bg-white">
         <div className="mx-auto grid max-w-6xl grid-cols-1 gap-8 px-5 py-16 sm:grid-cols-2 lg:grid-cols-4">
