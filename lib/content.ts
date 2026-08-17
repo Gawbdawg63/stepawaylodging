@@ -42,7 +42,7 @@ export const story = {
     paragraphs: [
       "Step Away Lodging is family owned and operated — and that shows in everything we do. This isn't a faceless management company; it's a family that genuinely loves welcoming people to the Oregon coast.",
       "At the heart of it is Lisa Ward, who has spent more than 30 years in the vacation-rental business. Three decades of caring for homes and hosting guests have given her a rare depth of experience and expertise — she knows this coast, she knows what turns a stay into a memory, and she looks after every owner's home as if it were her own.",
-      "Working alongside her are her kids, Max and Gabrielle Ward, the next generation of the family business. Each brings their own strengths to the table, and together they make property management feel less like a service and more like real hospitality — it's simply the perfect fit for the way this family works.",
+      "Working alongside her is the next generation of the family, bringing fresh energy and their own strengths to the table. Together they make property management feel less like a service and more like real hospitality — it's simply the perfect fit for the way this family works.",
       "For our guests, that means a stay cared for down to the smallest detail. For homeowners, it means your property — and your guests — are in the hands of people who treat them like family. That's the Step Away difference.",
     ],
   },
