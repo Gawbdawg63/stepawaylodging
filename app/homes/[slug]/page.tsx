@@ -4,6 +4,7 @@ import PropertyPage from "@/components/PropertyPage";
 import JsonLd from "@/components/JsonLd";
 import { properties, getProperty, brand } from "@/lib/content";
 import { propertyJsonLd } from "@/lib/seo";
+import { getReviews, reviewMatchesHome } from "@/lib/reviews";
 
 const num = (n: number) => (Number.isInteger(n) ? String(n) : n.toFixed(1));
 
@@ -43,9 +44,14 @@ export default async function Page({
   const { slug } = await params;
   const property = getProperty(slug);
   if (!property) notFound();
+
+  const { average, count, reviews } = await getReviews();
+  const homeReviews = reviews.filter((rv) => reviewMatchesHome(rv.property, property.name));
+  const schemaReviews = (homeReviews.length ? homeReviews : reviews).slice(0, 5);
+
   return (
     <>
-      <JsonLd data={propertyJsonLd(property)} />
+      <JsonLd data={propertyJsonLd(property, { average, count, reviews: schemaReviews })} />
       <PropertyPage property={property} />
     </>
   );

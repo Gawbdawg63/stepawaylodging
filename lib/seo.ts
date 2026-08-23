@@ -1,4 +1,4 @@
-import { brand, properties, type Property } from "@/lib/content";
+import { brand, type Property } from "@/lib/content";
 
 const BASE = `https://${brand.domain}`;
 
@@ -12,35 +12,82 @@ function locality(location: string): string {
   return "Lincoln City";
 }
 
-// Structured data for a single home (schema.org VacationRental).
-export function propertyJsonLd(p: Property) {
+function geoFromMapQuery(mapQuery?: string): { latitude: number; longitude: number } | null {
+  if (!mapQuery) return null;
+  const m = mapQuery.match(/^\s*(-?\d+(?:\.\d+)?)\s*,\s*(-?\d+(?:\.\d+)?)\s*$/);
+  return m ? { latitude: parseFloat(m[1]), longitude: parseFloat(m[2]) } : null;
+}
+
+export type ReviewsForSchema = {
+  average?: number | null;
+  count?: number | null;
+  reviews?: { author: string; stars: number; body: string; date?: string }[];
+};
+
+// Structured data for a single home (schema.org VacationRental — Google's spec:
+// geo, containsPlace, identifier, and 8+ images make it a valid rich result).
+export function propertyJsonLd(p: Property, r?: ReviewsForSchema) {
+  const geo = geoFromMapQuery(p.mapQuery);
+  const images = p.photos.slice(0, 12).map((ph) => abs(`/${ph.file}`));
+  const amenityFeature = (p.amenities ?? []).map((a) => ({
+    "@type": "LocationFeatureSpecification",
+    name: a,
+    value: true,
+  }));
+  const occupancy = { "@type": "QuantitativeValue", value: p.stats.sleeps };
+  const petsAllowed = (p.amenities ?? []).some((a) => /pet/i.test(a));
+
   return {
     "@context": "https://schema.org",
     "@type": "VacationRental",
+    additionalType: "https://schema.org/House",
+    identifier: { "@type": "PropertyValue", propertyID: "OwnerRez", value: p.ownerRez.propertyId ?? p.slug },
     name: p.name,
-    description: p.headline,
+    description: [p.headline, ...(p.description ?? [])].join(" ").slice(0, 600),
     url: abs(`/homes/${p.slug}`),
-    image: p.photos.slice(0, 6).map((ph) => abs(`/${ph.file}`)),
+    image: images,
     brand: { "@type": "Brand", name: brand.name },
+    ...(geo ? { latitude: geo.latitude, longitude: geo.longitude, geo: { "@type": "GeoCoordinates", ...geo } } : {}),
     address: {
       "@type": "PostalAddress",
       addressLocality: locality(p.location),
       addressRegion: "OR",
       addressCountry: "US",
     },
+    checkinTime: "16:00:00",
+    checkoutTime: "11:00:00",
     numberOfBedrooms: p.stats.bedrooms,
     numberOfBathroomsTotal: p.stats.bathrooms,
-    occupancy: { "@type": "QuantitativeValue", maxValue: p.stats.sleeps },
-    amenityFeature: (p.amenities ?? []).map((a) => ({
-      "@type": "LocationFeatureSpecification",
-      name: a,
-      value: true,
-    })),
-    containedInPlace: { "@type": "Place", name: "Oregon Coast" },
+    petsAllowed,
+    knowsLanguage: "en-US",
+    amenityFeature,
+    containsPlace: {
+      "@type": "Accommodation",
+      additionalType: "EntirePlace",
+      name: p.name,
+      numberOfBedrooms: p.stats.bedrooms,
+      numberOfBathroomsTotal: p.stats.bathrooms,
+      occupancy,
+      amenityFeature,
+    },
+    ...(r?.average && r?.count
+      ? { aggregateRating: { "@type": "AggregateRating", ratingValue: r.average, reviewCount: r.count, bestRating: 5, worstRating: 1 } }
+      : {}),
+    ...(r?.reviews?.length
+      ? {
+          review: r.reviews.slice(0, 5).map((rv) => ({
+            "@type": "Review",
+            reviewRating: { "@type": "Rating", ratingValue: rv.stars, bestRating: 5, worstRating: 1 },
+            author: { "@type": "Person", name: rv.author || "Guest" },
+            ...(rv.date ? { datePublished: rv.date } : {}),
+            reviewBody: rv.body,
+          })),
+        }
+      : {}),
   };
 }
 
-// Structured data for the whole brand (schema.org LodgingBusiness + home list).
+// Structured data for the whole brand (schema.org LodgingBusiness).
 export function siteJsonLd(average?: number | null, count?: number | null) {
   return {
     "@context": "https://schema.org",
@@ -58,13 +105,5 @@ export function siteJsonLd(average?: number | null, count?: number | null) {
     ...(brand.phone ? { telephone: brand.phone } : {}),
     ...(brand.email ? { email: brand.email } : {}),
     sameAs: [brand.social.facebook, brand.social.instagram, brand.social.pinterest].filter(Boolean),
-    makesOffer: properties.map((p) => ({
-      "@type": "Offer",
-      itemOffered: {
-        "@type": "VacationRental",
-        name: p.name,
-        url: abs(`/homes/${p.slug}`),
-      },
-    })),
   };
 }
