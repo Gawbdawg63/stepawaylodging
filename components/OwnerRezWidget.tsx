@@ -34,22 +34,22 @@ export default function OwnerRezWidget({
   widget?: OwnerRezWidgetConfig;
 }) {
   useEffect(() => {
+    // If widget.js is already loaded (e.g. client-side navigation between pages),
+    // it won't auto-scan again — so we ask it to mount this page's widget.
     if (window.OwnerRez) {
       scan();
       return;
     }
-    const existing = document.querySelector<HTMLScriptElement>("script[data-orez-loader]");
-    if (existing) {
-      existing.addEventListener("load", scan);
-      return () => existing.removeEventListener("load", scan);
+    // First load: just add the loader. widget.js auto-initializes every
+    // `.ownerrez-widget` on the page when it loads — no manual scan needed
+    // (calling it again would double-init and trigger a phantom validation error).
+    if (!document.querySelector("script[data-orez-loader]")) {
+      const s = document.createElement("script");
+      s.src = ownerRezScript;
+      s.async = true;
+      s.setAttribute("data-orez-loader", "");
+      document.body.appendChild(s);
     }
-    const s = document.createElement("script");
-    s.src = ownerRezScript;
-    s.async = true;
-    s.setAttribute("data-orez-loader", "");
-    s.addEventListener("load", scan);
-    document.body.appendChild(s);
-    return () => s.removeEventListener("load", scan);
   }, [widget.widgetId]);
 
   return (
