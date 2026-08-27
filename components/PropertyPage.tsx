@@ -182,7 +182,7 @@ export default async function PropertyPage({ property }: { property: Property })
           Enter your dates to see the price, then book instantly or send an inquiry — all handled securely through our reservation system.
         </p>
 
-        <div className="mx-auto mt-10 max-w-2xl rounded-2xl border border-[var(--border)] bg-white p-5 text-left shadow-sm sm:p-7">
+        <div className="mx-auto mt-10 w-full max-w-md rounded-2xl border border-[var(--border)] bg-white p-4 text-left shadow-sm sm:p-6">
           <OwnerRezWidget widget={property.ownerRez} />
         </div>
       </section>
