@@ -39,7 +39,16 @@ export const metadata: Metadata = {
       "Hand-picked vacation homes and suites on the Oregon Coast. Browse our homes and book direct.",
     url: `https://${brand.domain}`,
     siteName: brand.name,
+    locale: "en_US",
     type: "website",
+    // og:image is supplied automatically by app/opengraph-image.png
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: `${brand.name} — ${brand.tagline}`,
+    description:
+      "Hand-picked vacation homes and suites on the Oregon Coast. Browse our homes and book direct.",
+    // twitter:image is supplied automatically by app/twitter-image.png
   },
 };
 
