@@ -338,3 +338,33 @@ export const owners = {
   // If blank, the form opens the visitor's email app addressed to brand.email.
   formEndpoint: "https://formspree.io/f/mrpzpnew",
 };
+
+// Family "through the years" photos for the Our Story page (in /public/story).
+// Curated from the family archive — building the first home and growing up on
+// the Oregon Coast, 2002 onward.
+export const storyGallery: Photo[] = [
+  { file: "story/01.jpg", alt: "The family at the cleared Oregon Coast lot where it all began, 2002" },
+  { file: "story/02.jpg", alt: "Building the first home — framing the vaulted A-frame, 2003" },
+  { file: "story/03.jpg", alt: "The kids playing outside the new house during construction" },
+  { file: "story/04.jpg", alt: "Ocean-view windows going in during the build, 2004" },
+  { file: "story/05.jpg", alt: "The next generation on the job site beside the excavator" },
+  { file: "story/06.jpg", alt: "Lisa on the beach at golden hour in the original Bella Beach hoodie" },
+  { file: "story/07.jpg", alt: "Lisa and the kids together on the beach at sunset, 2003" },
+  { file: "story/08.jpg", alt: "The whole family on the sand as the sun goes down" },
+  { file: "story/09.jpg", alt: "A windy spring day on the beach with the kids" },
+  { file: "story/10.jpg", alt: "Kids celebrating on the beach near the new home, 2002" },
+  { file: "story/11.jpg", alt: "A summer afternoon on a beach blanket by the surf" },
+  { file: "story/12.jpg", alt: "Lisa heading into the surf with a boogie board" },
+  { file: "story/13.jpg", alt: "Lisa and her son on the beach" },
+  { file: "story/14.jpg", alt: "The family gathered on driftwood along the shore, 2004" },
+  { file: "story/15.jpg", alt: "A quiet coffee on the beach steps with the homes behind" },
+  { file: "story/16.jpg", alt: "The kids racing down the lane toward the house" },
+  { file: "story/17.jpg", alt: "Boogie boards in hand on an overcast coast morning, 2004" },
+  { file: "story/18.jpg", alt: "Wetsuits on and ready for the water" },
+  { file: "story/19.jpg", alt: "Riding a board across the tide pools, 2007" },
+  { file: "story/20.jpg", alt: "Fishing off the dock on the bay" },
+  { file: "story/21.jpg", alt: "Crabbing on the dock — coastal life the year round" },
+  { file: "story/22.jpg", alt: "Sunshine and blue skies on the coast, 2007" },
+  { file: "story/23.jpg", alt: "Looking out over the bay from the deck, 2005" },
+  { file: "story/24.jpg", alt: "Evening on the beach with the lights of town behind, 2008" },
+];

@@ -3,7 +3,8 @@ import Link from "next/link";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import PageHero from "@/components/PageHero";
-import { brand, story } from "@/lib/content";
+import Gallery from "@/components/Gallery";
+import { brand, story, storyGallery } from "@/lib/content";
 
 export const metadata: Metadata = {
   title: `Our Story — ${brand.name}`,
@@ -47,6 +48,14 @@ export default function OurStoryPage() {
           </div>
         </div>
       </section>
+
+      {/* Through the years — family photo gallery */}
+      <Gallery
+        photos={storyGallery}
+        eyebrow="Through the years"
+        title="Our family on the coast"
+        subtitle="From breaking ground on the first home to a lifetime of days on the beach — tap any photo to view it larger."
+      />
 
       {/* Values */}
       <section className="border-y border-[var(--border)] bg-white">

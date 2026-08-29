@@ -5,7 +5,17 @@ import type { Photo } from "@/lib/content";
 
 const VISIBLE = 12;
 
-export default function Gallery({ photos }: { photos: Photo[] }) {
+export default function Gallery({
+  photos,
+  eyebrow = "Gallery",
+  title = "Take a look around",
+  subtitle = "Tap any photo to view it larger.",
+}: {
+  photos: Photo[];
+  eyebrow?: string;
+  title?: string;
+  subtitle?: string;
+}) {
   const [open, setOpen] = useState<number | null>(null);
   const [showAll, setShowAll] = useState(false);
   const shown = showAll ? photos : photos.slice(0, VISIBLE);
@@ -39,9 +49,9 @@ export default function Gallery({ photos }: { photos: Photo[] }) {
   return (
     <section id="gallery" className="mx-auto max-w-6xl px-5 py-16 sm:py-20">
       <div className="mb-8">
-        <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[var(--sand-600)]">Gallery</p>
-        <h2 className="mt-2 font-display text-3xl text-[var(--sea)] sm:text-4xl">Take a look around</h2>
-        <p className="mt-2 text-sm text-[var(--muted)]">Tap any photo to view it larger.</p>
+        <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[var(--sand-600)]">{eyebrow}</p>
+        <h2 className="mt-2 font-display text-3xl text-[var(--sea)] sm:text-4xl">{title}</h2>
+        <p className="mt-2 text-sm text-[var(--muted)]">{subtitle}</p>
       </div>
 
       <div className="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-4">
