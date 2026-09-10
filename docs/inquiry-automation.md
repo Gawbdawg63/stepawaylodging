@@ -25,7 +25,16 @@ in Vercel. Every reply then becomes a flagged draft instead.
 Set `OWNERREZ_TOKEN` (and `OWNERREZ_USERNAME` if the login is not
 `lisa@bellabeachrentals.com`).
 
-**2. Register an app for the mailbox** — [portal.azure.com](https://portal.azure.com)
+**2. Register an app for the mailbox.** On a Microsoft 365 (work or school)
+mailbox this is one command, which creates the app, allows public client flows
+and adds the three permissions:
+
+```bash
+npm run azure:setup
+```
+
+A personal `outlook.com` account has no Azure AD tenant for the CLI to talk to,
+so register it by hand instead — [portal.azure.com](https://portal.azure.com)
 → App registrations → New registration:
 
 - Supported account types: include personal Microsoft accounts if the mailbox
@@ -100,3 +109,5 @@ knowing:
 | `app/api/inquiries/process/route.ts` | The scheduled job |
 | `app/api/inquiries/preview/route.ts` | Safe dry-run against pasted text |
 | `vercel.json` | Every 15 minutes |
+| `scripts/azure-app-setup.sh` | One-command app registration (M365 only) |
+| `scripts/outlook-auth.mjs` | One-time sign-in for the refresh token |
