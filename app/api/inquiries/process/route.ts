@@ -36,6 +36,7 @@ type Outcome = {
   excerpt?: string; // dry run only, and only when it could not be read
   bookUrl?: string; // where "Book these dates" points
   links?: { field: string; url: string }[]; // every link OwnerRez returned
+  quoteFields?: { field: string; value: string }[]; // and every other field
   sent: boolean;
   error?: string;
   html?: string; // dry run only
@@ -144,7 +145,14 @@ async function handle(
       total: reply.quote.total,
       quoteId: reply.quote.id,
       sent,
-      ...(dryRun ? { html: reply.html, bookUrl: reply.quote.url ?? undefined, links: reply.quote.links } : {}),
+      ...(dryRun
+        ? {
+            html: reply.html,
+            bookUrl: reply.quote.url ?? undefined,
+            links: reply.quote.links,
+            quoteFields: reply.quote.fields,
+          }
+        : {}),
     };
   }
 
