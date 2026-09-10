@@ -27,12 +27,12 @@ function firstName(full: string | null): string {
 const P = 'style="margin:0 0 14px;"';
 
 function shell(inner: string): string {
-  return `<div style="font-family:-apple-system,Segoe UI,Helvetica,Arial,sans-serif;font-size:15px;line-height:1.55;color:#1c2b33;">
+  return `<div style="font-family:-apple-system,Segoe UI,Helvetica,Arial,sans-serif;font-size:15px;line-height:1.55;color:#22312f;">
 ${inner}
 <p ${P}>Warmly,<br>The ${brand.name} team<br>
-<a href="tel:${brand.phone.replace(/\D/g, "")}" style="color:#1c6e8c;">${brand.phone}</a> ·
-<a href="mailto:${brand.email}" style="color:#1c6e8c;">${brand.email}</a><br>
-<a href="https://${brand.domain}" style="color:#1c6e8c;">${brand.domain}</a></p>
+<a href="tel:${brand.phone.replace(/\D/g, "")}" style="color:#14494a;">${brand.phone}</a> ·
+<a href="mailto:${brand.email}" style="color:#14494a;">${brand.email}</a><br>
+<a href="https://${brand.domain}" style="color:#14494a;">${brand.domain}</a></p>
 </div>`;
 }
 
@@ -40,15 +40,15 @@ function chargeTable(quote: CreatedQuote): string {
   const rows = quote.charges
     .map(
       (c) =>
-        `<tr><td style="padding:6px 16px 6px 0;color:#4a5b66;">${escapeHtml(c.label)}</td>` +
+        `<tr><td style="padding:6px 16px 6px 0;color:#5c6a68;">${escapeHtml(c.label)}</td>` +
         `<td style="padding:6px 0;text-align:right;white-space:nowrap;">${money(c.amount)}</td></tr>`
     )
     .join("\n");
 
   return `<table role="presentation" cellpadding="0" cellspacing="0" style="margin:0 0 16px;border-collapse:collapse;">
 ${rows}
-<tr><td style="padding:10px 16px 0 0;border-top:1px solid #dde5ea;font-weight:600;">Total</td>
-<td style="padding:10px 0 0;border-top:1px solid #dde5ea;text-align:right;font-weight:600;white-space:nowrap;">${money(quote.total)}</td></tr>
+<tr><td style="padding:10px 16px 0 0;border-top:1px solid #e6ddcf;font-weight:600;">Total</td>
+<td style="padding:10px 0 0;border-top:1px solid #e6ddcf;text-align:right;font-weight:600;white-space:nowrap;">${money(quote.total)}</td></tr>
 </table>`;
 }
 
@@ -71,9 +71,9 @@ ${chargeTable(quote)}
 <p ${P}>That${"'"}s the full price — rent, fees and taxes included, with nothing added later.
 ${quote.id ? `I${"'"}ve put a quote on hold for you, good through ${longDate(quote.expiresUtc.slice(0, 10))}.` : ""}</p>
 
-<p ${P}><a href="${bookUrl}" style="display:inline-block;background:#1c6e8c;color:#fff;text-decoration:none;padding:11px 22px;border-radius:6px;font-weight:600;">Book these dates</a></p>
+<p ${P}><a href="${bookUrl}" style="display:inline-block;background:#14494a;color:#fff;text-decoration:none;padding:11px 22px;border-radius:6px;font-weight:600;">Book these dates</a></p>
 
-<p ${P}>You can see more photos and the full details at <a href="${stayUrl}" style="color:#1c6e8c;">${escapeHtml(name)}</a>.
+<p ${P}>You can see more photos and the full details at <a href="${stayUrl}" style="color:#14494a;">${escapeHtml(name)}</a>.
 If you have any questions at all — or want to look at different dates — just reply to this email and I${"'"}ll help.</p>`);
 }
 
@@ -89,9 +89,9 @@ export function composeAlternativesReply(
       const p = getProperty(a.slug);
       if (!p) return "";
       return `<li style="margin-bottom:10px;">
-<a href="https://${brand.domain}/homes/${p.slug}" style="color:#1c6e8c;font-weight:600;">${escapeHtml(p.name)}</a>
+<a href="https://${brand.domain}/homes/${p.slug}" style="color:#14494a;font-weight:600;">${escapeHtml(p.name)}</a>
 — ${escapeHtml(p.location)}<br>
-<span style="color:#4a5b66;">Sleeps ${p.stats.sleeps} · ${money(a.total)} total for your dates</span></li>`;
+<span style="color:#5c6a68;">Sleeps ${p.stats.sleeps} · ${money(a.total)} total for your dates</span></li>`;
     })
     .filter(Boolean)
     .join("\n");
