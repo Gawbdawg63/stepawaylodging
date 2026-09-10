@@ -19,6 +19,16 @@
 
 // Accept the id as an argument first: `VAR=value cmd` is not valid syntax in
 // PowerShell or cmd.exe, so an argument is the one form that works everywhere.
+// Global fetch landed in Node 18. On an older Node this script fails with a
+// bare "fetch is not defined", which says nothing about the real problem.
+const NODE_MAJOR = Number(process.versions.node.split(".")[0]);
+if (NODE_MAJOR < 18) {
+  console.error(`\nThis needs Node 18 or newer — you have ${process.versions.node}.\n`);
+  console.error("Install the current version from https://nodejs.org, close this");
+  console.error("terminal, open a new one, and try again.\n");
+  process.exit(1);
+}
+
 const CLIENT_ID = (process.argv[2] || process.env.MS_CLIENT_ID || "").trim();
 const TENANT = process.env.MS_TENANT_ID?.trim() || "common";
 const SCOPE = "https://graph.microsoft.com/Mail.ReadWrite https://graph.microsoft.com/Mail.Send offline_access";
