@@ -155,6 +155,9 @@ export type CreatedQuote = {
   // dashboard so the right one can be identified by looking rather than
   // guessing at names that differ between their APIs.
   links: { field: string; url: string }[];
+  // Every scalar the quote came back with, for identifying a link that is not
+  // a bare http string — a payment-form token, an id, a relative path.
+  fields: { field: string; value: string }[];
 };
 
 // Walks the response for anything that looks like a guest-facing link. Field
@@ -174,6 +177,20 @@ function collectLinks(value: unknown, path = "", depth = 0): { field: string; ur
     );
   }
   return [];
+}
+
+// Flattens the response to field/value pairs. collectLinks only sees strings
+// that already look like URLs; OwnerRez may hand back a payment-form token or
+// an id that a link is built from, and this is how those become visible.
+function collectFields(value: unknown, path = "", depth = 0): { field: string; value: string }[] {
+  if (depth > 2 || value == null || path === "charges") return [];
+  if (typeof value === "object") {
+    if (Array.isArray(value)) return [];
+    return Object.entries(value as Record<string, unknown>).flatMap(([k, v]) =>
+      collectFields(v, path ? `${path}.${k}` : k, depth + 1)
+    );
+  }
+  return [{ field: path, value: String(value).slice(0, 120) }];
 }
 
 // Prefer a link that takes the guest somewhere they can act, over a bare
@@ -330,7 +347,27 @@ export async function createQuote(input: {
       expiresUtc,
       url: pickGuestLink(links),
       links,
+      fields: collectFields(data),
     };
+
+    // The create response is lean on some accounts. When it carried no link,
+    // read the quote back once — a read is safe, and it is the only way to see
+    // whether a payment form or booking link exists at all.
+    if (!quote.url && quote.id) {
+      try {
+        const full = await orFetch(`/v2/quotes/${quote.id}`, auth);
+        if (full.ok) {
+          const detail = (await full.json()) as Record<string, unknown>;
+          const moreLinks = collectLinks(detail).map((l) => ({ ...l, field: `GET ${l.field}` }));
+          quote.links = [...quote.links, ...moreLinks];
+          quote.fields = [...quote.fields, ...collectFields(detail).map((f) => ({ ...f, field: `GET ${f.field}` }))];
+          quote.url = pickGuestLink(quote.links);
+        }
+      } catch {
+        // Diagnostics only — never let this cost us a working quote.
+      }
+    }
+
     return { status: "created", quote };
   } catch (e) {
     return { status: "failed", detail: `Could not reach OwnerRez: ${String(e)}` };

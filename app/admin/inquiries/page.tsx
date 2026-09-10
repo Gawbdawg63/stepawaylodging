@@ -23,6 +23,7 @@ type Outcome = {
   excerpt?: string;
   bookUrl?: string;
   links?: { field: string; url: string }[];
+  quoteFields?: { field: string; value: string }[];
 };
 
 type ScanResult = { scanned: number; autoSend: boolean; results: Outcome[] };
@@ -275,8 +276,21 @@ function OutcomeCard({ outcome, accessKey }: { outcome: Outcome; accessKey: stri
               ))}
             </ul>
           )}
+          {outcome.links.length === 0 && (
+            <p className="mt-2 text-xs text-[var(--muted)]">
+              OwnerRez returned no link with this quote. Everything it <em>did</em> return is below —
+              a payment form or booking token would show up here.
+            </p>
+          )}
+
+          {outcome.quoteFields && outcome.quoteFields.length > 0 && (
+            <pre className="mt-2 max-h-72 overflow-auto whitespace-pre-wrap rounded-lg bg-[var(--sea-100)]/40 p-3 font-mono text-xs text-[var(--foreground)]">
+              {outcome.quoteFields.map((f) => `${f.field}: ${f.value}`).join("\n")}
+            </pre>
+          )}
+
           <p className="mt-1.5 text-xs text-[var(--muted)]">
-            Every link OwnerRez returned with the quote. Send these over and the right one can be wired in.
+            Copy this and send it over — the right field can then be wired in.
           </p>
         </details>
       )}
