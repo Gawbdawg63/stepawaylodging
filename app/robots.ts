@@ -4,7 +4,7 @@ import { brand } from "@/lib/content";
 export default function robots(): MetadataRoute.Robots {
   const base = `https://${brand.domain}`;
   return {
-    rules: [{ userAgent: "*", allow: "/" }],
+    rules: [{ userAgent: "*", allow: "/", disallow: ["/admin", "/api/"] }],
     sitemap: `${base}/sitemap.xml`,
     host: base,
   };

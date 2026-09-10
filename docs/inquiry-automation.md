@@ -71,6 +71,21 @@ tenant can use app-only auth instead of step 3 (`MS_TENANT_ID`,
 `MS_CLIENT_SECRET`, `MS_MAILBOX`, with admin-consented *application*
 permissions), but the refresh token works for both account types.
 
+## The dashboard
+
+`https://stepawaylodging.com/admin/inquiries` is the no-terminal way to watch
+the robot. Sign in with the `INQUIRY_JOB_SECRET` (held in that browser tab only,
+never sent anywhere but this site) and it offers two read-only checks:
+
+- **Check the inbox** — runs the dry run and lists each unanswered inquiry with
+  the home, dates and guest it read, plus the reply it would send. Sends
+  nothing, drafts nothing, leaves every email unread. It also states plainly
+  whether automatic sending is currently on.
+- **Try an email** — paste any inquiry, even an old one, and see how it is read.
+  Never touches the mailbox.
+
+The page is excluded from search engines via `robots.ts`.
+
 ## Checking it without involving a guest
 
 `POST /api/inquiries/preview` takes a pasted email and shows exactly what the
@@ -120,6 +135,7 @@ knowing:
 | `lib/reply.ts` | The three reply emails |
 | `app/api/inquiries/process/route.ts` | The scheduled job |
 | `app/api/inquiries/preview/route.ts` | Safe dry-run against pasted text |
+| `app/admin/inquiries/page.tsx` | The dashboard |
 | `vercel.json` | Every 15 minutes |
 | `scripts/azure-app-setup.sh` | One-command app registration (M365 only) |
 | `scripts/outlook-auth.mjs` | One-time sign-in for the refresh token |
