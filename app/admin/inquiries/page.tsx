@@ -20,6 +20,7 @@ type Outcome = {
   missing?: string[];
   error?: string;
   html?: string;
+  excerpt?: string;
 };
 
 type ScanResult = { scanned: number; autoSend: boolean; results: Outcome[] };
@@ -251,6 +252,20 @@ function OutcomeCard({ outcome }: { outcome: Outcome }) {
           Couldn&apos;t read: {outcome.missing.join(", ")}. This one is left for you to answer.
         </p>
       ) : null}
+
+      {outcome.excerpt && (
+        <details className="mt-3">
+          <summary className="cursor-pointer text-sm text-[var(--sea)] underline underline-offset-2">
+            See what the email actually said
+          </summary>
+          <pre className="mt-2 max-h-72 overflow-auto whitespace-pre-wrap rounded-lg bg-[var(--sea-100)]/40 p-3 font-mono text-xs text-[var(--foreground)]">
+            {outcome.excerpt}
+          </pre>
+          <p className="mt-1.5 text-xs text-[var(--muted)]">
+            Copy this and send it over — it shows exactly which wording the parser is missing.
+          </p>
+        </details>
+      )}
 
       {outcome.error && (
         <p className="mt-3 rounded-lg bg-[#fbe9e9] p-3 text-sm text-[#9b3232]">{outcome.error}</p>

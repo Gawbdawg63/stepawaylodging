@@ -35,6 +35,7 @@ type Outcome = {
   total?: number;
   quoteId?: number | null;
   missing?: string[];
+  excerpt?: string; // dry run only, and only when it could not be read
   sent: boolean;
   error?: string;
   html?: string; // dry run only
@@ -119,7 +120,15 @@ async function handle(
       await saveDraftReply(message.id, html, inquiry.guestEmail ?? undefined);
       await flagForReview(message.id, CATEGORY_REVIEW);
     }
-    return { ...base, action: "needs-review", missing: inquiry.missing, sent: false, ...(dryRun ? { html } : {}) };
+    return {
+      ...base,
+      action: "needs-review",
+      missing: inquiry.missing,
+      sent: false,
+      // Showing the raw text is the difference between guessing at a template
+      // and reading it. Dry run only, and only for the ones that failed.
+      ...(dryRun ? { html, excerpt: message.body.slice(0, 1500) } : {}),
+    };
   }
 
   const quote = await createQuote({
