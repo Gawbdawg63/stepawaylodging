@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // One-time setup: get a Microsoft Graph refresh token for the inquiry mailbox.
 //
-//   npm run outlook:auth -- <application id>
+//   npm run outlook:auth -- <application id> [directory (tenant) id]
 //
 // (MS_CLIENT_ID in the environment works too, but the argument form is the same
 // on macOS, Linux and Windows PowerShell, so prefer it.)
@@ -30,7 +30,10 @@ if (NODE_MAJOR < 18) {
 }
 
 const CLIENT_ID = (process.argv[2] || process.env.MS_CLIENT_ID || "").trim();
-const TENANT = process.env.MS_TENANT_ID?.trim() || "common";
+// A single-tenant app registration cannot be resolved from the generic
+// "common" endpoint during device-code sign-in, because that first request
+// carries no user to imply a tenant. Passing the directory id fixes it.
+const TENANT = (process.argv[3] || process.env.MS_TENANT_ID || "common").trim();
 const SCOPE = "https://graph.microsoft.com/Mail.ReadWrite https://graph.microsoft.com/Mail.Send offline_access";
 const LOGIN = `https://login.microsoftonline.com/${TENANT}/oauth2/v2.0`;
 
@@ -51,10 +54,19 @@ if (!start.ok) {
   // like, and the raw message ("no tenant-identifying information") gives no
   // hint of that — so say what actually needs fixing.
   if (/50059|700016|unauthorized_client/.test(body)) {
-    console.error(`\nMicrosoft did not recognise that application id:\n\n  ${CLIENT_ID}\n`);
-    console.error("Check you copied the \"Application (client) ID\" from the app registration");
-    console.error("(not the object id or the directory id). If the app was only just");
-    console.error("created, give it a minute and try again.\n");
+    console.error(`\nMicrosoft would not accept that application id:\n\n  ${CLIENT_ID}\n`);
+    if (TENANT === "common") {
+      console.error("Most likely the app is registered for one organisation only, which");
+      console.error("is the default. Run it again with your Directory (tenant) ID as a");
+      console.error("second value — it is on the same app registration overview page:\n");
+      console.error(`  npm run outlook:auth -- ${CLIENT_ID} <directory (tenant) id>\n`);
+      console.error("Otherwise, check you copied the \"Application (client) ID\" and not");
+      console.error("the object id. A brand new registration can also take a minute.\n");
+    } else {
+      console.error(`It was not found in the directory you gave:\n\n  ${TENANT}\n`);
+      console.error("Check both values on the app registration overview page — the");
+      console.error("\"Application (client) ID\" and the \"Directory (tenant) ID\".\n");
+    }
   } else {
     console.error(`\nCould not start device login (${start.status}):\n${body}\n`);
   }

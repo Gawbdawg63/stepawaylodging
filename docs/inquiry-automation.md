@@ -49,6 +49,17 @@ so register it by hand instead — [portal.azure.com](https://portal.azure.com)
 npm run outlook:auth -- <application id>
 ```
 
+If that reports `AADSTS50059`, the registration is single-tenant (the default),
+so device-code sign-in cannot resolve it from the generic `common` endpoint.
+Pass the Directory (tenant) ID as a second value — both are on the app
+registration's overview page:
+
+```bash
+npm run outlook:auth -- <application id> <directory (tenant) id>
+```
+
+Set `MS_TENANT_ID` in Vercel to that same directory id when you do.
+
 It prints a short code, you sign in as the inquiry mailbox in a browser, and it
 prints the `MS_REFRESH_TOKEN` to paste into Vercel. The argument form works the
 same in macOS Terminal, Linux and Windows PowerShell.
