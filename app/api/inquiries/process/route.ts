@@ -36,6 +36,8 @@ type Outcome = {
   quoteId?: number | null;
   missing?: string[];
   excerpt?: string; // dry run only, and only when it could not be read
+  bookUrl?: string; // where "Book these dates" points
+  links?: { field: string; url: string }[]; // every link OwnerRez returned
   sent: boolean;
   error?: string;
   html?: string; // dry run only
@@ -152,7 +154,7 @@ async function handle(
       total: quote.total,
       quoteId: quote.id,
       sent,
-      ...(dryRun ? { html } : {}),
+      ...(dryRun ? { html, bookUrl: quote.url ?? undefined, links: quote.links } : {}),
     };
   }
 

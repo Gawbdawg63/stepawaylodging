@@ -21,6 +21,8 @@ type Outcome = {
   error?: string;
   html?: string;
   excerpt?: string;
+  bookUrl?: string;
+  links?: { field: string; url: string }[];
 };
 
 type ScanResult = { scanned: number; autoSend: boolean; results: Outcome[] };
@@ -171,7 +173,8 @@ function InboxCheck({ accessKey, onExpired }: { accessKey: string; onExpired: ()
       <h2 className="font-display text-2xl text-[var(--sea)]">What&apos;s waiting in the inbox</h2>
       <p className="mt-1.5 text-sm text-[var(--muted)]">
         Reads unanswered Beachcombers NW inquiries from the last few days and shows what the robot
-        would do with each one. It sends nothing and leaves every email unread.
+        would do with each one. It sends no email, writes no draft, and leaves every message unread —
+        but it does create the quote in OwnerRez, which is how it knows the price.
       </p>
 
       <button
@@ -252,6 +255,29 @@ function OutcomeCard({ outcome }: { outcome: Outcome }) {
           Couldn&apos;t read: {outcome.missing.join(", ")}. This one is left for you to answer.
         </p>
       ) : null}
+
+      {outcome.links && (
+        <details className="mt-3">
+          <summary className="cursor-pointer text-sm text-[var(--sea)] underline underline-offset-2">
+            Where &ldquo;Book these dates&rdquo; points
+          </summary>
+          <p className="mt-2 break-all text-xs text-[var(--muted)]">
+            Using: <span className="text-[var(--foreground)]">{outcome.bookUrl ?? "the listing page (OwnerRez sent no link)"}</span>
+          </p>
+          {outcome.links.length > 0 && (
+            <ul className="mt-2 space-y-1">
+              {outcome.links.map((l) => (
+                <li key={l.field} className="break-all text-xs text-[var(--muted)]">
+                  <span className="font-mono text-[var(--foreground)]">{l.field}</span> — {l.url}
+                </li>
+              ))}
+            </ul>
+          )}
+          <p className="mt-1.5 text-xs text-[var(--muted)]">
+            Every link OwnerRez returned with the quote. Send these over and the right one can be wired in.
+          </p>
+        </details>
+      )}
 
       {outcome.excerpt && (
         <details className="mt-3">
