@@ -34,3 +34,10 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+## Guest inquiry automation
+
+Beachcombers NW inquiries are answered automatically — availability checked in
+OwnerRez, a quote created, and the guest emailed back. See
+[docs/inquiry-automation.md](docs/inquiry-automation.md) for setup and for how
+to check a reply before it reaches anyone.
