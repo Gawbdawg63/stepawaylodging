@@ -39,6 +39,14 @@ const ALIASES: Record<string, string> = {
   "ebb flow": "ebb-and-flow",
 };
 
+// What can sit between the two halves of a date range. Beachcombers NW uses a
+// right arrow; other templates use dashes or words. Kept in one place so every
+// range pattern below accepts the same set.
+const DATE =
+  "(?:[A-Za-z]{3,9}\\.?\\s+\\d{1,2}(?:st|nd|rd|th)?(?:,?\\s*\\d{4})?|\\d{1,2}[/.-]\\d{1,2}[/.-]\\d{2,4}|\\d{4}-\\d{1,2}-\\d{1,2})";
+
+const RANGE_SEP = "(?:-{1,2}>|=>|→|➔|➜|⇒|⟶|»|–|—|-|to|through|thru|until|till|til)";
+
 const MONTHS: Record<string, number> = {
   jan: 1, feb: 2, mar: 3, apr: 4, may: 5, jun: 6,
   jul: 7, aug: 8, sep: 9, oct: 10, nov: 11, dec: 12,
@@ -192,7 +200,7 @@ export function parseInquiry(
   // because the second half carries no month of its own.
   if (!arrival || !departure) {
     const sameMonth = body.match(
-      /\b([A-Za-z]{3,9})\.?\s+(\d{1,2})(?:st|nd|rd|th)?\s*(?:-|–|—|to|through|thru|until)\s*(\d{1,2})(?:st|nd|rd|th)?(?:,?\s*(\d{4}))?/i
+      new RegExp(`\\b([A-Za-z]{3,9})\\.?\\s+(\\d{1,2})(?:st|nd|rd|th)?\\s*${RANGE_SEP}\\s*(\\d{1,2})(?:st|nd|rd|th)?(?:,?\\s*(\\d{4}))?`, "i")
     );
     if (sameMonth && MONTHS[sameMonth[1].slice(0, 3).toLowerCase()]) {
       const year = sameMonth[4] ?? "";
@@ -203,7 +211,9 @@ export function parseInquiry(
 
   // The same idea in slashes without a year — "10/1 - 10/8".
   if (!arrival || !departure) {
-    const slashes = body.match(/\b(\d{1,2})\/(\d{1,2})\s*(?:-|–|—|to|through|thru|until)\s*(\d{1,2})\/(\d{1,2})\b(?!\s*[/-]\s*\d)/);
+    const slashes = body.match(
+      new RegExp(`\\b(\\d{1,2})/(\\d{1,2})\\s*${RANGE_SEP}\\s*(\\d{1,2})/(\\d{1,2})\\b(?!\\s*[/-]\\s*\\d)`)
+    );
     if (slashes) {
       const year = today.getUTCFullYear();
       arrival = arrival ?? parseDate(`${slashes[1]}/${slashes[2]}/${year}`, today);
@@ -216,9 +226,7 @@ export function parseInquiry(
   // Fall back to a "July 4 - July 11" / "7/4/26 to 7/11/26" range anywhere in
   // the text when the template used no labels at all.
   if (!arrival || !departure) {
-    const range = body.match(
-      /([A-Za-z]{3,9}\.?\s+\d{1,2}(?:st|nd|rd|th)?(?:,?\s*\d{4})?|\d{1,2}[/.-]\d{1,2}[/.-]\d{2,4}|\d{4}-\d{1,2}-\d{1,2})\s*(?:-|–|—|to|through|thru|until)\s*([A-Za-z]{3,9}\.?\s+\d{1,2}(?:st|nd|rd|th)?(?:,?\s*\d{4})?|\d{1,2}[/.-]\d{1,2}[/.-]\d{2,4}|\d{4}-\d{1,2}-\d{1,2})/i
-    );
+    const range = body.match(new RegExp(`(${DATE})\\s*${RANGE_SEP}\\s*(${DATE})`, "i"));
     if (range) {
       arrival = arrival ?? parseDate(range[1], today);
       departure = departure ?? parseDate(range[2], today);
