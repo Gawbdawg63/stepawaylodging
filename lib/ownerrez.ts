@@ -283,10 +283,9 @@ export async function createQuote(input: {
         adults: input.adults,
         children: input.children ?? 0,
         generate_charges: true,
-        // Asks OwnerRez for a link the guest can act on. Ignored harmlessly if
-        // this account or endpoint does not offer one.
-        create_redirect_url: true,
-        createRedirectUrl: true,
+        // Nothing speculative goes in this body. OwnerRez rejects an unknown
+        // field with a 400 for the whole request, so a guessed property name
+        // does not degrade — it stops every quote from being created.
         expires_utc: expiresUtc,
         ...(guestId ? { guest_id: guestId } : {}),
         ...(input.notes ? { notes: input.notes } : {}),
