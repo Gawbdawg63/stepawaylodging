@@ -12,7 +12,7 @@ type Outcome = {
   messageId: string;
   subject: string;
   guest: string | null;
-  action: "quoted" | "offered-alternatives" | "needs-review" | "error";
+  action: "quoted" | "offered-alternatives" | "needs-review" | "blocked" | "error";
   slug?: string | null;
   arrival?: string | null;
   departure?: string | null;
@@ -210,7 +210,7 @@ function InboxCheck({ accessKey, onExpired }: { accessKey: string; onExpired: ()
             <ul className="mt-4 space-y-4">
               {data.results.map((r) => (
                 <li key={r.messageId}>
-                  <OutcomeCard outcome={r} />
+                  <OutcomeCard outcome={r} accessKey={accessKey} />
                 </li>
               ))}
             </ul>
@@ -221,7 +221,7 @@ function InboxCheck({ accessKey, onExpired }: { accessKey: string; onExpired: ()
   );
 }
 
-function OutcomeCard({ outcome }: { outcome: Outcome }) {
+function OutcomeCard({ outcome, accessKey }: { outcome: Outcome; accessKey: string }) {
   const [open, setOpen] = useState(false);
 
   const tone =
@@ -231,7 +231,9 @@ function OutcomeCard({ outcome }: { outcome: Outcome }) {
         ? { label: "Booked — would offer other homes", cls: "bg-[var(--sea-100)] text-[var(--sea)]" }
         : outcome.action === "needs-review"
           ? { label: "Needs you", cls: "bg-[#fdf1e0] text-[var(--sand-600)]" }
-          : { label: "Error", cls: "bg-[#fbe9e9] text-[#9b3232]" };
+          : outcome.action === "blocked"
+            ? { label: "Couldn't price it", cls: "bg-[#fbe9e9] text-[#9b3232]" }
+            : { label: "Error", cls: "bg-[#fbe9e9] text-[#9b3232]" };
 
   return (
     <div className="rounded-xl border border-[var(--border)] p-4">
@@ -308,6 +310,94 @@ function OutcomeCard({ outcome }: { outcome: Outcome }) {
           {open && <ReplyPreview html={outcome.html} />}
         </>
       )}
+
+      {(outcome.action === "quoted" || outcome.action === "offered-alternatives") && (
+        <SendControl messageId={outcome.messageId} to={outcome.guest} accessKey={accessKey} />
+      )}
+    </div>
+  );
+}
+
+function SendControl({
+  messageId,
+  to,
+  accessKey,
+}: {
+  messageId: string;
+  to: string | null;
+  accessKey: string;
+}) {
+  const [stage, setStage] = useState<"idle" | "confirm" | "sending" | "sent" | "error">("idle");
+  const [error, setError] = useState("");
+
+  async function send() {
+    setStage("sending");
+    setError("");
+    try {
+      const res = await fetch("/api/inquiries/send", {
+        method: "POST",
+        headers: { "x-inquiry-secret": accessKey, "Content-Type": "application/json" },
+        body: JSON.stringify({ messageId }),
+      });
+      const data = (await res.json().catch(() => ({}))) as { error?: string };
+      if (!res.ok) {
+        setError(data.error ?? `Could not send (${res.status}).`);
+        setStage("error");
+        return;
+      }
+      setStage("sent");
+    } catch {
+      setError("Could not reach the site. Nothing was sent.");
+      setStage("error");
+    }
+  }
+
+  if (stage === "sent") {
+    return (
+      <p className="mt-4 rounded-lg bg-[var(--sea-100)] p-3 text-sm font-medium text-[var(--sea)]">
+        Sent to {to ?? "the guest"}. It&apos;s in your Sent Items, marked <em>Quoted by Step Away bot</em>.
+      </p>
+    );
+  }
+
+  return (
+    <div className="mt-4 border-t border-[var(--border)] pt-4">
+      {stage === "confirm" ? (
+        <div className="flex flex-wrap items-center gap-3">
+          <span className="text-sm text-[var(--foreground)]">
+            Send this to <strong>{to ?? "the guest"}</strong>?
+          </span>
+          <button
+            onClick={send}
+            className="rounded-lg bg-[var(--sea)] px-4 py-2 text-sm font-medium text-white transition hover:bg-[var(--sea-700)]"
+          >
+            Yes, send it
+          </button>
+          <button
+            onClick={() => setStage("idle")}
+            className="text-sm text-[var(--muted)] underline underline-offset-2"
+          >
+            Cancel
+          </button>
+        </div>
+      ) : (
+        <button
+          onClick={() => setStage("confirm")}
+          disabled={stage === "sending"}
+          className="rounded-lg border border-[var(--sea)] px-4 py-2 text-sm font-medium text-[var(--sea)] transition hover:bg-[var(--sea-100)] disabled:opacity-60"
+        >
+          {stage === "sending" ? "Sending…" : "Send this reply"}
+        </button>
+      )}
+
+      {stage === "error" && (
+        <p className="mt-3 rounded-lg bg-[#fbe9e9] p-3 text-sm text-[#9b3232]">{error}</p>
+      )}
+
+      <p className="mt-2 text-xs text-[var(--muted)]">
+        This goes to the guest for real. The reply is rebuilt from the email as it sends, so it
+        matches the preview above.
+      </p>
     </div>
   );
 }

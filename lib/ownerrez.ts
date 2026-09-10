@@ -233,9 +233,19 @@ async function findOrCreateGuest(
   }
 }
 
-// Creates the saved quote. Returns null when the dates are not bookable — an
-// unavailable stay and a rejected request look the same from here, which is
-// exactly how we want to treat them: no quote, no automatic reply.
+// Telling a guest a home is booked when it is not is the worst thing this can
+// do, so an unavailable stay and a failed request are kept apart. Only
+// OwnerRez actually saying the dates are taken produces "unavailable";
+// anything else is "failed", which goes to a human and never to a guest.
+export type QuoteOutcome =
+  | { status: "created"; quote: CreatedQuote }
+  | { status: "unavailable" }
+  | { status: "failed"; detail: string };
+
+// Phrases OwnerRez uses when the dates genuinely cannot be booked. Anything
+// outside this list is treated as a fault on our side, not a full calendar.
+const UNAVAILABLE = /not available|unavailable|already booked|conflict|blocked|overlap|no availability|minimum stay|min stay|too short|cannot be booked/i;
+
 export async function createQuote(input: {
   slug: string;
   arrival: string;
@@ -247,13 +257,15 @@ export async function createQuote(input: {
   guestPhone?: string | null;
   notes?: string;
   expiresInDays?: number;
-}): Promise<CreatedQuote | null> {
+}): Promise<QuoteOutcome> {
   const id = PROPERTY_IDS[input.slug];
+  if (!id) return { status: "failed", detail: `No OwnerRez property id for "${input.slug}".` };
+
   const auth = authHeader();
-  if (!id || !auth) return null;
+  if (!auth) return { status: "failed", detail: "OWNERREZ_TOKEN is not set." };
 
   const nights = nightsBetween(input.arrival, input.departure);
-  if (nights <= 0) return null;
+  if (nights <= 0) return { status: "failed", detail: "The dates are not a real stay." };
 
   const guestId = input.guestEmail
     ? await findOrCreateGuest(auth, input.guestEmail, input.guestName ?? null, input.guestPhone ?? null)
@@ -280,7 +292,15 @@ export async function createQuote(input: {
         ...(input.notes ? { notes: input.notes } : {}),
       }),
     });
-    if (!res.ok) return null;
+    if (!res.ok) {
+      const detail = (await res.text().catch(() => "")).slice(0, 400);
+      // Only OwnerRez saying the dates are taken counts as booked. A 500, a
+      // rate limit, or a validation slip must never reach a guest as "sorry,
+      // it's gone".
+      return UNAVAILABLE.test(detail)
+        ? { status: "unavailable" }
+        : { status: "failed", detail: `OwnerRez said ${res.status}: ${detail || "no detail"}` };
+    }
 
     const data = (await res.json()) as {
       id?: number;
@@ -296,9 +316,13 @@ export async function createQuote(input: {
       }))
       .filter((c) => c.amount);
     const total = charges.reduce((s, c) => s + c.amount, 0);
-    if (total <= 0) return null;
+    // A priced-at-zero quote means OwnerRez accepted the request but could not
+    // price the stay — not a booked calendar.
+    if (total <= 0) {
+      return { status: "failed", detail: "OwnerRez returned a quote with no charges on it." };
+    }
 
-    return {
+    const quote: CreatedQuote = {
       id: typeof data.id === "number" ? data.id : null,
       total: Math.round(total),
       nights,
@@ -308,7 +332,8 @@ export async function createQuote(input: {
       url: pickGuestLink(links),
       links,
     };
-  } catch {
-    return null;
+    return { status: "created", quote };
+  } catch (e) {
+    return { status: "failed", detail: `Could not reach OwnerRez: ${String(e)}` };
   }
 }

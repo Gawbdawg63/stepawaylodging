@@ -1,9 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { fetchInquiries, sendReply, saveDraftReply, markHandled, flagForReview, outlookConfigured } from "@/lib/outlook";
-import { parseInquiry, type ParsedInquiry } from "@/lib/inquiry";
-import { createQuote, searchAvailability } from "@/lib/ownerrez";
-import { composeQuoteReply, composeAlternativesReply, composeNeedsInfoReply } from "@/lib/reply";
-import { brand } from "@/lib/content";
+import { type ParsedInquiry } from "@/lib/inquiry";
+import { buildReply } from "@/lib/respond";
 
 export const dynamic = "force-dynamic";
 export const maxDuration = 60;
@@ -28,7 +26,7 @@ type Outcome = {
   messageId: string;
   subject: string;
   guest: string | null;
-  action: "quoted" | "offered-alternatives" | "needs-review" | "error";
+  action: "quoted" | "offered-alternatives" | "needs-review" | "blocked" | "error";
   slug?: string | null;
   arrival?: string | null;
   departure?: string | null;
@@ -104,7 +102,8 @@ async function handle(
   message: { id: string; subject: string; body: string; from: string },
   dryRun: boolean
 ): Promise<Outcome> {
-  const inquiry = parseInquiry(message.subject, message.body, { senderDomain: SENDER_DOMAIN });
+  const reply = await buildReply(message.subject, message.body, SENDER_DOMAIN);
+  const inquiry = reply.inquiry;
   const base = {
     messageId: message.id,
     subject: message.subject,
@@ -114,12 +113,9 @@ async function handle(
     departure: inquiry.departure,
   };
 
-  // Anything we could not read confidently never gets an automatic reply — a
-  // wrong home or a wrong week reaching a guest is far worse than a slow one.
-  if (inquiry.missing.length) {
-    const html = composeNeedsInfoReply(inquiry);
+  if (reply.kind === "needs-info") {
     if (!dryRun) {
-      await saveDraftReply(message.id, html, inquiry.guestEmail ?? undefined);
+      await saveDraftReply(message.id, reply.html, inquiry.guestEmail ?? undefined);
       await flagForReview(message.id, CATEGORY_REVIEW);
     }
     return {
@@ -129,49 +125,30 @@ async function handle(
       sent: false,
       // Showing the raw text is the difference between guessing at a template
       // and reading it. Dry run only, and only for the ones that failed.
-      ...(dryRun ? { html, excerpt: message.body.slice(0, 1500) } : {}),
+      ...(dryRun ? { html: reply.html, excerpt: message.body.slice(0, 1500) } : {}),
     };
   }
 
-  const quote = await createQuote({
-    slug: inquiry.slug!,
-    arrival: inquiry.arrival!,
-    departure: inquiry.departure!,
-    adults: inquiry.adults,
-    children: inquiry.children,
-    guestEmail: inquiry.guestEmail,
-    guestName: inquiry.guestName,
-    guestPhone: inquiry.phone,
-    notes: quoteNote(inquiry),
-  });
+  // A quote we could not price is never guessed at in front of a guest.
+  if (reply.kind === "blocked") {
+    if (!dryRun) await flagForReview(message.id, CATEGORY_REVIEW);
+    return { ...base, action: "blocked", sent: false, error: reply.detail };
+  }
 
-  if (quote) {
-    const html = composeQuoteReply(inquiry, quote);
-    const sent = await deliver(message.id, html, inquiry, dryRun);
+  const sent = await deliver(message.id, reply.html, inquiry, dryRun);
+
+  if (reply.kind === "quoted") {
     return {
       ...base,
       action: "quoted",
-      total: quote.total,
-      quoteId: quote.id,
+      total: reply.quote.total,
+      quoteId: reply.quote.id,
       sent,
-      ...(dryRun ? { html, bookUrl: quote.url ?? undefined, links: quote.links } : {}),
+      ...(dryRun ? { html: reply.html, bookUrl: reply.quote.url ?? undefined, links: reply.quote.links } : {}),
     };
   }
 
-  // The requested home is taken. Offer whatever else is genuinely free rather
-  // than sending the guest away with a bare "sorry".
-  const search = await searchAvailability(inquiry.arrival!, inquiry.departure!, inquiry.adults);
-  const alternatives =
-    search.ok
-      ? search.rows
-          .filter((r) => r.available && r.total !== null && r.slug !== inquiry.slug)
-          .map((r) => ({ slug: r.slug, total: r.total as number }))
-          .sort((a, b) => a.total - b.total)
-      : [];
-
-  const html = composeAlternativesReply(inquiry, alternatives);
-  const sent = await deliver(message.id, html, inquiry, dryRun);
-  return { ...base, action: "offered-alternatives", sent, ...(dryRun ? { html } : {}) };
+  return { ...base, action: "offered-alternatives", sent, ...(dryRun ? { html: reply.html } : {}) };
 }
 
 async function deliver(
@@ -190,16 +167,4 @@ async function deliver(
   await saveDraftReply(messageId, html, to);
   await flagForReview(messageId, CATEGORY_REVIEW);
   return false;
-}
-
-// Written onto the OwnerRez quote so the record says where it came from.
-function quoteNote(inquiry: ParsedInquiry): string {
-  const parts = [
-    `Auto-quoted from a Beachcombers NW enquiry (${brand.domain}).`,
-    inquiry.guestName ? `Guest: ${inquiry.guestName}` : null,
-    inquiry.phone ? `Phone: ${inquiry.phone}` : null,
-    inquiry.pets ? "Guest mentioned pets." : null,
-    inquiry.note ? `Their message: ${inquiry.note}` : null,
-  ];
-  return parts.filter(Boolean).join("\n");
 }
