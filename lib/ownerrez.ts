@@ -135,3 +135,143 @@ export function nightsBetween(arrival: string, departure: string): number {
   const n = Math.round((d.getTime() - a.getTime()) / 86400000);
   return n > 0 ? n : 0;
 }
+
+// ---------------------------------------------------------------------------
+// Saved quotes
+//
+// getQuote() above only prices a stay — it throws the response away. To send a
+// guest a real quote we need the record OwnerRez keeps, so these create one.
+// ---------------------------------------------------------------------------
+
+export type CreatedQuote = {
+  id: number | null;
+  total: number;
+  nights: number;
+  charges: { label: string; amount: number }[];
+  guestId: number | null;
+  expiresUtc: string;
+  url: string | null; // OwnerRez-hosted quote link, when the API returns one
+};
+
+async function orFetch(path: string, auth: string, init: RequestInit = {}): Promise<Response> {
+  return fetch(`${BASE}${path}`, {
+    ...init,
+    headers: {
+      Authorization: auth,
+      Accept: "application/json",
+      ...(init.body ? { "Content-Type": "application/json" } : {}),
+      ...init.headers,
+    },
+    cache: "no-store",
+  });
+}
+
+// Best-effort: reuse an existing guest record so repeat enquiries from the same
+// person do not pile up duplicates. Never fatal — a quote can stand without a
+// guest attached, and we would rather send a correct price than nothing.
+async function findOrCreateGuest(
+  auth: string,
+  email: string,
+  name: string | null,
+  phone: string | null
+): Promise<number | null> {
+  try {
+    const found = await orFetch(`/v2/guests?q=${encodeURIComponent(email)}`, auth);
+    if (found.ok) {
+      const data = (await found.json()) as { items?: { id?: number }[] };
+      const id = data.items?.[0]?.id;
+      if (typeof id === "number") return id;
+    }
+
+    const [first, ...rest] = (name ?? "").trim().split(/\s+/).filter(Boolean);
+    const created = await orFetch(`/v2/guests`, auth, {
+      method: "POST",
+      body: JSON.stringify({
+        first_name: first || "Guest",
+        last_name: rest.join(" ") || "-",
+        email_addresses: [{ address: email, type: "home", is_default: true }],
+        ...(phone ? { phones: [{ number: phone, type: "mobile", is_default: true }] } : {}),
+      }),
+    });
+    if (!created.ok) return null;
+    const guest = (await created.json()) as { id?: number };
+    return typeof guest.id === "number" ? guest.id : null;
+  } catch {
+    return null;
+  }
+}
+
+// Creates the saved quote. Returns null when the dates are not bookable — an
+// unavailable stay and a rejected request look the same from here, which is
+// exactly how we want to treat them: no quote, no automatic reply.
+export async function createQuote(input: {
+  slug: string;
+  arrival: string;
+  departure: string;
+  adults: number;
+  children?: number;
+  guestEmail?: string | null;
+  guestName?: string | null;
+  guestPhone?: string | null;
+  notes?: string;
+  expiresInDays?: number;
+}): Promise<CreatedQuote | null> {
+  const id = PROPERTY_IDS[input.slug];
+  const auth = authHeader();
+  if (!id || !auth) return null;
+
+  const nights = nightsBetween(input.arrival, input.departure);
+  if (nights <= 0) return null;
+
+  const guestId = input.guestEmail
+    ? await findOrCreateGuest(auth, input.guestEmail, input.guestName ?? null, input.guestPhone ?? null)
+    : null;
+
+  const expiresUtc = new Date(Date.now() + (input.expiresInDays ?? 7) * 86400000).toISOString();
+
+  try {
+    const res = await orFetch(`/v2/quotes`, auth, {
+      method: "POST",
+      body: JSON.stringify({
+        property_id: id,
+        arrival: input.arrival,
+        departure: input.departure,
+        adults: input.adults,
+        children: input.children ?? 0,
+        generate_charges: true,
+        expires_utc: expiresUtc,
+        ...(guestId ? { guest_id: guestId } : {}),
+        ...(input.notes ? { notes: input.notes } : {}),
+      }),
+    });
+    if (!res.ok) return null;
+
+    const data = (await res.json()) as {
+      id?: number;
+      url?: string;
+      quote_url?: string;
+      charges?: { amount?: number; description?: string; title?: string; name?: string; type?: string }[];
+    };
+
+    const charges = (data.charges ?? [])
+      .map((c) => ({
+        label: c.description || c.title || c.name || c.type || "Charge",
+        amount: typeof c.amount === "number" ? c.amount : 0,
+      }))
+      .filter((c) => c.amount);
+    const total = charges.reduce((s, c) => s + c.amount, 0);
+    if (total <= 0) return null;
+
+    return {
+      id: typeof data.id === "number" ? data.id : null,
+      total: Math.round(total),
+      nights,
+      charges,
+      guestId,
+      expiresUtc,
+      url: data.url || data.quote_url || null,
+    };
+  } catch {
+    return null;
+  }
+}

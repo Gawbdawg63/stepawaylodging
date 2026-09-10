@@ -6,7 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "outlook:auth": "node scripts/outlook-auth.mjs",
+    "azure:setup": "bash scripts/azure-app-setup.sh"
   },
   "dependencies": {
     "@vercel/analytics": "^2.0.1",
