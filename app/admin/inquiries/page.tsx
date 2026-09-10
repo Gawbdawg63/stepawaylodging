@@ -1,0 +1,389 @@
+"use client";
+
+import { useCallback, useState, useSyncExternalStore } from "react";
+
+// A private page for watching the inquiry robot without a terminal.
+//
+// Everything here is read-only: the inbox check runs in dry-run mode, so it
+// never sends, drafts, or marks anything read, and the email tester never
+// touches the mailbox at all. The access key is held only in this tab.
+
+type Outcome = {
+  messageId: string;
+  subject: string;
+  guest: string | null;
+  action: "quoted" | "offered-alternatives" | "needs-review" | "error";
+  slug?: string | null;
+  arrival?: string | null;
+  departure?: string | null;
+  total?: number;
+  missing?: string[];
+  error?: string;
+  html?: string;
+};
+
+type ScanResult = { scanned: number; autoSend: boolean; results: Outcome[] };
+
+type Parsed = {
+  guestName: string | null;
+  guestEmail: string | null;
+  slug: string | null;
+  arrival: string | null;
+  departure: string | null;
+  adults: number;
+  missing: string[];
+};
+
+type PreviewResult = { parsed: Parsed; wouldSend: boolean; available?: boolean; reason?: string; html: string };
+
+const KEY = "sal-inquiry-key";
+
+// The key lives in sessionStorage so a reload does not ask for it again, and it
+// is gone when the tab closes. Read through useSyncExternalStore rather than an
+// effect: the server has no sessionStorage, and this keeps the two in step
+// without a render-triggering setState.
+const listeners = new Set<() => void>();
+
+function readKey(): string {
+  try { return sessionStorage.getItem(KEY) ?? ""; } catch { return ""; }
+}
+
+function writeKey(value: string) {
+  try {
+    if (value) sessionStorage.setItem(KEY, value);
+    else sessionStorage.removeItem(KEY);
+  } catch {}
+  listeners.forEach((notify) => notify());
+}
+
+function subscribeKey(notify: () => void) {
+  listeners.add(notify);
+  window.addEventListener("storage", notify);
+  return () => {
+    listeners.delete(notify);
+    window.removeEventListener("storage", notify);
+  };
+}
+
+export default function InquiryAdmin() {
+  const key = useSyncExternalStore(subscribeKey, readKey, () => "");
+  const [entry, setEntry] = useState("");
+
+  const unlock = (e: React.FormEvent) => {
+    e.preventDefault();
+    const k = entry.trim();
+    if (k) writeKey(k);
+  };
+
+  const forget = useCallback(() => {
+    writeKey("");
+    setEntry("");
+  }, []);
+
+  if (!key) {
+    return (
+      <main className="mx-auto w-full max-w-md px-5 py-20">
+        <h1 className="font-display text-3xl text-[var(--sea)]">Inquiry robot</h1>
+        <p className="mt-2 text-sm text-[var(--muted)]">
+          Enter your access key to see what the robot is doing. It stays in this browser tab only.
+        </p>
+        <form onSubmit={unlock} className="mt-6 space-y-3">
+          <input
+            id="access-key"
+            type="password"
+            value={entry}
+            onChange={(e) => setEntry(e.target.value)}
+            placeholder="Access key"
+            autoComplete="off"
+            className="w-full rounded-xl border border-[var(--border)] bg-white px-4 py-3 text-[var(--foreground)] outline-none focus:border-[var(--sea)]"
+          />
+          <button
+            type="submit"
+            className="w-full rounded-xl bg-[var(--sea)] px-4 py-3 font-medium text-white transition hover:bg-[var(--sea-700)]"
+          >
+            Unlock
+          </button>
+        </form>
+        <p className="mt-5 text-xs text-[var(--muted)]">
+          This is the <code>INQUIRY_JOB_SECRET</code> from your Vercel settings.
+        </p>
+      </main>
+    );
+  }
+
+  return (
+    <main className="mx-auto w-full max-w-3xl px-5 py-12 sm:py-16">
+      <header className="flex flex-wrap items-baseline justify-between gap-3">
+        <div>
+          <h1 className="font-display text-3xl text-[var(--sea)] sm:text-4xl">Inquiry robot</h1>
+          <p className="mt-1 text-sm text-[var(--muted)]">
+            Nothing on this page sends email. Both checks are previews.
+          </p>
+        </div>
+        <button onClick={forget} className="text-sm text-[var(--muted)] underline underline-offset-2 hover:text-[var(--sea)]">
+          Lock
+        </button>
+      </header>
+
+      <InboxCheck accessKey={key} onExpired={forget} />
+      <EmailTester accessKey={key} />
+    </main>
+  );
+}
+
+/* ---------------------------------------------------------------- inbox --- */
+
+function InboxCheck({ accessKey, onExpired }: { accessKey: string; onExpired: () => void }) {
+  const [state, setState] = useState<"idle" | "loading" | "done" | "error">("idle");
+  const [data, setData] = useState<ScanResult | null>(null);
+  const [error, setError] = useState("");
+
+  const run = useCallback(async () => {
+    setState("loading");
+    setError("");
+    try {
+      const res = await fetch("/api/inquiries/process?dryRun=1", {
+        headers: { "x-inquiry-secret": accessKey },
+      });
+      if (res.status === 401) {
+        setError("That access key is not right. Check INQUIRY_JOB_SECRET in Vercel.");
+        setState("error");
+        onExpired();
+        return;
+      }
+      if (!res.ok) {
+        const body = await res.json().catch(() => ({}));
+        setError((body as { error?: string }).error ?? `The check failed (${res.status}).`);
+        setState("error");
+        return;
+      }
+      setData((await res.json()) as ScanResult);
+      setState("done");
+    } catch {
+      setError("Could not reach the site. Check your connection and try again.");
+      setState("error");
+    }
+  }, [accessKey, onExpired]);
+
+  return (
+    <section className="mt-10 rounded-2xl border border-[var(--border)] bg-white p-6 shadow-sm sm:p-8">
+      <h2 className="font-display text-2xl text-[var(--sea)]">What&apos;s waiting in the inbox</h2>
+      <p className="mt-1.5 text-sm text-[var(--muted)]">
+        Reads unanswered Beachcombers NW inquiries from the last few days and shows what the robot
+        would do with each one. It sends nothing and leaves every email unread.
+      </p>
+
+      <button
+        onClick={run}
+        disabled={state === "loading"}
+        className="mt-5 rounded-xl bg-[var(--sea)] px-5 py-3 font-medium text-white transition hover:bg-[var(--sea-700)] disabled:opacity-60"
+      >
+        {state === "loading" ? "Checking…" : "Check the inbox"}
+      </button>
+
+      {state === "error" && <Problem>{error}</Problem>}
+
+      {state === "done" && data && (
+        <div className="mt-6">
+          <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-[var(--muted)]">
+            <span>
+              Found <strong className="text-[var(--foreground)]">{data.scanned}</strong>{" "}
+              {data.scanned === 1 ? "inquiry" : "inquiries"}.
+            </span>
+            <span className={data.autoSend ? "text-[var(--sand-600)]" : ""}>
+              {data.autoSend
+                ? "Automatic sending is ON — real replies go out on the next run."
+                : "Automatic sending is off — replies are saved as drafts."}
+            </span>
+          </div>
+
+          {data.results.length === 0 ? (
+            <p className="mt-4 rounded-xl bg-[var(--sea-100)] p-4 text-sm text-[var(--sea)]">
+              Nothing unanswered right now. If you just sent yourself a test, make sure it has
+              arrived and is still marked unread, then check again.
+            </p>
+          ) : (
+            <ul className="mt-4 space-y-4">
+              {data.results.map((r) => (
+                <li key={r.messageId}>
+                  <OutcomeCard outcome={r} />
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+      )}
+    </section>
+  );
+}
+
+function OutcomeCard({ outcome }: { outcome: Outcome }) {
+  const [open, setOpen] = useState(false);
+
+  const tone =
+    outcome.action === "quoted"
+      ? { label: "Would send a quote", cls: "bg-[var(--sea-100)] text-[var(--sea)]" }
+      : outcome.action === "offered-alternatives"
+        ? { label: "Booked — would offer other homes", cls: "bg-[var(--sea-100)] text-[var(--sea)]" }
+        : outcome.action === "needs-review"
+          ? { label: "Needs you", cls: "bg-[#fdf1e0] text-[var(--sand-600)]" }
+          : { label: "Error", cls: "bg-[#fbe9e9] text-[#9b3232]" };
+
+  return (
+    <div className="rounded-xl border border-[var(--border)] p-4">
+      <div className="flex flex-wrap items-start justify-between gap-2">
+        <p className="font-medium text-[var(--foreground)]">{outcome.subject || "(no subject)"}</p>
+        <span className={`rounded-full px-3 py-1 text-xs font-semibold ${tone.cls}`}>{tone.label}</span>
+      </div>
+
+      <dl className="mt-3 grid gap-x-6 gap-y-1 text-sm sm:grid-cols-2">
+        <Row label="Home" value={outcome.slug ?? "— not recognised —"} />
+        <Row label="Guest" value={outcome.guest ?? "— not found —"} />
+        <Row label="Arriving" value={outcome.arrival ?? "— not found —"} />
+        <Row label="Leaving" value={outcome.departure ?? "— not found —"} />
+        {typeof outcome.total === "number" && (
+          <Row label="Total" value={`$${outcome.total.toLocaleString("en-US")}`} />
+        )}
+      </dl>
+
+      {outcome.missing?.length ? (
+        <p className="mt-3 rounded-lg bg-[#fdf1e0] p-3 text-sm text-[var(--sand-600)]">
+          Couldn&apos;t read: {outcome.missing.join(", ")}. This one is left for you to answer.
+        </p>
+      ) : null}
+
+      {outcome.error && (
+        <p className="mt-3 rounded-lg bg-[#fbe9e9] p-3 text-sm text-[#9b3232]">{outcome.error}</p>
+      )}
+
+      {outcome.html && (
+        <>
+          <button
+            onClick={() => setOpen((v) => !v)}
+            className="mt-3 text-sm text-[var(--sea)] underline underline-offset-2"
+          >
+            {open ? "Hide the reply" : "See the reply it would send"}
+          </button>
+          {open && <ReplyPreview html={outcome.html} />}
+        </>
+      )}
+    </div>
+  );
+}
+
+/* --------------------------------------------------------------- tester --- */
+
+function EmailTester({ accessKey }: { accessKey: string }) {
+  const [subject, setSubject] = useState("");
+  const [body, setBody] = useState("");
+  const [state, setState] = useState<"idle" | "loading" | "done" | "error">("idle");
+  const [data, setData] = useState<PreviewResult | null>(null);
+  const [error, setError] = useState("");
+
+  async function run(e: React.FormEvent) {
+    e.preventDefault();
+    if (!body.trim()) return;
+    setState("loading");
+    setError("");
+    try {
+      const res = await fetch("/api/inquiries/preview", {
+        method: "POST",
+        headers: { "x-inquiry-secret": accessKey, "Content-Type": "application/json" },
+        body: JSON.stringify({ subject, body }),
+      });
+      if (!res.ok) {
+        setError(res.status === 401 ? "That access key is not right." : `Test failed (${res.status}).`);
+        setState("error");
+        return;
+      }
+      setData((await res.json()) as PreviewResult);
+      setState("done");
+    } catch {
+      setError("Could not reach the site.");
+      setState("error");
+    }
+  }
+
+  return (
+    <section className="mt-8 rounded-2xl border border-[var(--border)] bg-white p-6 shadow-sm sm:p-8">
+      <h2 className="font-display text-2xl text-[var(--sea)]">Try an email</h2>
+      <p className="mt-1.5 text-sm text-[var(--muted)]">
+        Paste any inquiry — even an old one you already answered — and see how the robot reads it.
+        This never touches your mailbox.
+      </p>
+
+      <form onSubmit={run} className="mt-5 space-y-3">
+        <input
+          id="test-subject"
+          value={subject}
+          onChange={(e) => setSubject(e.target.value)}
+          placeholder="Subject line (optional)"
+          className="w-full rounded-xl border border-[var(--border)] px-4 py-3 outline-none focus:border-[var(--sea)]"
+        />
+        <textarea
+          id="test-body"
+          value={body}
+          onChange={(e) => setBody(e.target.value)}
+          rows={9}
+          placeholder="Paste the whole email here…"
+          className="w-full rounded-xl border border-[var(--border)] px-4 py-3 font-mono text-sm outline-none focus:border-[var(--sea)]"
+        />
+        <button
+          type="submit"
+          disabled={state === "loading" || !body.trim()}
+          className="rounded-xl bg-[var(--sea)] px-5 py-3 font-medium text-white transition hover:bg-[var(--sea-700)] disabled:opacity-60"
+        >
+          {state === "loading" ? "Reading…" : "Read this email"}
+        </button>
+      </form>
+
+      {state === "error" && <Problem>{error}</Problem>}
+
+      {state === "done" && data && (
+        <div className="mt-6 rounded-xl border border-[var(--border)] p-4">
+          <p className="font-medium text-[var(--foreground)]">
+            {data.wouldSend ? "It understood this one." : "It would leave this one for you."}
+          </p>
+          <dl className="mt-3 grid gap-x-6 gap-y-1 text-sm sm:grid-cols-2">
+            <Row label="Home" value={data.parsed.slug ?? "— not recognised —"} />
+            <Row label="Guest" value={data.parsed.guestEmail ?? "— not found —"} />
+            <Row label="Arriving" value={data.parsed.arrival ?? "— not found —"} />
+            <Row label="Leaving" value={data.parsed.departure ?? "— not found —"} />
+          </dl>
+          {data.reason && (
+            <p className="mt-3 rounded-lg bg-[#fdf1e0] p-3 text-sm text-[var(--sand-600)]">{data.reason}</p>
+          )}
+          <ReplyPreview html={data.html} />
+        </div>
+      )}
+    </section>
+  );
+}
+
+/* ----------------------------------------------------------------- bits --- */
+
+function Row({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="flex gap-2">
+      <dt className="min-w-20 text-[var(--muted)]">{label}</dt>
+      <dd className="text-[var(--foreground)]">{value}</dd>
+    </div>
+  );
+}
+
+function Problem({ children }: { children: React.ReactNode }) {
+  return <p className="mt-4 rounded-xl bg-[#fbe9e9] p-4 text-sm text-[#9b3232]">{children}</p>;
+}
+
+// The reply is rendered in a sandboxed frame: it is our own generated HTML, but
+// an email body has no business running script in the admin page.
+function ReplyPreview({ html }: { html: string }) {
+  return (
+    <iframe
+      title="Reply preview"
+      sandbox=""
+      srcDoc={html}
+      className="mt-3 h-80 w-full rounded-lg border border-[var(--border)] bg-white"
+    />
+  );
+}
