@@ -46,11 +46,12 @@ so register it by hand instead — [portal.azure.com](https://portal.azure.com)
 **3. Sign in once** to mint a refresh token:
 
 ```bash
-MS_CLIENT_ID=<application id> npm run outlook:auth
+npm run outlook:auth -- <application id>
 ```
 
 It prints a short code, you sign in as the inquiry mailbox in a browser, and it
-prints the `MS_REFRESH_TOKEN` to paste into Vercel.
+prints the `MS_REFRESH_TOKEN` to paste into Vercel. The argument form works the
+same in macOS Terminal, Linux and Windows PowerShell.
 
 **4. Job secret** — `openssl rand -hex 32` into `INQUIRY_JOB_SECRET`.
 

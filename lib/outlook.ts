@@ -7,7 +7,7 @@ import "server-only";
 //
 //   Delegated (MS_REFRESH_TOKEN set) — acts as the signed-in user, mailbox /me.
 //     Works for outlook.com and M365. Needs Mail.ReadWrite, Mail.Send,
-//     offline_access. Get the refresh token once via `npm run outlook:auth`.
+//     offline_access. Get the refresh token once via `npm run outlook:auth -- <app id>`.
 //
 //   App-only (no refresh token) — client credentials against MS_MAILBOX.
 //     M365 tenants only. Needs Mail.ReadWrite + Mail.Send *application*

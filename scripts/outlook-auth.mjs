@@ -1,7 +1,10 @@
 #!/usr/bin/env node
 // One-time setup: get a Microsoft Graph refresh token for the inquiry mailbox.
 //
-//   MS_CLIENT_ID=<app id> node scripts/outlook-auth.mjs
+//   npm run outlook:auth -- <application id>
+//
+// (MS_CLIENT_ID in the environment works too, but the argument form is the same
+// on macOS, Linux and Windows PowerShell, so prefer it.)
 //
 // Uses the device-code flow, so there is no redirect URL to configure and no
 // client secret to keep: it prints a short code, you sign in to Outlook in a
@@ -14,13 +17,16 @@
 //   * API permissions -> Microsoft Graph -> Delegated:
 //     Mail.ReadWrite, Mail.Send, offline_access.
 
-const CLIENT_ID = process.env.MS_CLIENT_ID?.trim();
+// Accept the id as an argument first: `VAR=value cmd` is not valid syntax in
+// PowerShell or cmd.exe, so an argument is the one form that works everywhere.
+const CLIENT_ID = (process.argv[2] || process.env.MS_CLIENT_ID || "").trim();
 const TENANT = process.env.MS_TENANT_ID?.trim() || "common";
 const SCOPE = "https://graph.microsoft.com/Mail.ReadWrite https://graph.microsoft.com/Mail.Send offline_access";
 const LOGIN = `https://login.microsoftonline.com/${TENANT}/oauth2/v2.0`;
 
 if (!CLIENT_ID) {
-  console.error("Set MS_CLIENT_ID first:  MS_CLIENT_ID=<app id> node scripts/outlook-auth.mjs");
+  console.error("Pass your application id:  npm run outlook:auth -- <application id>");
+  console.error("(It is the 'Application (client) ID' from the app registration.)");
   process.exit(1);
 }
 
@@ -30,7 +36,18 @@ const start = await fetch(`${LOGIN}/devicecode`, {
   body: new URLSearchParams({ client_id: CLIENT_ID, scope: SCOPE }),
 });
 if (!start.ok) {
-  console.error(`Could not start device login (${start.status}):`, await start.text());
+  const body = await start.text();
+  // AADSTS50059/700016 is what a mistyped or unregistered application id looks
+  // like, and the raw message ("no tenant-identifying information") gives no
+  // hint of that — so say what actually needs fixing.
+  if (/50059|700016|unauthorized_client/.test(body)) {
+    console.error(`\nMicrosoft did not recognise that application id:\n\n  ${CLIENT_ID}\n`);
+    console.error("Check you copied the \"Application (client) ID\" from the app registration");
+    console.error("(not the object id or the directory id). If the app was only just");
+    console.error("created, give it a minute and try again.\n");
+  } else {
+    console.error(`\nCould not start device login (${start.status}):\n${body}\n`);
+  }
   process.exit(1);
 }
 const device = await start.json();
