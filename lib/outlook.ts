@@ -145,6 +145,28 @@ export async function fetchInquiries(senderDomain: string, lookbackDays: number,
     });
 }
 
+// Re-reads one message. The Send button works from the message id the
+// dashboard already has, and rebuilds the reply from the live email rather
+// than trusting anything the browser sends back.
+export async function fetchMessage(id: string): Promise<Message | null> {
+  const res = await graph(`${mailbox()}/messages/${encodeURIComponent(id)}?$select=id,subject,from,receivedDateTime,body`);
+  if (res.status === 404) return null;
+  if (!res.ok) throw new Error(`Graph get message failed (${res.status}): ${await res.text()}`);
+
+  const m = (await res.json()) as GraphMessage;
+  const isHtml = (m.body?.contentType ?? "").toLowerCase() === "html";
+  const raw = m.body?.content ?? "";
+  return {
+    id: m.id,
+    subject: m.subject ?? "",
+    from: m.from?.emailAddress?.address ?? "",
+    fromName: m.from?.emailAddress?.name ?? "",
+    receivedDateTime: m.receivedDateTime ?? "",
+    body: isHtml ? htmlToText(raw) : raw,
+    bodyIsHtml: isHtml,
+  };
+}
+
 // Graph's createReply builds the draft with the quoted original and the right
 // recipients/threading; we then replace its body with our own copy.
 async function createReplyDraft(messageId: string, html: string, to?: string): Promise<string> {
