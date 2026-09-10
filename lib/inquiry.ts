@@ -90,6 +90,12 @@ function inferYear(month: number, day: number, today: Date): number {
   return candidate >= start ? year : year + 1;
 }
 
+function addDays(iso: string, days: number): string {
+  const d = new Date(iso + "T00:00:00Z");
+  d.setUTCDate(d.getUTCDate() + days);
+  return d.toISOString().slice(0, 10);
+}
+
 function validate(year: number, month: number, day: number): string | null {
   if (month < 1 || month > 12 || day < 1 || day > 31) return null;
   const d = new Date(Date.UTC(year, month - 1, day));
@@ -97,14 +103,31 @@ function validate(year: number, month: number, day: number): string | null {
   return `${year}-${pad(month)}-${pad(day)}`;
 }
 
-// Pulls "Label: value" off its own line. Labels vary, so each field passes
-// several spellings and the first that hits wins.
+// Pulls "Label: value" out of the text. Labels vary between templates, so each
+// field passes several spellings and the first that hits wins.
+//
+// Two tolerances matter in practice. Templates pad labels with a noun
+// ("Departure Date:", "Check-out day:"), and a label that came out of an HTML
+// table can end up on its own line with the value on the next one.
+const FILLER = "(?:\\s+(?:date|dates|day|on))?";
+
+function clean(value: string | undefined): string | null {
+  const v = value?.trim().replace(/\s*[|>]+\s*$/, "");
+  return v && !/^(n\/?a|none|unknown|tbd|-+)$/i.test(v) ? v : null;
+}
+
 function field(text: string, labels: string[]): string | null {
   for (const label of labels) {
-    const re = new RegExp(`^[\\s>*|-]*${label}\\s*[:\\-\\t]\\s*(.+)$`, "im");
-    const m = text.match(re);
-    const value = m?.[1]?.trim().replace(/\s*[|>]+\s*$/, "");
-    if (value && !/^(n\/?a|none|-+)$/i.test(value)) return value;
+    const sameLine = text.match(new RegExp(`^[\\s>*|-]*${label}${FILLER}\\s*[:\\-\\t]\\s*(.+)$`, "im"));
+    const value = clean(sameLine?.[1]);
+    if (value) return value;
+  }
+  // Only if no label produced a value on its own line: a label alone on one
+  // line, its value on the next.
+  for (const label of labels) {
+    const nextLine = text.match(new RegExp(`^[\\s>*|-]*${label}${FILLER}\\s*:?\\s*$\\n\\s*(.+)$`, "im"));
+    const value = clean(nextLine?.[1]);
+    if (value) return value;
   }
   return null;
 }
@@ -148,8 +171,18 @@ export function parseInquiry(
   // Bare "from"/"to" are deliberately absent: a forwarded message's header
   // block would match them. The unlabelled range regex below covers the
   // "from March 6 - March 9" phrasing instead.
-  const arrivalRaw = field(body, ["arrival", "arrive", "arriving", "check[- ]?in", "checkin", "start date", "dates?"]);
-  const departureRaw = field(body, ["departure", "depart", "departing", "check[- ]?out", "checkout", "end date"]);
+  const arrivalRaw = field(body, [
+    "arrival", "arrive", "arriving", "arrives",
+    "check[- ]?in", "checkin", "coming",
+    "start", "first night", "dates?",
+  ]);
+  const departureRaw = field(body, [
+    "departure", "depart", "departing", "departs",
+    "check[- ]?out", "checkout",
+    "leaving", "leave", "leaves",
+    "return", "returning", "going home",
+    "end", "last night",
+  ]);
 
   let arrival = arrivalRaw ? parseDate(arrivalRaw, today) : null;
   let departure = departureRaw ? parseDate(departureRaw, today) : null;
@@ -164,6 +197,12 @@ export function parseInquiry(
       arrival = arrival ?? parseDate(range[1], today);
       departure = departure ?? parseDate(range[2], today);
     }
+  }
+
+  // Some forms ask for an arrival and a length of stay rather than two dates.
+  if (arrival && !departure) {
+    const nights = count(field(body, ["nights", "number of nights", "no. of nights", "length of stay", "stay"]));
+    if (nights && nights > 0 && nights < 366) departure = addDays(arrival, nights);
   }
 
   const propertyText = field(body, ["property", "rental", "home", "listing", "unit", "house"]) ?? subject;
