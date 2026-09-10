@@ -187,6 +187,32 @@ export function parseInquiry(
   let arrival = arrivalRaw ? parseDate(arrivalRaw, today) : null;
   let departure = departureRaw ? parseDate(departureRaw, today) : null;
 
+  // A range that names its month once — "October 1-8, 2026", "Nov 1 thru 8".
+  // This is the shape that leaves an arrival parsed and a departure missing,
+  // because the second half carries no month of its own.
+  if (!arrival || !departure) {
+    const sameMonth = body.match(
+      /\b([A-Za-z]{3,9})\.?\s+(\d{1,2})(?:st|nd|rd|th)?\s*(?:-|–|—|to|through|thru|until)\s*(\d{1,2})(?:st|nd|rd|th)?(?:,?\s*(\d{4}))?/i
+    );
+    if (sameMonth && MONTHS[sameMonth[1].slice(0, 3).toLowerCase()]) {
+      const year = sameMonth[4] ?? "";
+      arrival = arrival ?? parseDate(`${sameMonth[1]} ${sameMonth[2]} ${year}`, today);
+      departure = departure ?? parseDate(`${sameMonth[1]} ${sameMonth[3]} ${year}`, today);
+    }
+  }
+
+  // The same idea in slashes without a year — "10/1 - 10/8".
+  if (!arrival || !departure) {
+    const slashes = body.match(/\b(\d{1,2})\/(\d{1,2})\s*(?:-|–|—|to|through|thru|until)\s*(\d{1,2})\/(\d{1,2})\b(?!\s*[/-]\s*\d)/);
+    if (slashes) {
+      const year = today.getUTCFullYear();
+      arrival = arrival ?? parseDate(`${slashes[1]}/${slashes[2]}/${year}`, today);
+      departure = departure ?? parseDate(`${slashes[3]}/${slashes[4]}/${year}`, today);
+      // A range that has already gone by means next year.
+      if (arrival && departure && departure < arrival) departure = null;
+    }
+  }
+
   // Fall back to a "July 4 - July 11" / "7/4/26 to 7/11/26" range anywhere in
   // the text when the template used no labels at all.
   if (!arrival || !departure) {
