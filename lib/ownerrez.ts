@@ -151,7 +151,39 @@ export type CreatedQuote = {
   guestId: number | null;
   expiresUtc: string;
   url: string | null; // OwnerRez-hosted quote link, when the API returns one
+  // Every link OwnerRez sent back, as field/value pairs. Surfaced in the
+  // dashboard so the right one can be identified by looking rather than
+  // guessing at names that differ between their APIs.
+  links: { field: string; url: string }[];
 };
+
+// Walks the response for anything that looks like a guest-facing link. Field
+// names vary (url, quote_url, reservationRedirectUrl, payment form links), so
+// this collects them all and lets the caller choose.
+function collectLinks(value: unknown, path = "", depth = 0): { field: string; url: string }[] {
+  if (depth > 2 || value == null) return [];
+  if (typeof value === "string") {
+    return /^https?:\/\//i.test(value) ? [{ field: path || "(root)", url: value }] : [];
+  }
+  if (Array.isArray(value)) {
+    return value.flatMap((v, i) => collectLinks(v, `${path}[${i}]`, depth + 1));
+  }
+  if (typeof value === "object") {
+    return Object.entries(value as Record<string, unknown>).flatMap(([k, v]) =>
+      collectLinks(v, path ? `${path}.${k}` : k, depth + 1)
+    );
+  }
+  return [];
+}
+
+// Prefer a link that takes the guest somewhere they can act, over a bare
+// listing or image URL that happens to be in the payload.
+function pickGuestLink(links: { field: string; url: string }[]): string | null {
+  const byName = links.find((l) => /redirect|payment|book|quote|checkout|reserv/i.test(l.field));
+  if (byName) return byName.url;
+  const byPath = links.find((l) => /\/(quote|book|pay|reserv)/i.test(l.url));
+  return byPath?.url ?? null;
+}
 
 async function orFetch(path: string, auth: string, init: RequestInit = {}): Promise<Response> {
   return fetch(`${BASE}${path}`, {
@@ -239,6 +271,10 @@ export async function createQuote(input: {
         adults: input.adults,
         children: input.children ?? 0,
         generate_charges: true,
+        // Asks OwnerRez for a link the guest can act on. Ignored harmlessly if
+        // this account or endpoint does not offer one.
+        create_redirect_url: true,
+        createRedirectUrl: true,
         expires_utc: expiresUtc,
         ...(guestId ? { guest_id: guestId } : {}),
         ...(input.notes ? { notes: input.notes } : {}),
@@ -248,10 +284,10 @@ export async function createQuote(input: {
 
     const data = (await res.json()) as {
       id?: number;
-      url?: string;
-      quote_url?: string;
       charges?: { amount?: number; description?: string; title?: string; name?: string; type?: string }[];
-    };
+    } & Record<string, unknown>;
+
+    const links = collectLinks(data);
 
     const charges = (data.charges ?? [])
       .map((c) => ({
@@ -269,7 +305,8 @@ export async function createQuote(input: {
       charges,
       guestId,
       expiresUtc,
-      url: data.url || data.quote_url || null,
+      url: pickGuestLink(links),
+      links,
     };
   } catch {
     return null;

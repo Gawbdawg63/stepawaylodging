@@ -78,9 +78,11 @@ the robot. Sign in with the `INQUIRY_JOB_SECRET` (held in that browser tab only,
 never sent anywhere but this site) and it offers two read-only checks:
 
 - **Check the inbox** — runs the dry run and lists each unanswered inquiry with
-  the home, dates and guest it read, plus the reply it would send. Sends
-  nothing, drafts nothing, leaves every email unread. It also states plainly
-  whether automatic sending is currently on.
+  the home, dates and guest it read, plus the reply it would send. Sends no
+  email, writes no draft, leaves every message unread — but it *does* create
+  the quote in OwnerRez, which is how it knows the price, so repeated checks
+  leave repeated quotes behind. It also states plainly whether automatic
+  sending is currently on.
 - **Try an email** — paste any inquiry, even an old one, and see how it is read.
   Never touches the mailbox.
 

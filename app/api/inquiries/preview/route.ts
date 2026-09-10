@@ -59,6 +59,7 @@ export async function POST(req: NextRequest) {
           guestId: null,
           expiresUtc: new Date(Date.now() + 7 * 86400000).toISOString(),
           url: null,
+          links: [],
         })
       : composeAlternativesReply(inquiry, []),
     note: priced.available
