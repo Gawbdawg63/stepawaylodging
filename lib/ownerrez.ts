@@ -19,6 +19,62 @@ const PROPERTY_IDS: Record<string, number> = {
   "ebb-and-flow": 426116,
 };
 
+// Guest-facing booking links look like
+//   https://booking.ownerrez.com/request?property=orp...&arrival=...&departure=...
+// The property token is not the numeric id used by the API, nor the widget id
+// on the website — it is a third identifier OwnerRez issues per property.
+// Read them from GET /v2/properties (the dashboard lists the fields) and fill
+// this in; any slug missing here simply falls back to the website page.
+const PROPERTY_TOKENS: Record<string, string> = {
+  // "ocean-peak-ridge": "orp5b7506fx",
+};
+
+// The "source" chosen alongside a public link in OwnerRez. Account-specific.
+const BOOKING_CHANNEL = process.env.OWNERREZ_BOOKING_CHANNEL?.trim() || "";
+
+// A link straight to OwnerRez's booking form with the stay filled in. Returns
+// null when the token is unknown, so the caller can fall back rather than
+// build a link that would 404 in front of a guest.
+export function bookingRequestUrl(input: {
+  slug: string;
+  arrival: string;
+  departure: string;
+  adults: number;
+  children?: number;
+}): string | null {
+  const token = PROPERTY_TOKENS[input.slug];
+  if (!token) return null;
+
+  const params = new URLSearchParams({
+    property: token,
+    arrival: input.arrival,
+    departure: input.departure,
+    adults: String(input.adults),
+  });
+  if (input.children && input.children > 0) params.set("children", String(input.children));
+  if (BOOKING_CHANNEL) params.set("channel", BOOKING_CHANNEL);
+
+  return `https://booking.ownerrez.com/request?${params}`;
+}
+
+// Lists properties with every field they carry, so the booking tokens above
+// can be read off rather than guessed at.
+export async function listPropertyFields(): Promise<
+  { ok: false; reason: string } | { ok: true; rows: { field: string; value: string }[] }
+> {
+  const auth = authHeader();
+  if (!auth) return { ok: false, reason: "OWNERREZ_TOKEN is not set." };
+  try {
+    const res = await orFetch(`/v2/properties?limit=50`, auth);
+    if (!res.ok) return { ok: false, reason: `OwnerRez said ${res.status}: ${(await res.text()).slice(0, 300)}` };
+    const data = (await res.json()) as { items?: unknown[] };
+    const items = Array.isArray(data.items) ? data.items : [];
+    return { ok: true, rows: items.flatMap((it, i) => collectFields(it, `#${i}`)) };
+  } catch (e) {
+    return { ok: false, reason: String(e) };
+  }
+}
+
 function authHeader(): string | null {
   const token = process.env.OWNERREZ_TOKEN?.trim();
   if (!token) return null;
@@ -158,6 +214,9 @@ export type CreatedQuote = {
   // Every scalar the quote came back with, for identifying a link that is not
   // a bare http string — a payment-form token, an id, a relative path.
   fields: { field: string; value: string }[];
+  // A guest-facing OwnerRez booking form with the stay filled in, when the
+  // property's booking token is known.
+  bookingUrl: string | null;
 };
 
 // Walks the response for anything that looks like a guest-facing link. Field
@@ -348,6 +407,13 @@ export async function createQuote(input: {
       url: pickGuestLink(links),
       links,
       fields: collectFields(data),
+      bookingUrl: bookingRequestUrl({
+        slug: input.slug,
+        arrival: input.arrival,
+        departure: input.departure,
+        adults: input.adults,
+        children: input.children,
+      }),
     };
 
     // The create response is lean on some accounts. When it carried no link,

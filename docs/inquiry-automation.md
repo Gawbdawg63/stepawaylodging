@@ -88,6 +88,25 @@ never sent anywhere but this site) and it offers two read-only checks:
 
 The page is excluded from search engines via `robots.ts`.
 
+## The "Book these dates" link
+
+A guest-facing OwnerRez booking form looks like:
+
+```
+https://booking.ownerrez.com/request?property=orp5b7506fx&arrival=2026-09-24&departure=2026-09-28&adults=1
+```
+
+Everything but `property` comes from the inquiry. That token is a third
+identifier — not the numeric id the API uses, nor the widget id on the website
+— so each home's token goes in `PROPERTY_TOKENS` in `lib/ownerrez.ts`.
+
+Read them from the dashboard's **Booking links** panel, which lists every field
+OwnerRez holds for each property. A home with no token falls back to its page on
+the website, so a missing one is never a broken link.
+
+`OWNERREZ_BOOKING_CHANNEL` optionally adds the `channel` that OwnerRez puts on
+links made by hand.
+
 ## Checking it without involving a guest
 
 `POST /api/inquiries/preview` takes a pasted email and shows exactly what the
