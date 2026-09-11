@@ -1,5 +1,5 @@
 import { brand, getProperty } from "@/lib/content";
-import { nightsBetween, type CreatedQuote } from "@/lib/ownerrez";
+import { bookingRequestUrl, nightsBetween, type CreatedQuote } from "@/lib/ownerrez";
 import type { ParsedInquiry } from "@/lib/inquiry";
 
 // Builds the HTML reply sent back through the Beachcombers NW thread.
@@ -49,6 +49,34 @@ ${inner}
 </div>`;
 }
 
+// OwnerRez's booking widget reads its dates from or_arrival / or_departure in
+// US format — the same query the site's own search results use — so a link
+// built this way opens the home with the stay already filled in.
+const toMdy = (iso: string) => {
+  const [y, m, d] = iso.split("-");
+  return y && m && d ? `${m}/${d}/${y}` : iso;
+};
+
+// Where a home's link should take a guest who already told us their dates:
+// OwnerRez's booking form where we hold that home's token, otherwise its page
+// on the site with the widget pre-filled and scrolled to.
+function stayLink(slug: string, inquiry: ParsedInquiry): string {
+  const direct = bookingRequestUrl({
+    slug,
+    arrival: inquiry.arrival!,
+    departure: inquiry.departure!,
+    adults: inquiry.adults,
+    children: inquiry.children,
+  });
+  if (direct) return direct;
+
+  const guests = Math.max(inquiry.adults + inquiry.children, 1);
+  return (
+    `https://${brand.domain}/homes/${slug}` +
+    `?or_arrival=${toMdy(inquiry.arrival!)}&or_departure=${toMdy(inquiry.departure!)}&or_adults=${guests}#book`
+  );
+}
+
 function depositLine(property?: { securityDeposit?: number }): string {
   const held = property?.securityDeposit ?? brand.securityDeposit;
   return held
@@ -76,7 +104,7 @@ export function composeQuoteReply(inquiry: ParsedInquiry, quote: CreatedQuote): 
   const property = getProperty(inquiry.slug ?? "");
   const name = property?.name ?? inquiry.propertyText ?? "the home";
   const stayUrl = property ? `https://${brand.domain}/homes/${property.slug}` : `https://${brand.domain}`;
-  const bookUrl = quote.bookingUrl ?? quote.url ?? stayUrl;
+  const bookUrl = quote.bookingUrl ?? quote.url ?? stayLink(inquiry.slug!, inquiry);
   const guests = inquiry.adults + inquiry.children;
 
   // A refundable hold is not a charge, so it sits apart from the total rather
@@ -114,10 +142,11 @@ export function composeAlternativesReply(
     .map((a) => {
       const p = getProperty(a.slug);
       if (!p) return "";
-      return `<li style="margin-bottom:10px;">
-<a href="https://${brand.domain}/homes/${p.slug}" style="color:#14494a;font-weight:600;">${escapeHtml(p.name)}</a>
+      return `<li style="margin-bottom:12px;">
+<a href="${stayLink(p.slug, inquiry)}" style="color:#14494a;font-weight:600;">${escapeHtml(p.name)}</a>
 — ${escapeHtml(p.location)}<br>
-<span style="color:#5c6a68;">Sleeps ${p.stats.sleeps} · ${money(a.total)} total for your dates</span></li>`;
+<span style="color:#5c6a68;">Sleeps ${p.stats.sleeps} · ${money(a.total)} total for your dates</span><br>
+<a href="${stayLink(p.slug, inquiry)}" style="color:#14494a;font-size:14px;">Book these dates &rarr;</a></li>`;
     })
     .filter(Boolean)
     .join("\n");
@@ -185,10 +214,11 @@ Rather than leave you waiting, I wanted to reply straight away.</p>`;
         .map((a) => {
           const p = getProperty(a.slug);
           if (!p) return "";
-          return `<li style="margin-bottom:10px;">
-<a href="https://${brand.domain}/homes/${p.slug}" style="color:#14494a;font-weight:600;">${escapeHtml(p.name)}</a>
+          return `<li style="margin-bottom:12px;">
+<a href="${stayLink(p.slug, inquiry)}" style="color:#14494a;font-weight:600;">${escapeHtml(p.name)}</a>
 &mdash; ${escapeHtml(p.location)}<br>
-<span style="color:#5c6a68;">Sleeps ${p.stats.sleeps} &middot; ${money(a.total)} total for your dates</span></li>`;
+<span style="color:#5c6a68;">Sleeps ${p.stats.sleeps} &middot; ${money(a.total)} total for your dates</span><br>
+<a href="${stayLink(p.slug, inquiry)}" style="color:#14494a;font-size:14px;">Book these dates &rarr;</a></li>`;
         })
         .filter(Boolean)
         .join("\n")}</ul>`
