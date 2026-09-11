@@ -326,7 +326,9 @@ function OutcomeCard({ outcome, accessKey }: { outcome: Outcome; accessKey: stri
         </>
       )}
 
-      {(outcome.action === "quoted" || outcome.action === "offered-alternatives") && (
+      {(outcome.action === "quoted" ||
+        outcome.action === "offered-alternatives" ||
+        outcome.action === "blocked") && (
         <SendControl messageId={outcome.messageId} to={outcome.guest} accessKey={accessKey} />
       )}
     </div>

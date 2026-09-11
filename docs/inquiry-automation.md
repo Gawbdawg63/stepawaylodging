@@ -10,6 +10,7 @@ creates a real saved quote, and emails the guest back — automatically.
 | --- | --- |
 | Dates, home and guest email all read cleanly, home is free | Creates an OwnerRez quote (7-day expiry) and **sends** the priced reply. Marks the email read, category *Quoted by Step Away bot*. |
 | Read cleanly, but the home is booked | Prices every other home for those dates and **sends** a reply listing the ones that are free, cheapest first. |
+| OwnerRez will not price the stay | Replies with an apology that points at live availability for their dates. It names a minimum-stay rule only when OwnerRez gave the number, and never claims the home is booked. Stays flagged *Needs a human* even after sending. |
 | Anything unclear — no dates, home not recognised, dates backwards, no guest email | **Sends nothing.** Saves a short "could you confirm your dates" draft, flags the email and leaves it unread, category *Needs a human*. |
 
 The third row is the safety net: a wrong home or a wrong week reaching a guest

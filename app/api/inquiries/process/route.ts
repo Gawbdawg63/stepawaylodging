@@ -130,10 +130,27 @@ async function handle(
     };
   }
 
-  // A quote we could not price is never guessed at in front of a guest.
+  // Could not price it. The guest still gets an answer — one that never claims
+  // the dates are booked — and it stays flagged either way, because a pricing
+  // failure is something worth a person's eyes even once the guest is happy.
   if (reply.kind === "blocked") {
-    if (!dryRun) await flagForReview(message.id, CATEGORY_REVIEW);
-    return { ...base, action: "blocked", sent: false, error: reply.detail };
+    let sent = false;
+    if (!dryRun) {
+      if (AUTO_SEND) {
+        await sendReply(message.id, reply.html, inquiry.guestEmail ?? undefined);
+        sent = true;
+      } else {
+        await saveDraftReply(message.id, reply.html, inquiry.guestEmail ?? undefined);
+      }
+      await flagForReview(message.id, CATEGORY_REVIEW);
+    }
+    return {
+      ...base,
+      action: "blocked",
+      sent,
+      error: reply.detail,
+      ...(dryRun ? { html: reply.html } : {}),
+    };
   }
 
   const sent = await deliver(message.id, reply.html, inquiry, dryRun);
