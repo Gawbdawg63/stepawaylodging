@@ -49,6 +49,13 @@ ${inner}
 </div>`;
 }
 
+function depositLine(property?: { securityDeposit?: number }): string {
+  const held = property?.securityDeposit ?? brand.securityDeposit;
+  return held
+    ? ` A refundable ${money(held)} security deposit is held against damage and released back to you after checkout.`
+    : "";
+}
+
 function chargeTable(quote: CreatedQuote): string {
   const rows = quote.charges
     .map(
@@ -75,11 +82,7 @@ export function composeQuoteReply(inquiry: ParsedInquiry, quote: CreatedQuote): 
   // A refundable hold is not a charge, so it sits apart from the total rather
   // than in the table — but it has to be said, or "nothing added later" reads
   // as a promise the deposit then breaks.
-  const held = property?.securityDeposit ?? brand.securityDeposit;
-  const deposit = held
-    ? ` A refundable <strong>${money(held)}</strong> security deposit is held against damage and
-released back to you after checkout.`
-    : "";
+  const deposit = depositLine(property);
 
   return shell(`<p ${P}>Hi ${escapeHtml(firstName(inquiry.guestName))},</p>
 
@@ -101,7 +104,8 @@ If you have any questions at all — or want to look at different dates — just
 
 export function composeAlternativesReply(
   inquiry: ParsedInquiry,
-  alternatives: { slug: string; total: number }[]
+  alternatives: { slug: string; total: number }[],
+  opts: { searched: boolean } = { searched: true }
 ): string {
   const property = getProperty(inquiry.slug ?? "");
   const name = property?.name ?? inquiry.propertyText ?? "that home";
@@ -118,12 +122,23 @@ export function composeAlternativesReply(
     .filter(Boolean)
     .join("\n");
 
+  const taken = `${escapeHtml(name)} is already booked for ${longDate(inquiry.arrival!)}–${longDate(inquiry.departure!)}`;
+  const searchUrl = `https://${brand.domain}/search?arrival=${inquiry.arrival}&departure=${inquiry.departure}&adults=${Math.max(inquiry.adults + inquiry.children, 1)}`;
+
   const body = alternatives.length
-    ? `<p ${P}>${escapeHtml(name)} is already booked for ${longDate(inquiry.arrival!)}–${longDate(inquiry.departure!)}, but these homes of ours <em>are</em> free that week:</p>
+    ? `<p ${P}>${taken}, but these homes of ours <em>are</em> free that week:</p>
 <ul style="margin:0 0 16px;padding-left:20px;">${list}</ul>
-<p ${P}>Every price above is the full total — rent, fees and taxes included. Happy to hold any of them for you, or to check different dates if these are set.</p>`
-    : `<p ${P}>Unfortunately ${escapeHtml(name)} is already booked for ${longDate(inquiry.arrival!)}–${longDate(inquiry.departure!)}, and our other homes are taken that week too.</p>
-<p ${P}>If your dates have any flexibility, tell me roughly when works and I${"'"}ll find you something — we often get cancellations, and I${"'"}m glad to keep an eye out for you.</p>`;
+<p ${P}>Every price above is the full total to pay — rent, fees and taxes included.${depositLine()} Happy to hold any of them for you, or to look at different dates if these are set.</p>`
+    : opts.searched
+      ? // The check ran and found nothing, so this is a fact we can state.
+        `<p ${P}>Unfortunately ${taken}, and our other homes are taken that week too.</p>
+<p ${P}>If your dates have any flexibility, tell me roughly when works and I${"'"}ll find you something — we often get cancellations, and I${"'"}m glad to keep an eye out for you.</p>`
+      : // The check did not run. Not knowing is not the same as nothing being
+        // free, so this points at live availability instead of asserting.
+        `<p ${P}>Unfortunately ${taken}.</p>
+<p ${P}>We have six other homes along the coast, and I${"'"}d rather show you what${"'"}s genuinely open than guess — here${"'"}s everything free for your dates:</p>
+<p ${P}><a href="${searchUrl}" style="display:inline-block;background:#14494a;color:#fff;text-decoration:none;padding:11px 22px;border-radius:6px;font-weight:600;">See what&rsquo;s available</a></p>
+<p ${P}>Or just reply with the dates you have in mind and I${"'"}ll sort it out personally.</p>`;
 
   return shell(`<p ${P}>Hi ${escapeHtml(firstName(inquiry.guestName))},</p>
 
