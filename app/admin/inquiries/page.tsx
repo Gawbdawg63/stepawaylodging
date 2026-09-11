@@ -131,6 +131,7 @@ export default function InquiryAdmin() {
 
       <InboxCheck accessKey={key} onExpired={forget} />
       <EmailTester accessKey={key} />
+      <PropertyTokens accessKey={key} />
     </main>
   );
 }
@@ -500,6 +501,68 @@ function EmailTester({ accessKey }: { accessKey: string }) {
           )}
           <ReplyPreview html={data.html} />
         </div>
+      )}
+    </section>
+  );
+}
+
+/* -------------------------------------------------------------- tokens --- */
+
+// Each property's booking token is what turns "Book these dates" into a real
+// OwnerRez booking form. They are not in the quote, so they are read from the
+// property list once and written into the code.
+function PropertyTokens({ accessKey }: { accessKey: string }) {
+  const [state, setState] = useState<"idle" | "loading" | "done" | "error">("idle");
+  const [rows, setRows] = useState<{ field: string; value: string }[]>([]);
+  const [error, setError] = useState("");
+
+  async function run() {
+    setState("loading");
+    setError("");
+    try {
+      const res = await fetch("/api/inquiries/properties", { headers: { "x-inquiry-secret": accessKey } });
+      const data = (await res.json().catch(() => ({}))) as { rows?: typeof rows; error?: string };
+      if (!res.ok) {
+        setError(data.error ?? `Could not read the properties (${res.status}).`);
+        setState("error");
+        return;
+      }
+      setRows(data.rows ?? []);
+      setState("done");
+    } catch {
+      setError("Could not reach the site.");
+      setState("error");
+    }
+  }
+
+  return (
+    <section className="mt-8 rounded-2xl border border-[var(--border)] bg-white p-6 shadow-sm sm:p-8">
+      <h2 className="font-display text-2xl text-[var(--sea)]">Booking links</h2>
+      <p className="mt-1.5 text-sm text-[var(--muted)]">
+        Each home has an OwnerRez booking token — the <code>orp…</code> part of a public booking
+        link. Once those are known, &ldquo;Book these dates&rdquo; goes straight to the booking form
+        with the stay filled in, instead of the website page. This only reads; it changes nothing.
+      </p>
+
+      <button
+        onClick={run}
+        disabled={state === "loading"}
+        className="mt-5 rounded-xl bg-[var(--sea)] px-5 py-3 font-medium text-white transition hover:bg-[var(--sea-700)] disabled:opacity-60"
+      >
+        {state === "loading" ? "Reading…" : "Show my properties"}
+      </button>
+
+      {state === "error" && <Problem>{error}</Problem>}
+
+      {state === "done" && (
+        <>
+          <pre className="mt-5 max-h-96 overflow-auto whitespace-pre-wrap rounded-lg bg-[var(--sea-100)]/40 p-3 font-mono text-xs text-[var(--foreground)]">
+            {rows.length ? rows.map((r) => `${r.field}: ${r.value}`).join("\n") : "OwnerRez returned no properties."}
+          </pre>
+          <p className="mt-2 text-xs text-[var(--muted)]">
+            Copy this over and the tokens can be wired in for every home at once.
+          </p>
+        </>
       )}
     </section>
   );

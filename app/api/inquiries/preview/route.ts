@@ -61,6 +61,7 @@ export async function POST(req: NextRequest) {
           url: null,
           links: [],
           fields: [],
+          bookingUrl: null,
         })
       : composeAlternativesReply(inquiry, []),
     note: priced.available

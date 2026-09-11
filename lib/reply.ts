@@ -56,7 +56,7 @@ export function composeQuoteReply(inquiry: ParsedInquiry, quote: CreatedQuote): 
   const property = getProperty(inquiry.slug ?? "");
   const name = property?.name ?? inquiry.propertyText ?? "the home";
   const stayUrl = property ? `https://${brand.domain}/homes/${property.slug}` : `https://${brand.domain}`;
-  const bookUrl = quote.url ?? stayUrl;
+  const bookUrl = quote.bookingUrl ?? quote.url ?? stayUrl;
   const guests = inquiry.adults + inquiry.children;
 
   return shell(`<p ${P}>Hi ${escapeHtml(firstName(inquiry.guestName))},</p>
