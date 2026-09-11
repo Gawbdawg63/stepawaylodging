@@ -61,7 +61,7 @@ export function composeQuoteReply(inquiry: ParsedInquiry, quote: CreatedQuote): 
 
   return shell(`<p ${P}>Hi ${escapeHtml(firstName(inquiry.guestName))},</p>
 
-<p ${P}>Thanks so much for your enquiry about <strong>${escapeHtml(name)}</strong> — good news, it${"'"}s available for your dates.</p>
+<p ${P}>Thanks so much for your inquiry about <strong>${escapeHtml(name)}</strong> — good news, it${"'"}s available for your dates.</p>
 
 <p ${P}><strong>${longDate(inquiry.arrival!)}</strong> to <strong>${longDate(inquiry.departure!)}</strong><br>
 ${quote.nights} ${quote.nights === 1 ? "night" : "nights"} · ${guests} ${guests === 1 ? "guest" : "guests"}</p>
@@ -105,7 +105,7 @@ export function composeAlternativesReply(
 
   return shell(`<p ${P}>Hi ${escapeHtml(firstName(inquiry.guestName))},</p>
 
-<p ${P}>Thanks so much for your enquiry.</p>
+<p ${P}>Thanks so much for your inquiry.</p>
 
 ${body}`);
 }
@@ -159,7 +159,7 @@ Rather than leave you waiting, I wanted to reply straight away.</p>`;
 
   return shell(`<p ${P}>Hi ${escapeHtml(firstName(inquiry.guestName))},</p>
 
-<p ${P}>Thanks so much for your enquiry.</p>
+<p ${P}>Thanks so much for your inquiry.</p>
 
 ${reason}
 

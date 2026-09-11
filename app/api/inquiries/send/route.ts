@@ -52,7 +52,7 @@ export async function POST(req: NextRequest) {
       { status: 422 }
     );
   }
-  // A blocked reply is sendable: it apologises and points at live availability
+  // A blocked reply is sendable: it apologizes and points at live availability
   // without claiming anything about the calendar.
 
   const to = reply.inquiry.guestEmail ?? undefined;
