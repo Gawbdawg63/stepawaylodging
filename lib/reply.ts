@@ -1,5 +1,5 @@
 import { brand, getProperty } from "@/lib/content";
-import { nightsBetween, type CreatedQuote } from "@/lib/ownerrez";
+import { bookingRequestUrl, nightsBetween, type CreatedQuote } from "@/lib/ownerrez";
 import type { ParsedInquiry } from "@/lib/inquiry";
 
 // Builds the HTML reply sent back through the Beachcombers NW thread.
@@ -49,6 +49,41 @@ ${inner}
 </div>`;
 }
 
+// OwnerRez's booking widget reads its dates from or_arrival / or_departure in
+// US format — the same query the site's own search results use — so a link
+// built this way opens the home with the stay already filled in.
+const toMdy = (iso: string) => {
+  const [y, m, d] = iso.split("-");
+  return y && m && d ? `${m}/${d}/${y}` : iso;
+};
+
+// Where a home's link should take a guest who already told us their dates:
+// OwnerRez's booking form where we hold that home's token, otherwise its page
+// on the site with the widget pre-filled and scrolled to.
+function stayLink(slug: string, inquiry: ParsedInquiry): string {
+  const direct = bookingRequestUrl({
+    slug,
+    arrival: inquiry.arrival!,
+    departure: inquiry.departure!,
+    adults: inquiry.adults,
+    children: inquiry.children,
+  });
+  if (direct) return direct;
+
+  const guests = Math.max(inquiry.adults + inquiry.children, 1);
+  return (
+    `https://${brand.domain}/homes/${slug}` +
+    `?or_arrival=${toMdy(inquiry.arrival!)}&or_departure=${toMdy(inquiry.departure!)}&or_adults=${guests}#book`
+  );
+}
+
+function depositLine(property?: { securityDeposit?: number }): string {
+  const held = property?.securityDeposit ?? brand.securityDeposit;
+  return held
+    ? ` A refundable ${money(held)} security deposit is held against damage and released back to you after checkout.`
+    : "";
+}
+
 function chargeTable(quote: CreatedQuote): string {
   const rows = quote.charges
     .map(
@@ -69,17 +104,13 @@ export function composeQuoteReply(inquiry: ParsedInquiry, quote: CreatedQuote): 
   const property = getProperty(inquiry.slug ?? "");
   const name = property?.name ?? inquiry.propertyText ?? "the home";
   const stayUrl = property ? `https://${brand.domain}/homes/${property.slug}` : `https://${brand.domain}`;
-  const bookUrl = quote.bookingUrl ?? quote.url ?? stayUrl;
+  const bookUrl = quote.bookingUrl ?? quote.url ?? stayLink(inquiry.slug!, inquiry);
   const guests = inquiry.adults + inquiry.children;
 
   // A refundable hold is not a charge, so it sits apart from the total rather
   // than in the table — but it has to be said, or "nothing added later" reads
   // as a promise the deposit then breaks.
-  const held = property?.securityDeposit ?? brand.securityDeposit;
-  const deposit = held
-    ? ` A refundable <strong>${money(held)}</strong> security deposit is held against damage and
-released back to you after checkout.`
-    : "";
+  const deposit = depositLine(property);
 
   return shell(`<p ${P}>Hi ${escapeHtml(firstName(inquiry.guestName))},</p>
 
@@ -101,7 +132,8 @@ If you have any questions at all — or want to look at different dates — just
 
 export function composeAlternativesReply(
   inquiry: ParsedInquiry,
-  alternatives: { slug: string; total: number }[]
+  alternatives: { slug: string; total: number }[],
+  opts: { searched: boolean } = { searched: true }
 ): string {
   const property = getProperty(inquiry.slug ?? "");
   const name = property?.name ?? inquiry.propertyText ?? "that home";
@@ -110,20 +142,32 @@ export function composeAlternativesReply(
     .map((a) => {
       const p = getProperty(a.slug);
       if (!p) return "";
-      return `<li style="margin-bottom:10px;">
-<a href="https://${brand.domain}/homes/${p.slug}" style="color:#14494a;font-weight:600;">${escapeHtml(p.name)}</a>
+      return `<li style="margin-bottom:12px;">
+<a href="${stayLink(p.slug, inquiry)}" style="color:#14494a;font-weight:600;">${escapeHtml(p.name)}</a>
 — ${escapeHtml(p.location)}<br>
-<span style="color:#5c6a68;">Sleeps ${p.stats.sleeps} · ${money(a.total)} total for your dates</span></li>`;
+<span style="color:#5c6a68;">Sleeps ${p.stats.sleeps} · ${money(a.total)} total for your dates</span><br>
+<a href="${stayLink(p.slug, inquiry)}" style="color:#14494a;font-size:14px;">Book these dates &rarr;</a></li>`;
     })
     .filter(Boolean)
     .join("\n");
 
+  const taken = `${escapeHtml(name)} is already booked for ${longDate(inquiry.arrival!)}–${longDate(inquiry.departure!)}`;
+  const searchUrl = `https://${brand.domain}/search?arrival=${inquiry.arrival}&departure=${inquiry.departure}&adults=${Math.max(inquiry.adults + inquiry.children, 1)}`;
+
   const body = alternatives.length
-    ? `<p ${P}>${escapeHtml(name)} is already booked for ${longDate(inquiry.arrival!)}–${longDate(inquiry.departure!)}, but these homes of ours <em>are</em> free that week:</p>
+    ? `<p ${P}>${taken}, but these homes of ours <em>are</em> free that week:</p>
 <ul style="margin:0 0 16px;padding-left:20px;">${list}</ul>
-<p ${P}>Every price above is the full total — rent, fees and taxes included. Happy to hold any of them for you, or to check different dates if these are set.</p>`
-    : `<p ${P}>Unfortunately ${escapeHtml(name)} is already booked for ${longDate(inquiry.arrival!)}–${longDate(inquiry.departure!)}, and our other homes are taken that week too.</p>
-<p ${P}>If your dates have any flexibility, tell me roughly when works and I${"'"}ll find you something — we often get cancellations, and I${"'"}m glad to keep an eye out for you.</p>`;
+<p ${P}>Every price above is the full total to pay — rent, fees and taxes included.${depositLine()} Happy to hold any of them for you, or to look at different dates if these are set.</p>`
+    : opts.searched
+      ? // The check ran and found nothing, so this is a fact we can state.
+        `<p ${P}>Unfortunately ${taken}, and our other homes are taken that week too.</p>
+<p ${P}>If your dates have any flexibility, tell me roughly when works and I${"'"}ll find you something — we often get cancellations, and I${"'"}m glad to keep an eye out for you.</p>`
+      : // The check did not run. Not knowing is not the same as nothing being
+        // free, so this points at live availability instead of asserting.
+        `<p ${P}>Unfortunately ${taken}.</p>
+<p ${P}>We have six other homes along the coast, and I${"'"}d rather show you what${"'"}s genuinely open than guess — here${"'"}s everything free for your dates:</p>
+<p ${P}><a href="${searchUrl}" style="display:inline-block;background:#14494a;color:#fff;text-decoration:none;padding:11px 22px;border-radius:6px;font-weight:600;">See what&rsquo;s available</a></p>
+<p ${P}>Or just reply with the dates you have in mind and I${"'"}ll sort it out personally.</p>`;
 
   return shell(`<p ${P}>Hi ${escapeHtml(firstName(inquiry.guestName))},</p>
 
@@ -170,10 +214,11 @@ Rather than leave you waiting, I wanted to reply straight away.</p>`;
         .map((a) => {
           const p = getProperty(a.slug);
           if (!p) return "";
-          return `<li style="margin-bottom:10px;">
-<a href="https://${brand.domain}/homes/${p.slug}" style="color:#14494a;font-weight:600;">${escapeHtml(p.name)}</a>
+          return `<li style="margin-bottom:12px;">
+<a href="${stayLink(p.slug, inquiry)}" style="color:#14494a;font-weight:600;">${escapeHtml(p.name)}</a>
 &mdash; ${escapeHtml(p.location)}<br>
-<span style="color:#5c6a68;">Sleeps ${p.stats.sleeps} &middot; ${money(a.total)} total for your dates</span></li>`;
+<span style="color:#5c6a68;">Sleeps ${p.stats.sleeps} &middot; ${money(a.total)} total for your dates</span><br>
+<a href="${stayLink(p.slug, inquiry)}" style="color:#14494a;font-size:14px;">Book these dates &rarr;</a></li>`;
         })
         .filter(Boolean)
         .join("\n")}</ul>`
