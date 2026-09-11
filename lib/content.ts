@@ -12,6 +12,10 @@
 
 export const brand = {
   name: "Step Away Lodging",
+  // Refundable damage hold, in dollars. Not part of the quoted total — it is
+  // held and released after checkout. Set to 0 to leave it out of quotes
+  // entirely; a single home can override it with its own `securityDeposit`.
+  securityDeposit: 350,
   tagline: "Vacation homes on the Oregon Coast",
   logo: "logo.png", // white wordmark, shown in the dark header
   logoWidth: 210,
@@ -89,6 +93,7 @@ export type Property = {
   area?: { intro: string; things: { title: string; text: string }[] };
   ownerRez: OwnerRezWidgetConfig;
   photos: Photo[]; // gallery for the detail page
+  securityDeposit?: number; // overrides the brand default when this home differs
 };
 
 // Build a gallery from numbered files in /public/homes/<slug>/ (01.jpg … NN.jpg).

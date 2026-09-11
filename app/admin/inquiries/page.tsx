@@ -42,20 +42,21 @@ type PreviewResult = { parsed: Parsed; wouldSend: boolean; available?: boolean; 
 
 const KEY = "sal-inquiry-key";
 
-// The key lives in sessionStorage so a reload does not ask for it again, and it
-// is gone when the tab closes. Read through useSyncExternalStore rather than an
-// effect: the server has no sessionStorage, and this keeps the two in step
-// without a render-triggering setState.
+// The key lives in localStorage so it survives a reload, a new tab and a
+// closed browser — several people use this page and none of them should have
+// to retype a 64-character key. "Lock" clears it. Read through
+// useSyncExternalStore rather than an effect: the server has no localStorage,
+// and this keeps the two in step without a render-triggering setState.
 const listeners = new Set<() => void>();
 
 function readKey(): string {
-  try { return sessionStorage.getItem(KEY) ?? ""; } catch { return ""; }
+  try { return localStorage.getItem(KEY) ?? ""; } catch { return ""; }
 }
 
 function writeKey(value: string) {
   try {
-    if (value) sessionStorage.setItem(KEY, value);
-    else sessionStorage.removeItem(KEY);
+    if (value) localStorage.setItem(KEY, value);
+    else localStorage.removeItem(KEY);
   } catch {}
   listeners.forEach((notify) => notify());
 }
@@ -89,7 +90,8 @@ export default function InquiryAdmin() {
       <main className="mx-auto w-full max-w-md px-5 py-20">
         <h1 className="font-display text-3xl text-[var(--sea)]">Inquiry robot</h1>
         <p className="mt-2 text-sm text-[var(--muted)]">
-          Enter your access key to see what the robot is doing. It stays in this browser tab only.
+          Enter your access key to see what the robot is doing. This browser remembers it until you
+          press Lock.
         </p>
         <form onSubmit={unlock} className="mt-6 space-y-3">
           <input
@@ -129,7 +131,7 @@ export default function InquiryAdmin() {
         </button>
       </header>
 
-      <InboxCheck accessKey={key} onExpired={forget} />
+      <InboxCheck accessKey={key} />
       <EmailTester accessKey={key} />
       <PropertyTokens accessKey={key} />
     </main>
@@ -138,7 +140,7 @@ export default function InquiryAdmin() {
 
 /* ---------------------------------------------------------------- inbox --- */
 
-function InboxCheck({ accessKey, onExpired }: { accessKey: string; onExpired: () => void }) {
+function InboxCheck({ accessKey }: { accessKey: string }) {
   const [state, setState] = useState<"idle" | "loading" | "done" | "error">("idle");
   const [data, setData] = useState<ScanResult | null>(null);
   const [error, setError] = useState("");
@@ -151,9 +153,12 @@ function InboxCheck({ accessKey, onExpired }: { accessKey: string; onExpired: ()
         headers: { "x-inquiry-secret": accessKey },
       });
       if (res.status === 401) {
-        setError("That access key is not right. Check INQUIRY_JOB_SECRET in Vercel.");
+        // Deliberately not signing out: being thrown back to a blank box, with
+        // the key gone, is a worse answer than being told it is wrong.
+        setError(
+          "That access key was not accepted. Check INQUIRY_JOB_SECRET in Vercel, then press Lock at the top and enter it again."
+        );
         setState("error");
-        onExpired();
         return;
       }
       if (!res.ok) {
@@ -168,7 +173,7 @@ function InboxCheck({ accessKey, onExpired }: { accessKey: string; onExpired: ()
       setError("Could not reach the site. Check your connection and try again.");
       setState("error");
     }
-  }, [accessKey, onExpired]);
+  }, [accessKey]);
 
   return (
     <section className="mt-10 rounded-2xl border border-[var(--border)] bg-white p-6 shadow-sm sm:p-8">
@@ -245,7 +250,7 @@ function OutcomeCard({ outcome, accessKey }: { outcome: Outcome; accessKey: stri
       </div>
 
       <dl className="mt-3 grid gap-x-6 gap-y-1 text-sm sm:grid-cols-2">
-        <Row label="Home" value={outcome.slug ?? "— not recognised —"} />
+        <Row label="Home" value={outcome.slug ?? "— not recognized —"} />
         <Row label="Guest" value={outcome.guest ?? "— not found —"} />
         <Row label="Arriving" value={outcome.arrival ?? "— not found —"} />
         <Row label="Leaving" value={outcome.departure ?? "— not found —"} />
@@ -326,7 +331,9 @@ function OutcomeCard({ outcome, accessKey }: { outcome: Outcome; accessKey: stri
         </>
       )}
 
-      {(outcome.action === "quoted" || outcome.action === "offered-alternatives") && (
+      {(outcome.action === "quoted" ||
+        outcome.action === "offered-alternatives" ||
+        outcome.action === "blocked") && (
         <SendControl messageId={outcome.messageId} to={outcome.guest} accessKey={accessKey} />
       )}
     </div>
@@ -491,7 +498,7 @@ function EmailTester({ accessKey }: { accessKey: string }) {
             {data.wouldSend ? "It understood this one." : "It would leave this one for you."}
           </p>
           <dl className="mt-3 grid gap-x-6 gap-y-1 text-sm sm:grid-cols-2">
-            <Row label="Home" value={data.parsed.slug ?? "— not recognised —"} />
+            <Row label="Home" value={data.parsed.slug ?? "— not recognized —"} />
             <Row label="Guest" value={data.parsed.guestEmail ?? "— not found —"} />
             <Row label="Arriving" value={data.parsed.arrival ?? "— not found —"} />
             <Row label="Leaving" value={data.parsed.departure ?? "— not found —"} />

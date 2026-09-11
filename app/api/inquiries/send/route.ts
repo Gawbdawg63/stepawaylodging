@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { fetchMessage, sendReply, markHandled, outlookConfigured } from "@/lib/outlook";
+import { fetchMessage, sendReply, markHandled, flagForReview, outlookConfigured } from "@/lib/outlook";
 import { buildReply } from "@/lib/respond";
 
 export const dynamic = "force-dynamic";
@@ -14,6 +14,7 @@ export const maxDuration = 60;
 
 const SENDER_DOMAIN = process.env.BEACHCOMBERS_SENDER_DOMAIN?.trim() || "beachcombersnw.com";
 const CATEGORY_SENT = "Quoted by Step Away bot";
+const CATEGORY_REVIEW = "Needs a human";
 
 function authorized(req: NextRequest): boolean {
   const secret = process.env.INQUIRY_JOB_SECRET?.trim() || process.env.CRON_SECRET?.trim();
@@ -51,17 +52,16 @@ export async function POST(req: NextRequest) {
       { status: 422 }
     );
   }
-  if (reply.kind === "blocked") {
-    return NextResponse.json(
-      { error: `OwnerRez could not price this stay, so nothing was sent. ${reply.detail}` },
-      { status: 422 }
-    );
-  }
+  // A blocked reply is sendable: it apologizes and points at live availability
+  // without claiming anything about the calendar.
 
   const to = reply.inquiry.guestEmail ?? undefined;
   try {
     await sendReply(message.id, reply.html, to);
-    await markHandled(message.id, CATEGORY_SENT);
+    // A priced reply is finished business; one we could not price stays
+    // flagged, because the underlying failure still wants looking at.
+    if (reply.kind === "blocked") await flagForReview(message.id, CATEGORY_REVIEW);
+    else await markHandled(message.id, CATEGORY_SENT);
   } catch (e) {
     return NextResponse.json({ error: `Sending failed: ${String(e)}` }, { status: 502 });
   }

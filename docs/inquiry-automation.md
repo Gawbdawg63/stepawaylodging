@@ -8,8 +8,9 @@ creates a real saved quote, and emails the guest back — automatically.
 
 | Situation | What happens |
 | --- | --- |
-| Dates, home and guest email all read cleanly, home is free | Creates an OwnerRez quote (7-day expiry) and **sends** the priced reply. Marks the email read, category *Quoted by Step Away bot*. |
+| Dates, home and guest email all read cleanly, home is free | Creates an OwnerRez quote (24-hour expiry) and **sends** the priced reply. Marks the email read, category *Quoted by Step Away bot*. |
 | Read cleanly, but the home is booked | Prices every other home for those dates and **sends** a reply listing the ones that are free, cheapest first. |
+| OwnerRez will not price the stay | Replies with an apology that points at live availability for their dates. It names a minimum-stay rule only when OwnerRez gave the number, and never claims the home is booked. Stays flagged *Needs a human* even after sending. |
 | Anything unclear — no dates, home not recognised, dates backwards, no guest email | **Sends nothing.** Saves a short "could you confirm your dates" draft, flags the email and leaves it unread, category *Needs a human*. |
 
 The third row is the safety net: a wrong home or a wrong week reaching a guest
@@ -70,6 +71,20 @@ All variables are listed in [`.env.example`](../.env.example). A Microsoft 365
 tenant can use app-only auth instead of step 3 (`MS_TENANT_ID`,
 `MS_CLIENT_SECRET`, `MS_MAILBOX`, with admin-consented *application*
 permissions), but the refresh token works for both account types.
+
+## Money wording in quotes
+
+Two figures in a priced reply come from `lib/content.ts`, not the email
+template:
+
+- `brand.securityDeposit` — the refundable damage hold, quoted as held and
+  released after checkout, and deliberately kept out of the total since it is
+  not a charge. Set it to `0` to drop the sentence; a single home can override
+  it with its own `securityDeposit`.
+- Quotes expire **24 hours** after they are created, and the email names the
+  exact Pacific time rather than a bare date — read late in the evening, "good
+  through tomorrow" sounds like two days and is really an hour. Change the
+  window with `expiresInHours` in `createQuote`.
 
 ## The dashboard
 

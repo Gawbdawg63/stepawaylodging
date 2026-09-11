@@ -335,7 +335,7 @@ export async function createQuote(input: {
   guestName?: string | null;
   guestPhone?: string | null;
   notes?: string;
-  expiresInDays?: number;
+  expiresInHours?: number;
 }): Promise<QuoteOutcome> {
   const id = PROPERTY_IDS[input.slug];
   if (!id) return { status: "failed", detail: `No OwnerRez property id for "${input.slug}".` };
@@ -350,7 +350,7 @@ export async function createQuote(input: {
     ? await findOrCreateGuest(auth, input.guestEmail, input.guestName ?? null, input.guestPhone ?? null)
     : null;
 
-  const expiresUtc = new Date(Date.now() + (input.expiresInDays ?? 7) * 86400000).toISOString();
+  const expiresUtc = new Date(Date.now() + (input.expiresInHours ?? 24) * 3600000).toISOString();
 
   try {
     const res = await orFetch(`/v2/quotes`, auth, {
