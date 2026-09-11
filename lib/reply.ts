@@ -9,6 +9,19 @@ import type { ParsedInquiry } from "@/lib/inquiry";
 const money = (n: number) =>
   n.toLocaleString("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 });
 
+// The homes are all on the Oregon coast, so Pacific is the honest clock to
+// quote an expiry in, and it is named so nobody has to guess.
+function expiryMoment(iso: string): string {
+  return new Date(iso).toLocaleString("en-US", {
+    weekday: "short",
+    month: "short",
+    day: "numeric",
+    hour: "numeric",
+    minute: "2-digit",
+    timeZone: "America/Los_Angeles",
+  }) + " Pacific";
+}
+
 function longDate(iso: string): string {
   return new Date(iso + "T12:00:00Z").toLocaleDateString("en-US", {
     weekday: "short",
@@ -59,6 +72,15 @@ export function composeQuoteReply(inquiry: ParsedInquiry, quote: CreatedQuote): 
   const bookUrl = quote.bookingUrl ?? quote.url ?? stayUrl;
   const guests = inquiry.adults + inquiry.children;
 
+  // A refundable hold is not a charge, so it sits apart from the total rather
+  // than in the table — but it has to be said, or "nothing added later" reads
+  // as a promise the deposit then breaks.
+  const held = property?.securityDeposit ?? brand.securityDeposit;
+  const deposit = held
+    ? ` A refundable <strong>${money(held)}</strong> security deposit is held against damage and
+released back to you after checkout.`
+    : "";
+
   return shell(`<p ${P}>Hi ${escapeHtml(firstName(inquiry.guestName))},</p>
 
 <p ${P}>Thanks so much for your inquiry about <strong>${escapeHtml(name)}</strong> — good news, it${"'"}s available for your dates.</p>
@@ -68,8 +90,8 @@ ${quote.nights} ${quote.nights === 1 ? "night" : "nights"} · ${guests} ${guests
 
 ${chargeTable(quote)}
 
-<p ${P}>That${"'"}s the full price — rent, fees and taxes included, with nothing added later.
-${quote.id ? `I${"'"}ve put a quote on hold for you, good through ${longDate(quote.expiresUtc.slice(0, 10))}.` : ""}</p>
+<p ${P}>That${"'"}s the full price to pay — rent, fees and taxes included, with nothing added later.${deposit}
+${quote.id ? `I${"'"}ve put this quote on hold for you for the next 24 hours — until ${expiryMoment(quote.expiresUtc)}.` : ""}</p>
 
 <p ${P}><a href="${bookUrl}" style="display:inline-block;background:#14494a;color:#fff;text-decoration:none;padding:11px 22px;border-radius:6px;font-weight:600;">Book these dates</a></p>
 
