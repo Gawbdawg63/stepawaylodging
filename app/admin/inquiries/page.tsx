@@ -585,11 +585,16 @@ function Problem({ children }: { children: React.ReactNode }) {
 
 // The reply is rendered in a sandboxed frame: it is our own generated HTML, but
 // an email body has no business running script in the admin page.
+//
+// allow-same-origin is needed because Safari renders a srcdoc frame blank
+// without it. It does not weaken anything that matters here: allow-scripts is
+// still absent, so nothing in the document can execute, and a frame that
+// cannot run script cannot use an origin for anything.
 function ReplyPreview({ html }: { html: string }) {
   return (
     <iframe
       title="Reply preview"
-      sandbox=""
+      sandbox="allow-same-origin"
       srcDoc={html}
       className="mt-3 h-80 w-full rounded-lg border border-[var(--border)] bg-white"
     />
