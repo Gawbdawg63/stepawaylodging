@@ -215,6 +215,22 @@ export const posts: BlogPost[] = [
       "Menus and hours change with the seasons on the coast, so when in doubt, just ask us — we live here and we're always happy to point you to what's good right now. Browse our homes to plan your stay, and come hungry.",
     ],
   },
+  {
+    slug: "beachcombing-oregon-coast-agates-sea-glass-driftwood",
+    title: "Beachcombing the Oregon Coast: Agates, Sea Glass & Driftwood",
+    date: "2026-09-14",
+    author: "Step Away Lodging",
+    excerpt:
+      "Long before the glass-float hunt, beachcombers came to the Oregon coast for agates, sea glass, and driftwood. Here's how to find your own treasures on the sand.",
+    cover: "homes/beach-bungalow-by-the-sea.jpg",
+    body: [
+      "There's a particular kind of quiet joy in walking the beach with your eyes on the sand instead of the horizon. Oregon's beaches are all public land, protected for everyone to walk and explore under the state's 1967 Beach Bill, so there's no shortage of shoreline to search — just seven miles of it right here in Lincoln City, and hundreds more up and down the coast.",
+      "Agates are the classic prize. These translucent quartz stones wash out of eroding headlands and get tumbled smooth by the surf, often turning up in patches of small gravel near river mouths and rocky points. The trick locals swear by: get down low and look toward the light. Wet agates catch and glow where opaque rocks stay dull, so a bright patch in a field of gray pebbles is usually worth a second look. Newport's own Agate Beach earned its name honestly, but you'll find them scattered along much of the central coast too.",
+      "Driftwood is the other constant. Whole logs and sun-bleached branches pile up above the tideline all winter, perfect for building a fort with the kids, or just hauling home a striking piece for the mantle. Sea glass turns up less often on the Pacific than on some other coastlines, but it does happen — old bottle glass, worn frosty and soft-edged by years in the surf, is a genuine little thrill when you spot it.",
+      "Timing matters more than luck. The best hunting tends to follow a storm or a big tide, when the surf has reworked the beach and turned up material that's been buried for months. Early morning, right after low tide, is prime time — the sand is freshly rinsed and you'll beat both the crowds and the next high water. Bring a small bag, keep an eye on the surf line (never turn your back on the ocean), and if you find a live sand dollar — gray or purple and slightly fuzzy, rather than bleached white — the kind thing is to leave it right where the water can reach it.",
+      "A beachcombing walk pairs perfectly with a slow coastal stay: no schedule to keep, just tide charts and curiosity. Come back to a warm home, rinse off your finds on the deck, and settle into the hot tub while you sort through the day's haul. Browse our homes and book direct at stepawaylodging.com for your next treasure hunt on the sand.",
+    ],
+  },
 ];
 
 export const postsByDate = [...posts].sort((a, b) => (a.date < b.date ? 1 : -1));
