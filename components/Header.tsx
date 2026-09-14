@@ -10,6 +10,7 @@ const defaultLinks: NavLink[] = [
   { href: "/homes", label: "Our Homes" },
   { href: "/our-story", label: "Our Story" },
   { href: "/events", label: "Events" },
+  { href: "/blog", label: "Blog" },
   { href: "/central-oregon", label: "Central Oregon" },
   { href: "/owners", label: "For Owners" },
 ];
