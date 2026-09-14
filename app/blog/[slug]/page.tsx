@@ -7,7 +7,7 @@ import PageHero from "@/components/PageHero";
 import JsonLd from "@/components/JsonLd";
 import { posts, getPost } from "@/lib/blog";
 import { brand } from "@/lib/content";
-import { abs } from "@/lib/seo";
+import { abs, breadcrumbJsonLd } from "@/lib/seo";
 
 export function generateStaticParams() {
   return posts.map((p) => ({ slug: p.slug }));
@@ -47,6 +47,11 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
   return (
     <div>
       <JsonLd data={jsonLd} />
+      <JsonLd data={breadcrumbJsonLd([
+        { name: "Home", path: "/" },
+        { name: "Blog", path: "/blog" },
+        { name: p.title, path: `/blog/${p.slug}` },
+      ])} />
       <Header />
       <PageHero eyebrow={fmt(p.date)} title={p.title} />
 

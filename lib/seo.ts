@@ -88,22 +88,73 @@ export function propertyJsonLd(p: Property, r?: ReviewsForSchema) {
 }
 
 // Structured data for the whole brand (schema.org LodgingBusiness).
+// Rich entity data helps both Google and AI answer engines (AEO) understand
+// exactly who the business is, where it operates, and what it offers.
 export function siteJsonLd(average?: number | null, count?: number | null) {
   return {
     "@context": "https://schema.org",
-    "@type": "LodgingBusiness",
+    "@type": ["LodgingBusiness", "PropertyManagementCompany"],
+    "@id": `${BASE}#business`,
     name: brand.name,
+    legalName: brand.name,
+    slogan: brand.tagline,
     ...(average && count
-      ? { aggregateRating: { "@type": "AggregateRating", ratingValue: average, reviewCount: count, bestRating: 5 } }
+      ? { aggregateRating: { "@type": "AggregateRating", ratingValue: average, reviewCount: count, bestRating: 5, worstRating: 1 } }
       : {}),
     description:
-      "Hand-picked vacation homes and suites on the Oregon Coast, each with a hot tub. Book direct with Step Away Lodging.",
+      "Step Away Lodging is a family-owned vacation-rental and property-management company on Oregon's central coast. We offer a curated collection of coastal homes and suites — each with a private hot tub — bookable direct, and provide full-service property management for owners on the Oregon Coast and in Central Oregon.",
     url: BASE,
     image: abs("/homes/ocean-peak-ridge.jpg"),
-    areaServed: { "@type": "Place", name: "Oregon Coast" },
+    logo: abs("/apple-icon.png"),
+    priceRange: "$$",
+    numberOfRooms: 7,
+    founder: { "@type": "Person", name: "Lisa Ward", description: "Founder with 30+ years in Oregon Coast vacation rentals." },
+    knowsAbout: [
+      "Oregon Coast vacation rentals",
+      "Lincoln City vacation homes",
+      "vacation rental property management",
+      "pet-friendly beach rentals",
+      "vacation homes with hot tubs",
+      "Depoe Bay",
+      "Central Oregon vacation rentals",
+    ],
+    areaServed: [
+      { "@type": "City", name: "Lincoln City", address: { "@type": "PostalAddress", addressRegion: "OR", addressCountry: "US" } },
+      { "@type": "City", name: "Depoe Bay", address: { "@type": "PostalAddress", addressRegion: "OR", addressCountry: "US" } },
+      { "@type": "Place", name: "Oregon Coast" },
+      { "@type": "Place", name: "Central Oregon" },
+    ],
     address: { "@type": "PostalAddress", addressRegion: "OR", addressCountry: "US" },
     ...(brand.phone ? { telephone: brand.phone } : {}),
     ...(brand.email ? { email: brand.email } : {}),
     sameAs: [brand.social.facebook, brand.social.instagram, brand.social.pinterest].filter(Boolean),
+  };
+}
+
+// FAQPage structured data — answer-first Q&A that AI answer engines (ChatGPT,
+// Perplexity, Google AI Overviews) can lift directly. Pair with a visible FAQ.
+export function faqJsonLd(faqs: { q: string; a: string }[]) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: faqs.map((f) => ({
+      "@type": "Question",
+      name: f.q,
+      acceptedAnswer: { "@type": "Answer", text: f.a },
+    })),
+  };
+}
+
+// BreadcrumbList structured data — clarifies page hierarchy for search and AI.
+export function breadcrumbJsonLd(items: { name: string; path: string }[]) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: items.map((it, i) => ({
+      "@type": "ListItem",
+      position: i + 1,
+      name: it.name,
+      item: abs(it.path),
+    })),
   };
 }

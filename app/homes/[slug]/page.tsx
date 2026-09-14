@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import PropertyPage from "@/components/PropertyPage";
 import JsonLd from "@/components/JsonLd";
 import { properties, getProperty, brand } from "@/lib/content";
-import { propertyJsonLd } from "@/lib/seo";
+import { propertyJsonLd, breadcrumbJsonLd } from "@/lib/seo";
 import { getReviews, reviewMatchesHome } from "@/lib/reviews";
 
 const num = (n: number) => (Number.isInteger(n) ? String(n) : n.toFixed(1));
@@ -60,6 +60,11 @@ export default async function Page({
   return (
     <>
       <JsonLd data={propertyJsonLd(property, { average, count, reviews: schemaReviews })} />
+      <JsonLd data={breadcrumbJsonLd([
+        { name: "Home", path: "/" },
+        { name: "Our Homes", path: "/homes" },
+        { name: property.name, path: `/homes/${property.slug}` },
+      ])} />
       <PropertyPage property={property} />
     </>
   );

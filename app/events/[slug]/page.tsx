@@ -7,7 +7,7 @@ import EventCover from "@/components/EventCover";
 import JsonLd from "@/components/JsonLd";
 import { events, getEvent } from "@/lib/events";
 import { brand } from "@/lib/content";
-import { abs } from "@/lib/seo";
+import { abs, breadcrumbJsonLd } from "@/lib/seo";
 
 export function generateStaticParams() {
   return events.map((e) => ({ slug: e.slug }));
@@ -45,6 +45,11 @@ export default async function EventPage({ params }: { params: Promise<{ slug: st
   return (
     <div>
       <JsonLd data={jsonLd} />
+      <JsonLd data={breadcrumbJsonLd([
+        { name: "Home", path: "/" },
+        { name: "Events", path: "/events" },
+        { name: e.title, path: `/events/${e.slug}` },
+      ])} />
       <Header />
 
       <article>
