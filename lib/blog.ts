@@ -88,6 +88,117 @@ export const posts: BlogPost[] = [
       "We keep pet-friendly homes in our collection so your whole family can come along — just look for the pet-friendly note when you book, and review the simple pet policy (leashed, not left unattended, one dog with a 50 lb limit). Browse our homes to find the right fit, and we'll see you — and your dog — on the sand.",
     ],
   },
+  {
+    slug: "whale-watching-oregon-coast-when-and-where",
+    title: "Whale Watching on the Oregon Coast: When & Where",
+    date: "2026-09-11",
+    author: "Step Away Lodging",
+    excerpt:
+      "Gray whales pass right by Lincoln City — and some stay all summer. Here's when to look, where to go, and how to spot them.",
+    cover: "hero.jpg",
+    body: [
+      "One of the best things about a stay on the central Oregon coast is that whale watching is often as simple as looking up from the beach. Gray whales travel this stretch of coastline in the thousands, and with a little timing you have an excellent chance of seeing a spout, a fluke, or a barnacled back breaking the surface.",
+      "There are two big migrations each year. In late December, around 18,000 gray whales head south toward Baja — the peak falls right around the week between Christmas and New Year's. Then in late March, they come back north with their calves, hugging the shore even closer as they go. Oregon celebrates both with Whale Watch Week, when trained volunteers set up at lookout points up and down the coast to help you spot them.",
+      "The real secret, though, is summer. A group of roughly 200 'resident' gray whales skips the long trip to Alaska and feeds just offshore from about mid-June through mid-November — which means you can watch whales on a warm, calm day, not only in the winter surf. Depoe Bay, a short drive south of Lincoln City, calls itself the whale-watching capital of the Oregon coast, with a free Whale Watching Center right on the seawall and boat tours that head out from the world's smallest navigable harbor.",
+      "To spot them yourself: pick a clear day, find a high vantage point or an ocean-view deck, bring binoculars, and scan the horizon slowly for the puff of a spout — that's usually what you see first. Early morning, when the water is calm, tends to be best.",
+      "Many of our homes look straight out at the water, so you can pour a coffee, step onto the deck, and start scanning without leaving the house. Browse our ocean-view homes and plan your whale-watching escape.",
+    ],
+  },
+  {
+    slug: "beachfront-vs-ocean-view-oregon-coast-rental",
+    title: "Beachfront vs. Ocean-View: Choosing Your Coast Rental",
+    date: "2026-09-08",
+    author: "Step Away Lodging",
+    excerpt:
+      "'Oceanfront,' 'ocean view,' 'steps to the sand' — the labels can be confusing. Here's what they really mean, so you book the stay you're picturing.",
+    cover: "photos/photo-11.jpg",
+    body: [
+      "When you're browsing coast rentals, the location words all start to blur together — oceanfront, ocean view, beachfront, steps to the sand. They describe genuinely different experiences, and knowing the difference is the easiest way to make sure the home matches what you're imagining.",
+      "'Oceanfront' or 'beachfront' means the property sits right on the beach or bluff, with the sand just outside — often with private or community beach access a short walk away. 'Ocean view' means you can see the water from the home, though there may be a road, a row of houses, or a short walk between you and the sand. Both can be wonderful; they just suit different trips.",
+      "Ask yourself how you'll spend your days. If you want to walk straight out to the beach with the kids, hunt for glass floats at first light, or fall asleep to the surf, prioritize being close to the sand. If you'd rather have a big, comfortable home with a sweeping view to enjoy from the deck or hot tub — and don't mind a short stroll to the water — an ocean-view home often gives you more house for the money and a higher, wider outlook.",
+      "A few things to check either way: which direction the home faces (west and southwest catch the sunset over the water), how many steps or what kind of path leads to the beach, and whether the view is from the main living area or just a bedroom. We describe each home honestly on its page, with a map of the general area and photos of the actual outlook.",
+      "Not sure which of our homes fits your group? Send us an inquiry — we know each one personally and we're happy to point you to the right one. Browse our homes to compare.",
+    ],
+  },
+  {
+    slug: "storm-watching-lincoln-city-oregon",
+    title: "Storm Watching in Lincoln City: The Coast's Cozy Secret",
+    date: "2026-09-04",
+    author: "Step Away Lodging",
+    excerpt:
+      "Winter on the Oregon coast is dramatic, moody, and surprisingly cozy. Here's how to enjoy storm season from the warm side of the window.",
+    cover: "photos/photo-12.jpg",
+    body: [
+      "Ask a local for their favorite season on the Oregon coast and plenty will tell you: winter. From about November through February, big Pacific storms roll in and put on a show — towering waves, wind-whipped spray, driftwood tossed high on the sand, and skies that shift from silver to gold in minutes. It's raw and beautiful, and the crowds are long gone.",
+      "The trick is to enjoy it from the warm side of the glass. A home with an ocean view, a fireplace, and a hot tub turns a stormy night into the coziest getaway of the year: watch the waves crash while you're wrapped in a blanket, then step out for a soak with the rain coming down and the surf roaring below. It's the kind of evening people drive hours for.",
+      "Time your visit around a 'king tide' — the year's highest tides, which stack up with winter swells for the most dramatic surf — and keep an eye on the forecast for the day after a storm, when the beach is scattered with fresh driftwood and, often, more glass floats than usual. Just watch the water from a safe distance: never turn your back on the ocean, and steer clear of logs in the swash zone.",
+      "Bundle up for a bracing walk between squalls, warm up with a bowl of clam chowder in town, and settle in for the evening light show. It's the Oregon coast at its most cinematic.",
+      "Every Step Away Lodging home has a hot tub, and many pair it with a fireplace and ocean views — the perfect base for storm season. Browse our homes and book your cozy winter escape.",
+    ],
+  },
+  {
+    slug: "weekend-in-bend-from-the-oregon-coast",
+    title: "Coast to High Desert: A Weekend in Bend",
+    date: "2026-08-30",
+    author: "Step Away Lodging",
+    excerpt:
+      "Oregon packs the ocean and the high desert into one road trip. Here's how to pair a coast stay with a weekend in Bend and central Oregon.",
+    cover: "bend.jpg",
+    body: [
+      "One of the joys of an Oregon trip is how much changes in a few hours of driving. Leave the misty coast, climb over the Cascades, and you drop into the high desert around Bend — all sunshine, ponderosa pines, volcanic rock, and the sparkling Deschutes River. It makes for a fantastic two-part vacation: salt air one half, alpine light the other.",
+      "Bend is an outdoor-lover's basecamp. In summer, float the Deschutes right through town, hike among the lakes and waterfalls of the Cascade Lakes Scenic Byway, or scramble the trails at Smith Rock State Park, one of the birthplaces of American rock climbing. In winter, Mt. Bachelor delivers some of the best skiing and riding in the Northwest. Year-round, the town itself is famous for its breweries — the Bend Ale Trail strings together more than a dozen of them.",
+      "It's an easy add-on to a coast stay. Plan a scenic drive over the mountains (the passes are gorgeous, and you'll want to check winter road conditions), spend a couple of nights exploring the high desert, then loop back to the ocean — or the other way around. Kids love the High Desert Museum and the lava caves at Newberry National Volcanic Monument.",
+      "Step Away Lodging is growing into central Oregon, so you can enjoy the same personal, locally-managed hospitality on both sides of the mountains. Explore our Central Oregon page to see what's coming, and browse our coast homes to plan the ocean half of your trip.",
+    ],
+  },
+  {
+    slug: "three-day-lincoln-city-itinerary",
+    title: "The Perfect 3-Day Lincoln City Itinerary",
+    date: "2026-08-26",
+    author: "Step Away Lodging",
+    excerpt:
+      "Only have a long weekend? Here's a relaxed, local-approved plan for three perfect days on the central Oregon coast.",
+    cover: "events/sandcastle-contest.jpg",
+    body: [
+      "Three days is just enough to fall for the central Oregon coast. This is the unhurried, local rhythm we'd recommend — beach mornings, good food, and one memorable outing a day, with plenty of time to do nothing at all.",
+      "Day one: settle in and go straight to the sand. Take a long walk on Lincoln City's seven miles of beach, hunt for a hand-blown glass float along the high-tide line, and let the kids build a driftwood fort. Grab clam chowder for lunch, pick up groceries for the house, and spend the evening watching the sunset from the deck before a soak in the hot tub.",
+      "Day two: explore a little farther. Drive south to Depoe Bay to look for whales from the seawall, tour the tide pools and lighthouse near Newport, or head to the Connie Hansen Garden and the shops in town if the weather turns. Fly a kite in the afternoon wind — it's practically the local sport — then come home to warm up.",
+      "Day three: pick your pace. Rent a paddleboard or kayak on Devil's Lake, browse the antique and vintage shops, or simply have a slow beach morning before checkout. Squeeze in one more chowder and one more walk on the sand for the road.",
+      "The beauty of staying in a home base with a kitchen and a hot tub is that you set the tempo — no rushing, no crowds, just the coast on your schedule. Browse our homes and start planning your three days.",
+    ],
+  },
+  {
+    slug: "best-oregon-coast-rentals-for-large-groups",
+    title: "The Best Oregon Coast Rentals for Large Groups",
+    date: "2026-08-22",
+    author: "Step Away Lodging",
+    excerpt:
+      "Family reunion, friends' trip, or a multi-generation getaway? Here's how to pick a coast home that fits everyone — comfortably.",
+    cover: "photos/photo-13.jpg",
+    body: [
+      "There's something special about getting everyone together on the coast — the whole family under one roof, meals around a big table, and the beach out the door. Booking for a large group just takes a little more planning, and the right home makes all the difference between cramped and carefree.",
+      "Start with how people actually sleep. Look past the headline 'sleeps 10' and check the bedroom count and bed types, so couples have real bedrooms and kids have their own space. Bathrooms matter just as much for a big group — the more, the smoother your mornings. Then think about the gathering spaces: an open living and kitchen area, a large dining table, and outdoor decks are what make a group home feel generous instead of tight.",
+      "A few of our homes are built for exactly this. Ocean Peak Ridge spreads three floors of living and ocean views across sleeping for ten. Americana and Ebb and Flow are roomy family houses with big kitchens and plenty of common space — and every one comes with a hot tub for winding down together at the end of the day. Traveling as two couples or a few families? Some of our properties sit right next to each other, so you can book neighboring homes and still share the beach and the evenings.",
+      "Our best advice: tell us about your group and we'll help you match the right home — or the right combination of homes. We manage each one personally, so we know which layout suits a reunion, a friends' weekend, or a multi-generation holiday.",
+      "Browse our homes to see the whole collection, or send us an inquiry and we'll help you gather everyone on the coast.",
+    ],
+  },
+  {
+    slug: "should-you-hire-a-vacation-rental-property-manager",
+    title: "Should You Hire a Property Manager for Your Vacation Rental?",
+    date: "2026-08-16",
+    author: "Step Away Lodging",
+    excerpt:
+      "Thinking about renting out your Oregon coast home? Here's an honest look at what a property manager actually does — and when it's worth it.",
+    cover: "photos/photo-05.jpg",
+    body: [
+      "Owning a vacation home on the Oregon coast is a wonderful thing — and turning it into a short-term rental can help it pay for itself. But managing that rental well is a real job. Before you decide to go it alone or bring in help, it's worth understanding everything the work actually involves.",
+      "A good property manager handles the whole guest journey: professional photos and listings, pricing that flexes with the seasons, bookings and calendars across every platform, guest communication at all hours, cleaning and laundry between stays, restocking, routine maintenance, and the inevitable 'the hot tub isn't heating' call at 9pm. Done right, it means more bookings, better reviews, higher nightly rates — and none of the late-night texts landing on you.",
+      "The question to ask isn't just 'what does it cost?' but 'what is my time and peace of mind worth?' If you live nearby, love hosting, and have the hours to spare, self-managing can work. If you're out of the area, short on time, or simply want to enjoy owning the home without running a small hospitality business, a local manager usually more than pays for itself in occupancy, rates, and stress saved.",
+      "That's exactly what we do. Step Away Lodging is a family-owned team with more than 30 years on the Oregon coast, and we treat every owner's home like our own — full-service management, personal attention, and guests who leave five-star reviews. We handle everything; you collect the income and keep the peace of mind.",
+      "Curious what your home could do? Visit our For Owners page or reach out for a no-pressure conversation about your property.",
+    ],
+  },
 ];
 
 export const postsByDate = [...posts].sort((a, b) => (a.date < b.date ? 1 : -1));
