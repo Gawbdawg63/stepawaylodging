@@ -199,6 +199,22 @@ export const posts: BlogPost[] = [
       "Curious what your home could do? Visit our For Owners page or reach out for a no-pressure conversation about your property.",
     ],
   },
+  {
+    slug: "where-to-eat-in-lincoln-city-oregon",
+    title: "Where to Eat in Lincoln City: Chowder, Seafood & More",
+    date: "2026-09-01",
+    author: "Step Away Lodging",
+    excerpt:
+      "Fresh Pacific seafood, legendary clam chowder, cozy bakeries and brewpubs — a local's take on eating well in Lincoln City.",
+    cover: "photos/photo-07.jpg",
+    body: [
+      "Sea air has a way of making you hungry, and Lincoln City delivers. For a town of its size, the food scene punches well above its weight — built around the fresh Pacific seafood landed just down the coast, plus a growing cast of bakeries, coffee roasters, food carts, and brewpubs. Here's how we'd eat our way through a stay.",
+      "Start with chowder, because you have to. Clam chowder is the coast's signature comfort food, and you'll find rich, steaming bowls of it all over town — including at Mo's, the beloved Oregon institution that's been serving the coast since 1946. Pair it with fish and chips or a fresh Dungeness crab roll and you've got the perfect post-beach lunch.",
+      "For dinner, you're spoiled for fresh seafood — halibut, salmon, rockfish, oysters, and crab straight from local waters — alongside options for every mood, from casual family spots to a nicer night out with an ocean view. Grab-and-go is easy too: pick up fresh catch from a seafood market and cook it back at the house (every one of our homes has a full kitchen), or graze the food carts for a low-key evening.",
+      "Don't skip breakfast and the in-between moments: local coffee roasters and cozy bakeries make for a slow, happy start to a beach day, and the area's brewpubs and tasting rooms are a fine way to end one. Rainy afternoon? The restaurants at Chinook Winds Casino Resort sit right on the beach, so you can watch the waves while you eat.",
+      "Menus and hours change with the seasons on the coast, so when in doubt, just ask us — we live here and we're always happy to point you to what's good right now. Browse our homes to plan your stay, and come hungry.",
+    ],
+  },
 ];
 
 export const postsByDate = [...posts].sort((a, b) => (a.date < b.date ? 1 : -1));
