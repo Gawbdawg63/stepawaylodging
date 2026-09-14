@@ -65,14 +65,17 @@ export async function buildReply(subject: string, body: string, senderDomain: st
     // Only list homes OwnerRez positively confirmed as free. If it is having a
     // bad day, an empty list means "we did not find any", never "everything is
     // taken" — so silence is reported as silence, not as a full calendar.
-    const alternatives = await freeElsewhere(inquiry);
+    const other = await freeElsewhere(inquiry);
     return {
       kind: "blocked",
       inquiry,
       detail: outcome.detail,
-      html: composeCouldNotPriceReply(inquiry, { minNights: minNightsFrom(outcome.detail), alternatives }),
+      html: composeCouldNotPriceReply(inquiry, {
+        minNights: minNightsFrom(outcome.detail),
+        alternatives: other.rows,
+      }),
       quote: null,
-      alternatives,
+      alternatives: other.rows,
     };
   }
 
@@ -96,13 +99,23 @@ export async function buildReply(subject: string, body: string, senderDomain: st
 }
 
 // Homes other than the one asked about that OwnerRez confirms are free.
-async function freeElsewhere(inquiry: ParsedInquiry): Promise<{ slug: string; total: number }[]> {
+//
+// `searched` matters as much as the rows: an empty list means "none are free"
+// only when the check actually ran. If it failed, an empty list means we do
+// not know, and saying "everything is taken" would be the same wrong answer
+// as calling a failed quote a booked calendar.
+async function freeElsewhere(
+  inquiry: ParsedInquiry
+): Promise<{ searched: boolean; rows: { slug: string; total: number }[] }> {
   const search = await searchAvailability(inquiry.arrival!, inquiry.departure!, inquiry.adults);
-  if (!search.ok) return [];
-  return search.rows
-    .filter((r) => r.available && r.total !== null && r.slug !== inquiry.slug)
-    .map((r) => ({ slug: r.slug, total: r.total as number }))
-    .sort((a, b) => a.total - b.total);
+  if (!search.ok) return { searched: false, rows: [] };
+  return {
+    searched: true,
+    rows: search.rows
+      .filter((r) => r.available && r.total !== null && r.slug !== inquiry.slug)
+      .map((r) => ({ slug: r.slug, total: r.total as number }))
+      .sort((a, b) => a.total - b.total),
+  };
 }
 
 // A minimum-stay rule is the one refusal worth explaining to a guest, and the
