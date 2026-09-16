@@ -6,6 +6,7 @@ import {
   composeAlternativesReply,
   composeNeedsInfoReply,
   composeCouldNotPriceReply,
+  composeTooManyGuestsReply,
 } from "@/lib/reply";
 import { brand } from "@/lib/content";
 
@@ -66,17 +67,21 @@ export async function buildReply(subject: string, body: string, senderDomain: st
     // bad day, an empty list means "we did not find any", never "everything is
     // taken" — so silence is reported as silence, not as a full calendar.
     const other = await freeElsewhere(inquiry);
-    return {
-      kind: "blocked",
-      inquiry,
-      detail: outcome.detail,
-      html: composeCouldNotPriceReply(inquiry, {
-        minNights: minNightsFrom(outcome.detail),
-        alternatives: other.rows,
-      }),
-      quote: null,
-      alternatives: other.rows,
-    };
+
+    // A group too large for the home is a question with a real answer, so it
+    // gets one: the actual limit, and the homes that do fit them. Every home
+    // in that list was priced for this same party, so none of them can be too
+    // small either.
+    const capacity = capacityFrom(outcome.detail);
+    const html =
+      capacity.maxGuests || capacity.maxAdults
+        ? composeTooManyGuestsReply(inquiry, { ...capacity, alternatives: other.rows })
+        : composeCouldNotPriceReply(inquiry, {
+            minNights: minNightsFrom(outcome.detail),
+            alternatives: other.rows,
+          });
+
+    return { kind: "blocked", inquiry, detail: outcome.detail, html, quote: null, alternatives: other.rows };
   }
 
   // OwnerRez says the home really is taken. Offer whatever else is genuinely
@@ -115,6 +120,17 @@ async function freeElsewhere(
       .filter((r) => r.available && r.total !== null && r.slug !== inquiry.slug)
       .map((r) => ({ slug: r.slug, total: r.total as number }))
       .sort((a, b) => a.total - b.total),
+  };
+}
+
+// OwnerRez names the limits when a party is too large — "This property allows
+// a maximum of 10 guests." — so the guest can be told the real number instead
+// of a shrug.
+function capacityFrom(detail: string): { maxGuests?: number; maxAdults?: number } {
+  const num = (m: RegExpMatchArray | null) => (m ? Number(m[1]) : undefined);
+  return {
+    maxGuests: num(detail.match(/maximum of (\d{1,2}) guests/i)),
+    maxAdults: num(detail.match(/maximum of (\d{1,2}) adults/i)),
   };
 }
 

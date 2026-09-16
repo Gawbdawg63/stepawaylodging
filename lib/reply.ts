@@ -184,6 +184,58 @@ function escapeHtml(s: string): string {
     .replace(/"/g, "&quot;");
 }
 
+// Sent when the party is larger than the home takes. OwnerRez names the limits
+// in its refusal, so the guest gets the real number rather than a vague "that
+// did not work" — and, because the alternatives list is built by pricing each
+// home for this same party, anything offered here already fits them.
+export function composeTooManyGuestsReply(
+  inquiry: ParsedInquiry,
+  opts: { maxGuests?: number; maxAdults?: number; alternatives: { slug: string; total: number }[] }
+): string {
+  const property = getProperty(inquiry.slug ?? "");
+  const name = property?.name ?? inquiry.propertyText ?? "that home";
+  const party = inquiry.adults + inquiry.children;
+
+  const limit = opts.maxGuests
+    ? `sleeps up to <strong>${opts.maxGuests}</strong>${
+        opts.maxAdults && opts.maxAdults < opts.maxGuests ? ` (up to ${opts.maxAdults} of them adults)` : ""
+      }`
+    : `cannot take a group that size`;
+
+  const searchUrl =
+    `https://${brand.domain}/search?arrival=${inquiry.arrival}&departure=${inquiry.departure}&adults=${Math.max(party, 1)}`;
+
+  const fits = opts.alternatives.length
+    ? `<p ${P}>These homes of ours do fit ${party} and are free for your dates:</p>
+<ul style="margin:0 0 16px;padding-left:20px;">${opts.alternatives
+        .map((a) => {
+          const p = getProperty(a.slug);
+          if (!p) return "";
+          return `<li style="margin-bottom:12px;">
+<a href="${stayLink(p.slug, inquiry)}" style="color:#14494a;font-weight:600;">${escapeHtml(p.name)}</a>
+&mdash; ${escapeHtml(p.location)}<br>
+<span style="color:#5c6a68;">Sleeps ${p.stats.sleeps} &middot; ${money(a.total)} total for your dates</span><br>
+<a href="${stayLink(p.slug, inquiry)}" style="color:#14494a;font-size:14px;">Book these dates &rarr;</a></li>`;
+        })
+        .filter(Boolean)
+        .join("\n")}</ul>
+<p ${P}>Every price above is the full total to pay &mdash; rent, fees and taxes included.${depositLine()}</p>`
+    : `<p ${P}>Here is everything we have open for your dates, with the ones big enough for ${party} shown first:</p>
+<p ${P}><a href="${searchUrl}" style="display:inline-block;background:#14494a;color:#fff;text-decoration:none;padding:11px 22px;border-radius:6px;font-weight:600;">See what&rsquo;s available</a></p>`;
+
+  return shell(`<p ${P}>Hi ${escapeHtml(firstName(inquiry.guestName))},</p>
+
+<p ${P}>Thanks so much for your inquiry about <strong>${escapeHtml(name)}</strong>.</p>
+
+<p ${P}>It ${limit}, so it is not quite big enough for a party of <strong>${party}</strong> &mdash;
+I did not want to quote you a stay that would not work on arrival.</p>
+
+${fits}
+
+<p ${P}>And if you would rather split the group across two places, or have a date or two of flexibility,
+just reply and I&rsquo;ll put something together for you &mdash; a real person reads every one of these.</p>`);
+}
+
 // Sent when OwnerRez would not price the stay. A guest who hears nothing
 // assumes they were ignored, so this always says something — but it only
 // states a reason when OwnerRez actually gave one. Where it did not, the note
