@@ -24,8 +24,35 @@ export type ReviewsForSchema = {
   reviews?: { author: string; stars: number; body: string; date?: string }[];
 };
 
-// Structured data for a single home (schema.org VacationRental — Google's spec:
-// geo, containsPlace, identifier, and 8+ images make it a valid rich result).
+const MONTHS: Record<string, string> = {
+  jan: "01", feb: "02", mar: "03", apr: "04", may: "05", jun: "06",
+  jul: "07", aug: "08", sep: "09", oct: "10", nov: "11", dec: "12",
+};
+
+// Normalize a scraped review date to an ISO 8601 date (YYYY-MM-DD) for schema.
+// Handles "Aug 2026", "August 2026", "2026-08-05", and "8/5/2026". Returns null
+// when it can't be parsed, so we omit datePublished rather than emit bad data.
+function reviewDateISO(s?: string): string | null {
+  if (!s) return null;
+  const t = s.trim();
+  let m = t.match(/^(\d{4})-(\d{2})-(\d{2})$/); // already ISO
+  if (m) return t;
+  m = t.match(/^([A-Za-z]{3,})\.?\s+(\d{4})$/); // "Aug 2026" / "August 2026"
+  if (m) {
+    const mo = MONTHS[m[1].slice(0, 3).toLowerCase()];
+    if (mo) return `${m[2]}-${mo}-01`;
+  }
+  m = t.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/); // "8/5/2026"
+  if (m) return `${m[3]}-${m[1].padStart(2, "0")}-${m[2].padStart(2, "0")}`;
+  return null;
+}
+
+// Structured data for a single home. We use LodgingBusiness (a LocalBusiness),
+// NOT VacationRental: Google's VacationRental rich result is a partner program
+// that requires the home's exact street address, postal code, and bed-level
+// detail — which we deliberately keep off the site for guest privacy. This type
+// validates cleanly with locality-level address and still carries geo, amenities,
+// and ratings for search and AI answer engines.
 export function propertyJsonLd(p: Property, r?: ReviewsForSchema) {
   const geo = geoFromMapQuery(p.mapQuery);
   const images = p.photos.slice(0, 12).map((ph) => abs(`/${ph.file}`));
@@ -34,14 +61,12 @@ export function propertyJsonLd(p: Property, r?: ReviewsForSchema) {
     name: a,
     value: true,
   }));
-  const occupancy = { "@type": "QuantitativeValue", value: p.stats.sleeps };
   const petsAllowed = (p.amenities ?? []).some((a) => /pet/i.test(a));
 
   return {
     "@context": "https://schema.org",
-    "@type": "VacationRental",
-    additionalType: "https://schema.org/House",
-    identifier: { "@type": "PropertyValue", propertyID: "OwnerRez", value: p.ownerRez.propertyId ?? p.slug },
+    "@type": "LodgingBusiness",
+    "@id": `${abs(`/homes/${p.slug}`)}#lodging`,
     name: p.name,
     description: [p.headline, ...(p.description ?? [])].join(" ").slice(0, 600),
     url: abs(`/homes/${p.slug}`),
@@ -54,34 +79,28 @@ export function propertyJsonLd(p: Property, r?: ReviewsForSchema) {
       addressRegion: "OR",
       addressCountry: "US",
     },
+    ...(brand.phone ? { telephone: brand.phone } : {}),
+    priceRange: "$$",
+    numberOfRooms: p.stats.bedrooms,
+    petsAllowed,
     checkinTime: "16:00:00",
     checkoutTime: "11:00:00",
-    numberOfBedrooms: p.stats.bedrooms,
-    numberOfBathroomsTotal: p.stats.bathrooms,
-    petsAllowed,
-    knowsLanguage: "en-US",
     amenityFeature,
-    containsPlace: {
-      "@type": "Accommodation",
-      additionalType: "EntirePlace",
-      name: p.name,
-      numberOfBedrooms: p.stats.bedrooms,
-      numberOfBathroomsTotal: p.stats.bathrooms,
-      occupancy,
-      amenityFeature,
-    },
     ...(r?.average && r?.count
       ? { aggregateRating: { "@type": "AggregateRating", ratingValue: r.average, reviewCount: r.count, bestRating: 5, worstRating: 1 } }
       : {}),
     ...(r?.reviews?.length
       ? {
-          review: r.reviews.slice(0, 5).map((rv) => ({
-            "@type": "Review",
-            reviewRating: { "@type": "Rating", ratingValue: rv.stars, bestRating: 5, worstRating: 1 },
-            author: { "@type": "Person", name: rv.author || "Guest" },
-            ...(rv.date ? { datePublished: rv.date } : {}),
-            reviewBody: rv.body,
-          })),
+          review: r.reviews.slice(0, 5).map((rv) => {
+            const iso = reviewDateISO(rv.date);
+            return {
+              "@type": "Review",
+              reviewRating: { "@type": "Rating", ratingValue: rv.stars, bestRating: 5, worstRating: 1 },
+              author: { "@type": "Person", name: rv.author || "Guest" },
+              ...(iso ? { datePublished: iso } : {}),
+              reviewBody: rv.body,
+            };
+          }),
         }
       : {}),
   };
