@@ -231,6 +231,23 @@ export const posts: BlogPost[] = [
       "A beachcombing walk pairs perfectly with a slow coastal stay: no schedule to keep, just tide charts and curiosity. Come back to a warm home, rinse off your finds on the deck, and settle into the hot tub while you sort through the day's haul. Browse our homes and book direct at stepawaylodging.com for your next treasure hunt on the sand.",
     ],
   },
+  {
+    slug: "fall-mushroom-foraging-oregon-coast",
+    title: "Fall Mushroom Foraging on the Oregon Coast",
+    date: "2026-09-21",
+    author: "Step Away Lodging",
+    excerpt:
+      "When the fall rains return, the forests behind Lincoln City come alive with mushrooms. Here's a beginner-friendly guide to foraging season on the Oregon coast.",
+    cover: "photos/photo-09.jpg",
+    body: [
+      "There's a particular kind of magic that settles over the coast once the fall rains arrive. The crowds thin out, the light turns soft and golden in the afternoons, and just inland, the damp forest floor along the Coast Range starts to wake up. For anyone who loves a reason to get outside in the cooler months, mushroom season is one of the central coast's best-kept secrets.",
+      "The star of the show is the Pacific golden chanterelle, Oregon's official state mushroom. These trumpet-shaped beauties range from pale yellow to deep gold, with wavy, ruffled caps and forking, gill-like ridges running down the stem rather than true gills. They favor the mossy floor of Douglas fir, western hemlock, and Sitka spruce forests, and they tend to appear in the same general spots year after year once the ground has had a good soaking from the season's first steady rains.",
+      "If you're new to foraging, the single most important rule is simple: never eat a wild mushroom you can't identify with complete confidence. Some toxic species can look surprisingly similar to good edibles to an untrained eye, and the consequences of a mistake range from an upset stomach to much worse. The safest way to start is to go out with an experienced forager, join a guided walk through a local mycological or naturalist group, or simply treat your first outings as a scouting mission and leave the tasting for another day. If you're foraging on public land, it's also worth checking with the local ranger district beforehand, since personal-use rules and seasonal closures can vary from forest to forest.",
+      "You don't need much gear to get started — a woven basket or mesh bag (so spores can scatter as you walk), a small knife for a clean cut at the base of the stem, and a good pair of waterproof boots for the inevitably soggy undergrowth. Move slowly and look low: chanterelles have a habit of hiding under sword fern and salal, peeking out from the duff rather than standing tall. A misty morning after a good rain, with the forest quiet and dripping, is about as pleasant a way as any to spend a fall day on the coast.",
+      "Whatever you bring home, the fun continues in the kitchen. A simple sauté in butter with a little garlic and thyme is all a good chanterelle really needs, and every Step Away Lodging home has a full kitchen ready for exactly that kind of evening. Clean your finds on the deck, get them sizzling on the stove, and then take the rest of the night easy in the private hot tub while the rain taps on the trees outside.",
+      "Fall is one of our favorite times to have guests on the coast — fewer crowds, moody skies, and the forest and beach both putting on a show. Browse our homes and book direct at stepawaylodging.com for your next Oregon coast escape.",
+    ],
+  },
 ];
 
 export const postsByDate = [...posts].sort((a, b) => (a.date < b.date ? 1 : -1));
