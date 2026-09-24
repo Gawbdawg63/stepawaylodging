@@ -30,8 +30,8 @@ export default function OwnersPage() {
           <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[var(--sand)]">Ready to get started?</p>
           <h2 className="mt-2 font-display text-3xl sm:text-4xl">Already coming aboard?</h2>
           <p className="mx-auto mt-4 max-w-xl text-lg text-white/80">
-            Use our welcome portal to send us your home&apos;s details — you&apos;ll essentially be creating your listing,
-            and we&apos;ll take it from there. It saves as you go, so there&apos;s no rush to finish in one sitting.
+            Use our welcome portal to share your home&apos;s details, and we&apos;ll take it from there. It saves as you go,
+            so there&apos;s no rush to finish in one sitting.
           </p>
           <Link href="/list-your-home" className="mt-7 inline-block rounded-full bg-[var(--sand)] px-8 py-3.5 font-semibold text-white shadow-sm transition hover:bg-[var(--sand-600)]">
             List your home →

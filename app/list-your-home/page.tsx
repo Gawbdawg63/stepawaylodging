@@ -20,8 +20,8 @@ export default function ListYourHomePage() {
 
       <section className="mx-auto max-w-3xl px-5 pt-12 text-center">
         <p className="text-lg leading-relaxed text-[var(--foreground)]/85">
-          We&apos;re so glad you&apos;re here. Fill in what you can about your home below and, in effect, you&apos;ll be
-          creating your listing with us — while giving our team everything we need to manage it beautifully.
+          We&apos;re so glad you&apos;re here. Tell us about your home below — it gives our team everything we need to get
+          your place set up and managed beautifully.
         </p>
         <p className="mt-4 text-[var(--muted)]">
           It doesn&apos;t have to be perfect, and you don&apos;t have to finish in one sitting — your progress saves as you
