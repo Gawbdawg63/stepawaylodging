@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { upload } from "@vercel/blob/client";
 import { brand, owners } from "@/lib/content";
 
 /**
@@ -142,9 +143,9 @@ const SECTIONS: SectionDef[] = [
   {
     id: "photos",
     title: "Photos",
-    desc: "Optional, but photos help us launch faster. Paste a link to a folder — Google Drive, Dropbox, Google Photos, anything.",
+    desc: "Optional, but photos help us launch faster. Drag them in below — or, if you have a lot, just paste a link to a folder (Google Drive, Dropbox, Google Photos).",
     fields: [
-      { name: "photosLink", label: "Link to your photos", kind: "url", full: true, placeholder: "https://drive.google.com/… or https://photos.app.goo.gl/…" },
+      { name: "photosLink", label: "…or paste a link to a photo folder", kind: "url", full: true, placeholder: "https://drive.google.com/… or https://photos.app.goo.gl/…" },
       { name: "photosNote", label: "Notes about the photos", kind: "text", full: true, placeholder: "e.g. Taken last summer; happy to have new ones shot" },
     ],
   },
@@ -165,6 +166,7 @@ export default function ListingIntakeForm() {
   const [form, setForm] = useState<FormState>({});
   const [status, setStatus] = useState<Status>("idle");
   const [restored, setRestored] = useState(false);
+  const [uploading, setUploading] = useState(false);
 
   // Restore saved progress
   useEffect(() => {
@@ -202,6 +204,8 @@ export default function ListingIntakeForm() {
         if (str) payload[field.label] = str;
       }
     }
+    const uploaded = Array.isArray(form.uploadedPhotos) ? (form.uploadedPhotos as string[]) : [];
+    if (uploaded.length) payload["Uploaded photos"] = uploaded.join("\n");
     const who = (form.propertyName as string) || (form.city as string) || (form.ownerName as string) || "New owner";
 
     if (!owners.formEndpoint) {
@@ -258,6 +262,17 @@ export default function ListingIntakeForm() {
             {section.desc && <p className="mt-2 text-sm leading-relaxed text-[var(--muted)]">{section.desc}</p>}
           </div>
 
+          {section.id === "photos" && (
+            <div className="mb-6">
+              <PhotoUploader
+                key={restored ? "photos-restored" : "photos-init"}
+                urls={Array.isArray(form.uploadedPhotos) ? (form.uploadedPhotos as string[]) : []}
+                onChange={(u) => set("uploadedPhotos", u)}
+                onUploadingChange={setUploading}
+              />
+            </div>
+          )}
+
           <div className="grid gap-5 sm:grid-cols-2">
             {section.fields.map((field) => {
               const value = form[field.name];
@@ -313,13 +328,95 @@ export default function ListingIntakeForm() {
       )}
 
       <div className="mt-8 flex flex-col items-center gap-3">
-        <button type="submit" disabled={status === "submitting"} className="w-full max-w-md rounded-full bg-[var(--sea)] px-8 py-4 text-lg font-semibold text-white shadow-sm transition hover:bg-[var(--sea-700)] disabled:opacity-60">
-          {status === "submitting" ? "Sending…" : "Submit my home details"}
+        <button type="submit" disabled={status === "submitting" || uploading} className="w-full max-w-md rounded-full bg-[var(--sea)] px-8 py-4 text-lg font-semibold text-white shadow-sm transition hover:bg-[var(--sea-700)] disabled:opacity-60">
+          {status === "submitting" ? "Sending…" : uploading ? "Photos still uploading…" : "Submit my home details"}
         </button>
         <p className="text-center text-xs text-[var(--muted)]">
           Your progress saves automatically in this browser. Only your name, email, and city are required — send us the rest as you have it.
         </p>
       </div>
     </form>
+  );
+}
+
+type PhotoItem = { id: string; name: string; url?: string; status: "uploading" | "done" | "error"; preview?: string };
+
+function PhotoUploader({ urls, onChange, onUploadingChange }: { urls: string[]; onChange: (u: string[]) => void; onUploadingChange?: (b: boolean) => void }) {
+  const [items, setItems] = useState<PhotoItem[]>(() =>
+    urls.map((u, i) => ({ id: `saved-${i}`, name: decodeURIComponent(u.split("/").pop() || "photo"), url: u, status: "done" as const }))
+  );
+  const [dragOver, setDragOver] = useState(false);
+  const [anyError, setAnyError] = useState(false);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    onChange(items.filter((i) => i.status === "done" && i.url).map((i) => i.url!));
+    onUploadingChange?.(items.some((i) => i.status === "uploading"));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [items]);
+
+  async function handleFiles(list: FileList | File[]) {
+    const files = Array.from(list).filter((f) => f.type.startsWith("image/") || /\.(jpe?g|png|webp|heic|heif|gif)$/i.test(f.name));
+    for (const file of files) {
+      const id = (globalThis.crypto?.randomUUID?.() ?? String(Math.random())).toString();
+      const preview = file.type.startsWith("image/") && !/heic|heif/i.test(file.type) ? URL.createObjectURL(file) : undefined;
+      setItems((p) => [...p, { id, name: file.name, status: "uploading", preview }]);
+      try {
+        const blob = await upload(file.name, file, { access: "public", handleUploadUrl: "/api/upload" });
+        setItems((p) => p.map((it) => (it.id === id ? { ...it, url: blob.url, status: "done" } : it)));
+      } catch {
+        setAnyError(true);
+        setItems((p) => p.map((it) => (it.id === id ? { ...it, status: "error" } : it)));
+      }
+    }
+  }
+
+  function remove(id: string) {
+    setItems((p) => p.filter((it) => it.id !== id));
+  }
+
+  return (
+    <div>
+      <div
+        onClick={() => inputRef.current?.click()}
+        onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
+        onDragLeave={() => setDragOver(false)}
+        onDrop={(e) => { e.preventDefault(); setDragOver(false); if (e.dataTransfer.files?.length) handleFiles(e.dataTransfer.files); }}
+        className={`flex cursor-pointer flex-col items-center justify-center rounded-2xl border-2 border-dashed px-6 py-10 text-center transition ${dragOver ? "border-[var(--sea)] bg-[var(--sea-100)]" : "border-[var(--border)] bg-[var(--background)] hover:border-[var(--sea)]/50"}`}
+      >
+        <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="var(--sea)" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><path d="M17 8l-5-5-5 5" /><path d="M12 3v12" /></svg>
+        <p className="mt-3 font-medium text-[var(--sea)]">Drag photos here, or click to browse</p>
+        <p className="mt-1 text-xs text-[var(--muted)]">JPG, PNG, HEIC — straight from your phone or computer</p>
+      </div>
+      <input ref={inputRef} type="file" accept="image/*,.heic,.heif" multiple hidden onChange={(e) => { if (e.target.files) handleFiles(e.target.files); e.currentTarget.value = ""; }} />
+
+      {items.length > 0 && (
+        <div className="mt-4 grid grid-cols-3 gap-3 sm:grid-cols-4">
+          {items.map((it) => (
+            <div key={it.id} className="group relative aspect-square overflow-hidden rounded-xl border border-[var(--border)] bg-[var(--background)]">
+              {it.preview || it.url ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img src={it.preview || it.url} alt={it.name} className="h-full w-full object-cover" />
+              ) : (
+                <div className="flex h-full items-center justify-center px-2 text-center text-[10px] text-[var(--muted)]">{it.name}</div>
+              )}
+              {it.status === "uploading" && (
+                <div className="absolute inset-0 flex items-center justify-center bg-black/40 text-xs font-medium text-white">Uploading…</div>
+              )}
+              {it.status === "error" && (
+                <div className="absolute inset-0 flex items-center justify-center bg-red-600/70 text-xs font-medium text-white">Failed</div>
+              )}
+              <button type="button" onClick={() => remove(it.id)} aria-label="Remove" className="absolute right-1 top-1 flex h-6 w-6 items-center justify-center rounded-full bg-black/60 text-white opacity-0 transition group-hover:opacity-100">×</button>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {anyError && (
+        <p className="mt-3 text-sm text-[var(--muted)]">
+          Some photos didn&apos;t upload. You can try again, or just paste a link to your photos below and we&apos;ll grab them.
+        </p>
+      )}
+    </div>
   );
 }
