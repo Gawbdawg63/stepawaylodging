@@ -76,6 +76,7 @@ const SECTIONS: SectionDef[] = [
     desc: "The basics about the home itself. The street address stays private — it's only for management.",
     fields: [
       { name: "propertyName", label: "Home name", kind: "text", placeholder: "If it has one — we can help name it", full: true },
+      { name: "headline", label: "One-line headline for the listing", kind: "text", full: true, placeholder: "e.g. Oceanfront retreat with a hot tub & sunset views" },
       { name: "streetAddress", label: "Street address", kind: "text", placeholder: "123 Beach Ave (kept private)", full: true },
       { name: "city", label: "City / town", kind: "text", required: true, placeholder: "e.g. Lincoln City" },
       { name: "state", label: "State", kind: "text", placeholder: "OR" },
@@ -134,6 +135,8 @@ const SECTIONS: SectionDef[] = [
     title: "Access & operations",
     desc: "The practical details we'll need to manage the home and guide guests.",
     fields: [
+      { name: "checkinTime", label: "Check-in time", kind: "text", placeholder: "e.g. 4:00 PM" },
+      { name: "checkoutTime", label: "Check-out time", kind: "text", placeholder: "e.g. 11:00 AM" },
       { name: "entryMethod", label: "Guest entry", kind: "text", full: true, placeholder: "e.g. Smart lock keypad; lockbox on front door" },
       { name: "wifiNetwork", label: "Wi-Fi network name", kind: "text" },
       { name: "wifiPassword", label: "Wi-Fi password", kind: "text" },
@@ -167,7 +170,9 @@ const SECTIONS: SectionDef[] = [
       { name: "currentlyListed", label: "Currently listed anywhere?", kind: "select", options: ["Not listed yet", "Airbnb", "Vrbo", "OwnerRez", "Other / multiple"] },
       { name: "listingLinks", label: "Existing listing link(s)", kind: "text", placeholder: "Paste any current listing URLs" },
       { name: "desiredRate", label: "Nightly rate expectations", kind: "text", placeholder: "Optional — we'll advise" },
+      { name: "cleaningFee", label: "Cleaning fee", kind: "text", placeholder: "Optional — we'll advise" },
       { name: "minStay", label: "Minimum-stay preference", kind: "text", placeholder: "e.g. 2 nights, 3 on holidays" },
+      { name: "cancellationPolicy", label: "Cancellation policy", kind: "select", options: ["Flexible", "Moderate", "Firm", "Strict", "Not sure — please advise"] },
       { name: "availabilityStart", label: "Available to start renting", kind: "date" },
       { name: "turnoverNotes", label: "Cleaning / turnover notes", kind: "textarea", full: true, placeholder: "Current cleaner, linen setup, storage for supplies…" },
     ],
