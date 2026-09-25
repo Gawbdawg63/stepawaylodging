@@ -1,8 +1,40 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { upload } from "@vercel/blob/client";
 import { brand, owners } from "@/lib/content";
+
+// Downscale a photo in the browser (max 2000px, JPEG) so uploads are small and
+// fast. Falls back to the original file when it can't be drawn (e.g. HEIC on
+// some browsers) as long as it's small enough for a serverless request.
+async function processPhoto(file: File): Promise<{ blob: Blob; name: string }> {
+  const base = file.name.replace(/\.[^.]+$/, "");
+  try {
+    const dataUrl: string = await new Promise((res, rej) => {
+      const r = new FileReader();
+      r.onload = () => res(r.result as string);
+      r.onerror = rej;
+      r.readAsDataURL(file);
+    });
+    const img: HTMLImageElement = await new Promise((res, rej) => {
+      const im = new Image();
+      im.onload = () => res(im);
+      im.onerror = rej;
+      im.src = dataUrl;
+    });
+    const max = 2000;
+    const scale = Math.min(1, max / Math.max(img.width, img.height));
+    const canvas = document.createElement("canvas");
+    canvas.width = Math.round(img.width * scale);
+    canvas.height = Math.round(img.height * scale);
+    canvas.getContext("2d")!.drawImage(img, 0, 0, canvas.width, canvas.height);
+    const blob: Blob | null = await new Promise((res) => canvas.toBlob(res, "image/jpeg", 0.85));
+    if (blob) return { blob, name: `${base}.jpg` };
+  } catch {
+    /* fall through to original */
+  }
+  if (file.size <= 4 * 1024 * 1024) return { blob: file, name: file.name };
+  throw new Error("too-large");
+}
 
 /**
  * Owner "welcome portal" — a new owner fills in everything we need to build
@@ -362,8 +394,15 @@ function PhotoUploader({ urls, onChange, onUploadingChange }: { urls: string[]; 
       const preview = file.type.startsWith("image/") && !/heic|heif/i.test(file.type) ? URL.createObjectURL(file) : undefined;
       setItems((p) => [...p, { id, name: file.name, status: "uploading", preview }]);
       try {
-        const blob = await upload(file.name, file, { access: "public", handleUploadUrl: "/api/upload" });
-        setItems((p) => p.map((it) => (it.id === id ? { ...it, url: blob.url, status: "done" } : it)));
+        const { blob, name } = await processPhoto(file);
+        const res = await fetch(`/api/owner-photo?filename=${encodeURIComponent(name)}`, {
+          method: "POST",
+          headers: { "content-type": blob.type || "image/jpeg" },
+          body: blob,
+        });
+        if (!res.ok) throw new Error("upload failed");
+        const { url } = (await res.json()) as { url: string };
+        setItems((p) => p.map((it) => (it.id === id ? { ...it, url, status: "done" } : it)));
       } catch {
         setAnyError(true);
         setItems((p) => p.map((it) => (it.id === id ? { ...it, status: "error" } : it)));
