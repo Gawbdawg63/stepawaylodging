@@ -9,16 +9,16 @@ export const SEQUENCE: SequenceStep[] = [
     subject: "Managing your {{city}} rental?",
     body: `Hi {{first_name}},
 
-I'm Lisa with Step Away Lodging — a family-owned property management company here on the Oregon Coast. I came across your short-term rental in {{city}} and wanted to reach out.
+I'm Maxwell with Step Away Lodging — a family-owned property management company here on the Oregon Coast. I came across your short-term rental in {{city}} and wanted to reach out.
 
 We handle everything for owners like you: listings, guest communication, cleaning and turnovers, dynamic pricing, and maintenance — so your place earns well without eating up your time. After 30+ years on this coast, we know exactly what turns a rental into a five-star stay.
 
 Would you be open to a quick call to see if we'd be a good fit? Even if you're happy where you are, I'm glad to share a free, no-obligation look at what your home could be earning.
 
 Warmly,
-Lisa Ward
+Maxwell Ward
 Step Away Lodging
-(541) 921-8885 · stepawaylodging.com`,
+541-961-4703 · stepawaylodging.com`,
   },
   {
     waitDays: 3,
@@ -29,9 +29,9 @@ Just floating this back to the top of your inbox. What makes us different from t
 
 Happy to answer any questions.
 
-Lisa Ward
+Maxwell Ward
 Step Away Lodging
-(541) 921-8885`,
+541-961-4703`,
   },
   {
     waitDays: 4,
@@ -42,9 +42,9 @@ A lot of owners come to us tired of juggling cleaners, messages, and pricing the
 
 If you've ever thought "there has to be an easier way," this is it. Want me to put together a quick estimate for your place?
 
-Lisa Ward
+Maxwell Ward
 Step Away Lodging
-(541) 921-8885`,
+541-961-4703`,
   },
   {
     waitDays: 5,
@@ -55,9 +55,9 @@ No pressure at all — but if you're even a little curious what your rental coul
 
 Just reply "yes" and I'll take it from there.
 
-Lisa Ward
+Maxwell Ward
 Step Away Lodging
-(541) 921-8885`,
+541-961-4703`,
   },
   {
     waitDays: 6,
@@ -68,8 +68,8 @@ I don't want to crowd your inbox, so this is my last note for now. If managing y
 
 Wishing you great guests either way.
 
-Lisa Ward
+Maxwell Ward
 Step Away Lodging
-(541) 921-8885 · stepawaylodging.com`,
+541-961-4703 · stepawaylodging.com`,
   },
 ];
