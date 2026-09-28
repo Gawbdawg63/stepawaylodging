@@ -143,21 +143,25 @@ export async function sendEmail(token: string, to: string, subject: string, html
   if (!res.ok) throw new Error(`sendMail failed: ${res.status} ${await res.text()}`);
 }
 
-// Returns the set of email addresses that have sent us a message recently, so
-// we can stop following up with anyone who replied.
-export async function fetchRepliers(token: string): Promise<Set<string>> {
+// Returns a map of sender email -> the time of their most recent message to us.
+// We use the timestamp so we only count messages that arrived AFTER we first
+// emailed a lead — otherwise old correspondence in the inbox looks like a reply.
+export async function fetchRepliers(token: string): Promise<Map<string, number>> {
   const url =
     `https://graph.microsoft.com/v1.0/users/${encodeURIComponent(FROM)}/mailFolders/inbox/messages` +
-    `?$top=100&$select=from,receivedDateTime&$orderby=receivedDateTime desc`;
+    `?$top=200&$select=from,receivedDateTime&$orderby=receivedDateTime desc`;
   const res = await fetch(url, { headers: { authorization: `Bearer ${token}` } });
-  if (!res.ok) return new Set();
-  const data = (await res.json()) as { value?: { from?: { emailAddress?: { address?: string } } }[] };
-  const set = new Set<string>();
+  if (!res.ok) return new Map();
+  const data = (await res.json()) as {
+    value?: { from?: { emailAddress?: { address?: string } }; receivedDateTime?: string }[];
+  };
+  const map = new Map<string, number>();
   for (const m of data.value ?? []) {
-    const addr = m.from?.emailAddress?.address;
-    if (addr) set.add(addr.toLowerCase());
+    const addr = m.from?.emailAddress?.address?.toLowerCase();
+    const t = m.receivedDateTime ? Date.parse(m.receivedDateTime) : 0;
+    if (addr && !map.has(addr)) map.set(addr, t); // first seen = most recent (desc order)
   }
-  return set;
+  return map;
 }
 
 // ---- The daily run ----------------------------------------------------------
@@ -177,7 +181,12 @@ export async function runOutreach(): Promise<{ sent: number; skipped: string; co
     try {
       const repliers = await fetchRepliers(token);
       for (const lead of leads) {
-        if (lead.status === "active" && lead.step >= 1 && repliers.has(lead.email.toLowerCase())) {
+        if (lead.status !== "active" || lead.step < 1) continue;
+        const replyAt = repliers.get(lead.email.toLowerCase());
+        if (!replyAt) continue;
+        // Only a genuine reply: a message that arrived after we first emailed them.
+        const firstSent = lead.history[0]?.at ? Date.parse(lead.history[0].at) : lead.lastSentAt ? Date.parse(lead.lastSentAt) : 0;
+        if (replyAt > firstSent) {
           lead.status = "replied";
           lead.repliedAt = new Date(now).toISOString();
         }
