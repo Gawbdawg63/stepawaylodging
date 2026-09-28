@@ -85,7 +85,7 @@ export function unsubUrl(email: string): string {
 function merge(text: string, lead: Lead): string {
   return text
     .replace(/\{\{\s*first_name\s*\}\}/g, lead.firstName || "there")
-    .replace(/\{\{\s*city\s*\}\}/g, lead.city || "the Lincoln City area")
+    .replace(/\{\{\s*city\s*\}\}/g, lead.city || "Oregon Coast")
     .replace(/\{\{\s*property\s*\}\}/g, lead.property || "your rental");
 }
 

@@ -12,7 +12,7 @@ export const SEQUENCE: SequenceStep[] = [
     subject: "your {{city}} rental",
     body: `Hi {{first_name}},
 
-I'm Maxwell with Step Away Lodging, a family-run vacation rental manager here on the Oregon Coast. I came across your rental in {{city}} and wanted to reach out.
+I'm Maxwell with Step Away Lodging, a family-run vacation rental manager here on the Oregon Coast. I came across your rental and wanted to reach out.
 
 We handle the whole grind for owners: bookings, guest messages, cleaning, and pricing. We keep homes booked with five-star reviews, and most owners come to us simply worn out from doing it all themselves.
 
