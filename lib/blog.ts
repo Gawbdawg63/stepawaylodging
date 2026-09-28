@@ -248,6 +248,23 @@ export const posts: BlogPost[] = [
       "Fall is one of our favorite times to have guests on the coast — fewer crowds, moody skies, and the forest and beach both putting on a show. Browse our homes and book direct at stepawaylodging.com for your next Oregon coast escape.",
     ],
   },
+  {
+    slug: "pacific-city-day-trip-cape-kiwanda",
+    title: "A Day Trip to Pacific City: Cape Kiwanda, Dory Boats & Big Views",
+    date: "2026-09-28",
+    author: "Step Away Lodging",
+    excerpt:
+      "Twenty minutes north of Lincoln City, Pacific City packs a giant dune, a beach-launched dory fleet, and a brewery with a view into one easy afternoon.",
+    cover: "photos/photo-01.jpg",
+    body: [
+      "If you only have one afternoon to spare during a Lincoln City stay, we'd point you north up Highway 101 to Pacific City. It's a short, scenic drive — call it 20 to 25 minutes — and it delivers a different flavor of the central coast: a little wilder, a little quieter, and built around one of the most striking headlands in Oregon.",
+      "That headland is Cape Kiwanda, a sandstone bluff carved by wind and surf, fronted by a massive dune that visitors have been climbing for generations. The view from the top takes in the whole curve of Pacific City's beach and, just offshore, the hulking sea stack locals simply call Haystack Rock — a different, lesser-known cousin of the more famous one up in Cannon Beach. The dune itself is a workout, and the sandstone bluffs above it are actively eroding, so admire them from a safe distance and heed any posted warnings rather than climbing out onto the edges.",
+      "Down on the sand, keep an eye out for Pacific City's dory fleet — one of the few in the country still launched and landed straight through the surf rather than from a harbor. These flat-bottomed boats have been doing it this way for decades, and watching a dory punch out through the breakers (or come surfing back in) is a genuinely unique bit of working-coast tradition you won't see anywhere else on this stretch of Oregon.",
+      "Once you've worked up an appetite, Pelican Brewing sits right at the foot of the dune, an easy, welcoming spot to grab a bite and watch the waves roll in — it's been a fixture of Cape Kiwanda since the 1990s and has picked up more than a few brewing awards along the way. Wherever you land for a meal, it's hard to beat eating with that view in front of you.",
+      "Pacific City pairs nicely with a broader central-coast loop — stop in Neskowin or Cascade Head on the way, or save it for the return leg after a morning in Lincoln City — but it's every bit worth the trip on its own. Pack layers, watch the tide and wind, and give yourself more time than you think you'll need; this is a place that's easy to linger.",
+      "However you spend the day, there's a warm home and a private hot tub waiting for you back in Lincoln City. Browse our homes and book direct at stepawaylodging.com for your next central Oregon coast getaway.",
+    ],
+  },
 ];
 
 export const postsByDate = [...posts].sort((a, b) => (a.date < b.date ? 1 : -1));
