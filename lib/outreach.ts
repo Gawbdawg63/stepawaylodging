@@ -47,7 +47,9 @@ export async function loadLeads(): Promise<Lead[]> {
   const token = blobToken();
   if (!token) return [];
   try {
-    const res = await get(LEADS_PATH, { access: "private", token });
+    // useCache:false is critical — this file is mutable state, and a cached read
+    // would make the robot re-send the same step and lose sequence progress.
+    const res = await get(LEADS_PATH, { access: "private", token, useCache: false });
     if (!res) return [];
     const text = await new Response(res.stream).text();
     return JSON.parse(text) as Lead[];
