@@ -12,9 +12,9 @@ export const SEQUENCE: SequenceStep[] = [
     subject: "your {{city}} rental",
     body: `Hi {{first_name}},
 
-I'm Maxwell with Step Away Lodging — a family-run vacation-rental manager here on the Oregon Coast. I came across your rental in {{city}} and wanted to reach out.
+I'm Maxwell with Step Away Lodging, a family-run vacation rental manager here on the Oregon Coast. I came across your rental in {{city}} and wanted to reach out.
 
-We take the whole grind off owners' hands — bookings, guest messages, cleaning, and pricing — and keep homes booked with five-star reviews. Most owners come to us simply worn out from doing it all themselves.
+We handle the whole grind for owners: bookings, guest messages, cleaning, and pricing. We keep homes booked with five-star reviews, and most owners come to us simply worn out from doing it all themselves.
 
 Would you be open to a quick call to see if we'd be a good fit? Even a "not right now" is a perfectly fine reply.
 
@@ -27,7 +27,7 @@ Step Away Lodging
     subject: "re: your {{city}} rental",
     body: `Hi {{first_name}},
 
-Floating this back to the top in case it slipped by. The short version: we're a local family, not a call center — you get one team that treats your home like our own, and guests who leave reviews to match.
+Floating this back to the top in case it slipped by. The short version: we're a local family, not a call center. You get one team that treats your home like our own, and guests who leave reviews to match.
 
 Worth a quick call? Happy to answer anything.
 
@@ -39,7 +39,7 @@ Maxwell
     subject: "the part owners actually hate",
     body: `Hi {{first_name}},
 
-The thing owners tell us they dread most isn't the cleaning — it's the 9pm "the hot tub won't heat" texts and constantly tweaking prices to stay booked. We take all of it, and keep you in the loop with clear, honest reporting.
+The thing owners tell us they dread most isn't the cleaning. It's the 9pm "the hot tub won't heat" texts and constantly tweaking prices to stay booked. We take all of it, and keep you in the loop with clear, honest reporting.
 
 Want me to put together a quick, free estimate of what your {{city}} place could earn with us? No strings.
 
@@ -51,7 +51,7 @@ Maxwell Ward
     subject: "a free number for your place",
     body: `Hi {{first_name}},
 
-No pressure at all — but if you're even a little curious, I'll put together a free estimate of what your rental could bring in with full-service local management.
+No pressure at all. But if you're even a little curious, I'll put together a free estimate of what your rental could bring in with full-service local management.
 
 Just reply "yes" and I'll send it over.
 
