@@ -265,6 +265,23 @@ export const posts: BlogPost[] = [
       "However you spend the day, there's a warm home and a private hot tub waiting for you back in Lincoln City. Browse our homes and book direct at stepawaylodging.com for your next central Oregon coast getaway.",
     ],
   },
+  {
+    slug: "newport-oregon-day-trip-aquarium-lighthouses",
+    title: "A Newport Day Trip: Aquarium, Lighthouses & Historic Bayfront",
+    date: "2026-10-05",
+    author: "Step Away Lodging",
+    excerpt:
+      "World-class sea life, two historic lighthouses, and a working waterfront full of barking sea lions — Newport packs a lot into one easy day trip from Lincoln City.",
+    cover: "photos/photo-16.jpg",
+    body: [
+      "Thirty minutes south of Lincoln City, Newport is the kind of town that rewards a full day of wandering. It's got a world-class aquarium, two very different historic lighthouses, a working fishing harbor, and an arts-district beach neighborhood — all within a few miles of each other along Highway 101. If you're looking for a day trip that goes beyond the beach, this is the one we send our guests on most often.",
+      "Start with the Oregon Coast Aquarium, which has introduced visitors to Pacific marine life since the early 1990s. Sea otters, giant Pacific octopus, leafy sea dragons, and a mesmerizing jellyfish gallery are the highlights, along with an outdoor seabird aviary and walk-through underwater tunnels. It's a full morning on its own, and a perfect plan for a drizzly day when the beach isn't calling quite as loudly.",
+      "Newport is also one of the few towns anywhere with two working lighthouses. Yaquina Head, just north of town, is the tallest lighthouse on the Oregon coast and still an active aid to navigation; the surrounding BLM-managed headland has excellent tide pools at its base and a noisy summer colony of nesting seabirds. Down at the harbor mouth, the squat, white Yaquina Bay Lighthouse is Newport's oldest standing structure and the only Oregon lighthouse that still has its original keeper's quarters attached — a quick, free stop with sweeping views over the bay.",
+      "From there, head down to the Historic Bayfront, where the fishing fleet still unloads its catch and sea lions haul out on the docks to bark at anyone who'll listen. It's a great stretch for browsing seafood markets, picking up fresh catch for the kitchen back at the house, or grabbing fish and chips with a water view. Rogue Ales, one of the better-known names in Pacific Northwest craft beer, has its flagship brewery and pub right on the Bayfront as well.",
+      "Save some time for Nye Beach, Newport's walkable little arts district a short drive up the coast from the harbor. It's a relaxed mix of bookstores, galleries, and cafes a block from the sand, anchored by the Newport Performing Arts Center — a nice, unhurried way to close out the afternoon before the drive back north.",
+      "However you spend the day in Newport, there's a hot tub waiting for you back in Lincoln City when you return. Browse our homes and book direct at stepawaylodging.com for your next central Oregon coast getaway.",
+    ],
+  },
 ];
 
 export const postsByDate = [...posts].sort((a, b) => (a.date < b.date ? 1 : -1));
