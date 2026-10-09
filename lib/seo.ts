@@ -68,7 +68,7 @@ export function propertyJsonLd(p: Property, r?: ReviewsForSchema) {
     "@type": "LodgingBusiness",
     "@id": `${abs(`/homes/${p.slug}`)}#lodging`,
     name: p.name,
-    description: [p.headline, ...(p.description ?? [])].join(" ").slice(0, 600),
+    description: [p.headline, ...(p.description ?? [])].join(" ").trim(),
     url: abs(`/homes/${p.slug}`),
     image: images,
     brand: { "@type": "Brand", name: brand.name },
