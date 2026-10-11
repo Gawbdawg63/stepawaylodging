@@ -88,7 +88,7 @@ export default async function Home() {
             <Link key={p.slug} href={`/homes/${p.slug}`} className="group overflow-hidden rounded-2xl border border-[var(--border)] bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-md">
               <div className="relative aspect-[4/3] overflow-hidden">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={`/${p.card}`} alt={p.name} className="h-full w-full object-cover transition duration-500 group-hover:scale-105" />
+                <img src={`/${p.card}`} alt={p.name} loading="lazy" decoding="async" className="h-full w-full object-cover transition duration-500 group-hover:scale-105" />
                 <span className="absolute left-3 top-3 rounded-full bg-[var(--sea)]/90 px-3 py-1 text-xs font-medium text-white backdrop-blur">{p.location}</span>
                 {average && (
                   <span className="absolute right-3 top-3 rounded-full bg-white/90 px-2.5 py-1 text-xs font-semibold text-[var(--sea)] shadow-sm backdrop-blur">★ {average}</span>

@@ -65,7 +65,7 @@ export default function Gallery({
             aria-label={`View ${p.alt}`}
           >
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={`/${p.file}`} alt={p.alt} className="h-full w-full object-cover transition duration-500 group-hover:scale-105" />
+            <img src={`/${p.file}`} alt={p.alt} loading="lazy" decoding="async" className="h-full w-full object-cover transition duration-500 group-hover:scale-105" />
           </button>
         ))}
       </div>
@@ -96,6 +96,7 @@ export default function Gallery({
           <img
             src={`/${photos[open].file}`}
             alt={photos[open].alt}
+            decoding="async"
             className="max-h-[88vh] max-w-[92vw] rounded-lg object-contain shadow-2xl"
             onClick={(e) => e.stopPropagation()}
           />

@@ -95,7 +95,7 @@ export default async function SearchPage({
                   <div key={r.slug} className="flex flex-col overflow-hidden rounded-2xl border border-[var(--border)] bg-white shadow-sm transition hover:shadow-md">
                     <Link href={bookHref(p.slug)} className="group relative block aspect-[4/3] overflow-hidden">
                       {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img src={`/${p.card}`} alt={p.name} className="h-full w-full object-cover transition duration-500 group-hover:scale-105" />
+                      <img src={`/${p.card}`} alt={p.name} loading="lazy" decoding="async" className="h-full w-full object-cover transition duration-500 group-hover:scale-105" />
                       <span className="absolute left-3 top-3 rounded-full bg-[var(--sea)]/90 px-3 py-1 text-xs font-medium text-white backdrop-blur">{p.location}</span>
                     </Link>
                     <div className="flex flex-1 flex-col p-5">

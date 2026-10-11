@@ -59,7 +59,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
         <Link href="/blog" className="text-sm text-[var(--sand-600)] transition hover:text-[var(--sea)]">← All posts</Link>
         {p.cover && (
           // eslint-disable-next-line @next/next/no-img-element
-          <img src={`/${p.cover}`} alt={p.title} className="mt-6 max-h-[60vh] w-full rounded-2xl object-cover" />
+          <img src={`/${p.cover}`} alt={p.title} fetchPriority="high" decoding="async" className="mt-6 max-h-[60vh] w-full rounded-2xl object-cover" />
         )}
         <div className="mt-8 space-y-5 text-lg leading-relaxed text-[var(--foreground)]/90">
           {p.body.map((para, i) => <p key={i}>{para}</p>)}

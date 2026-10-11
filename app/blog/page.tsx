@@ -27,7 +27,7 @@ export default function BlogPage() {
             <Link key={p.slug} href={`/blog/${p.slug}`} className="group flex flex-col overflow-hidden rounded-2xl border border-[var(--border)] bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-md">
               {p.cover ? (
                 // eslint-disable-next-line @next/next/no-img-element
-                <img src={`/${p.cover}`} alt={p.title} className="h-48 w-full object-cover" />
+                <img src={`/${p.cover}`} alt={p.title} loading="lazy" decoding="async" className="h-48 w-full object-cover" />
               ) : (
                 <div className="h-48 w-full" style={{ background: "linear-gradient(140deg, var(--sea) 0%, var(--sea-700) 100%)" }} />
               )}
