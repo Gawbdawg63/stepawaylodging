@@ -8,6 +8,7 @@ import TrustStrip from "@/components/TrustStrip";
 import BookDirect from "@/components/BookDirect";
 import EmailSignup from "@/components/EmailSignup";
 import MobileCTA from "@/components/MobileCTA";
+import LastMinute from "@/components/LastMinute";
 import { brand, properties } from "@/lib/content";
 import { siteJsonLd, faqJsonLd } from "@/lib/seo";
 import { getReviews } from "@/lib/reviews";
@@ -124,6 +125,9 @@ export default async function Home() {
           </div>
         </div>
       </section>
+
+      {/* LAST-MINUTE */}
+      <LastMinute />
 
       {/* FAQ — answer-first, mirrors the FAQPage structured data */}
       <section id="faq" className="mx-auto max-w-3xl px-5 py-16 sm:py-20">

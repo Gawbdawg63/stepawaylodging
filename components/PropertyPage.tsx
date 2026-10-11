@@ -185,6 +185,20 @@ export default async function PropertyPage({ property }: { property: Property })
         <div className="mx-auto mt-10 w-full max-w-md rounded-2xl border border-[var(--border)] bg-white p-4 text-left shadow-sm sm:p-6">
           <OwnerRezWidget widget={property.ownerRez} />
         </div>
+
+        {/* Book-direct trust signals */}
+        <div className="mx-auto mt-8 flex max-w-2xl flex-wrap items-center justify-center gap-x-7 gap-y-2 text-sm text-[var(--foreground)]/80">
+          {["No service fees", "Best rate, booking direct", "Secure checkout", "A local family to help"].map((t) => (
+            <span key={t} className="inline-flex items-center gap-1.5">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--sand)" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"><path d="M20 6 9 17l-5-5" /></svg>
+              {t}
+            </span>
+          ))}
+        </div>
+        <p className="mx-auto mt-4 text-sm text-[var(--muted)]">
+          Check-in 4:00 PM · Check-out 11:00 AM ·{" "}
+          <Link href="/policies" className="font-medium text-[var(--sand-600)] underline-offset-2 hover:underline">See our full policies</Link>
+        </p>
       </section>
 
       {/* REVIEWS — this home's reviews (falls back to recent collection reviews) */}
