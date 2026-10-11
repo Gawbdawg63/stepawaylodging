@@ -6,7 +6,7 @@ import Script from "next/script";
 // It looks like:  https://embed.tawk.to/XXXXXXXXXXXXXXXX/1abcd2efg
 // (the long number is your Property ID, the short code is the Widget ID.)
 // Until this is filled in, the chat bubble simply doesn't render.
-const TAWK_SRC = "";
+const TAWK_SRC = "https://embed.tawk.to/6acc2002cf6c7734c8d62b8a/1k4mlq2nh";
 
 export default function TawkChat() {
   if (!TAWK_SRC) return null;
