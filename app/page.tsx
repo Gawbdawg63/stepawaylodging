@@ -4,6 +4,10 @@ import SearchBar from "@/components/SearchBar";
 import Reviews from "@/components/Reviews";
 import Footer from "@/components/Footer";
 import JsonLd from "@/components/JsonLd";
+import TrustStrip from "@/components/TrustStrip";
+import BookDirect from "@/components/BookDirect";
+import EmailSignup from "@/components/EmailSignup";
+import MobileCTA from "@/components/MobileCTA";
 import { brand, properties } from "@/lib/content";
 import { siteJsonLd, faqJsonLd } from "@/lib/seo";
 import { getReviews } from "@/lib/reviews";
@@ -35,7 +39,7 @@ export default async function Home() {
   const { average, count, reviews } = await getReviews();
 
   return (
-    <div id="top">
+    <div id="top" className="pb-20 md:pb-0">
       <JsonLd data={siteJsonLd(average, count)} />
       <JsonLd data={faqJsonLd(faqs.map((f) => ({ q: f.q, a: f.a })))} />
       <Header />
@@ -52,6 +56,12 @@ export default async function Home() {
           <p className="mx-auto mt-6 max-w-xl text-lg text-white/85">
             Hand-picked coastal homes and suites — each with a hot tub, all along Oregon&apos;s central coast. Book direct.
           </p>
+          {average && count && (
+            <div className="mt-6 inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-1.5 text-sm font-medium text-white ring-1 ring-white/20 backdrop-blur">
+              <span className="text-[var(--sand)]">★★★★★</span>
+              <span>{average} from {count} guest reviews</span>
+            </div>
+          )}
           <div className="mt-10">
             <SearchBar />
           </div>
@@ -60,6 +70,8 @@ export default async function Home() {
           </div>
         </div>
       </section>
+
+      <TrustStrip average={average} count={count} />
 
       {/* FEATURED HOMES */}
       <section className="mx-auto max-w-6xl px-5 py-16 sm:py-20">
@@ -77,6 +89,9 @@ export default async function Home() {
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src={`/${p.card}`} alt={p.name} className="h-full w-full object-cover transition duration-500 group-hover:scale-105" />
                 <span className="absolute left-3 top-3 rounded-full bg-[var(--sea)]/90 px-3 py-1 text-xs font-medium text-white backdrop-blur">{p.location}</span>
+                {average && (
+                  <span className="absolute right-3 top-3 rounded-full bg-white/90 px-2.5 py-1 text-xs font-semibold text-[var(--sea)] shadow-sm backdrop-blur">★ {average}</span>
+                )}
               </div>
               <div className="p-5">
                 <h3 className="font-display text-xl text-[var(--sea)]">{p.name}</h3>
@@ -90,6 +105,9 @@ export default async function Home() {
 
       {/* REVIEWS */}
       <Reviews heading="Loved by our guests" average={average} count={count} reviews={reviews} />
+
+      {/* BOOK DIRECT */}
+      <BookDirect />
 
       {/* EXPLORE */}
       <section className="border-t border-[var(--border)] bg-white">
@@ -123,7 +141,10 @@ export default async function Home() {
         </dl>
       </section>
 
+      <EmailSignup />
+
       <Footer subtitle={brand.tagline} />
+      <MobileCTA />
     </div>
   );
 }
