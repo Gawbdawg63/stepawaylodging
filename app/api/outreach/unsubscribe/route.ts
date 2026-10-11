@@ -1,4 +1,4 @@
-import { loadLeads, saveLeads, unsubToken } from "@/lib/outreach";
+import { loadLeads, saveLeads, loadSubscribers, saveSubscribers, unsubToken } from "@/lib/outreach";
 
 export const runtime = "nodejs";
 
@@ -18,6 +18,16 @@ export async function GET(request: Request) {
 
   if (!email || !token || token !== unsubToken(email)) {
     return page("That unsubscribe link doesn't look valid. If you'd like to be removed, just reply to any of our emails and we'll take care of it.");
+  }
+
+  if (params.get("l") === "news") {
+    const subs = await loadSubscribers();
+    const sub = subs.find((s) => s.email.toLowerCase() === email);
+    if (sub && sub.status !== "unsubscribed") {
+      sub.status = "unsubscribed";
+      await saveSubscribers(subs);
+    }
+    return page("You've been unsubscribed from our newsletter. Thanks, and all the best!");
   }
 
   const leads = await loadLeads();

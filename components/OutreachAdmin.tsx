@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import NewsletterPanel from "@/components/NewsletterPanel";
 
 type Lead = {
   id: string;
@@ -25,6 +26,7 @@ const STATUS_COLORS: Record<string, string> = {
 export default function OutreachAdmin() {
   const [password, setPassword] = useState("");
   const [authed, setAuthed] = useState(false);
+  const [tab, setTab] = useState<"outreach" | "newsletter">("outreach");
   const [leads, setLeads] = useState<Lead[]>([]);
   const [counts, setCounts] = useState<Record<string, number>>({});
   const [importText, setImportText] = useState("");
@@ -113,13 +115,24 @@ export default function OutreachAdmin() {
   return (
     <div className="mx-auto max-w-5xl px-5 py-12">
       <div className="flex flex-wrap items-center justify-between gap-4">
-        <h1 className="font-display text-3xl text-[var(--sea)]">Owner outreach</h1>
+        <h1 className="font-display text-3xl text-[var(--sea)]">Step Away portal</h1>
+        <div className="inline-flex rounded-full border border-[var(--border)] bg-white p-1 text-sm font-medium">
+          <button onClick={() => setTab("outreach")} className={`rounded-full px-4 py-1.5 transition ${tab === "outreach" ? "bg-[var(--sea)] text-white" : "text-[var(--muted)]"}`}>Cold outreach</button>
+          <button onClick={() => setTab("newsletter")} className={`rounded-full px-4 py-1.5 transition ${tab === "newsletter" ? "bg-[var(--sea)] text-white" : "text-[var(--muted)]"}`}>Newsletter</button>
+        </div>
+      </div>
+
+      {tab === "newsletter" ? (
+        <div className="mt-8"><NewsletterPanel password={password} /></div>
+      ) : (
+      <div className="mt-8">
+      <div className="mb-5 flex justify-end">
         <button onClick={runNow} disabled={busy} className="rounded-full bg-[var(--sand)] px-6 py-2.5 font-semibold text-white transition hover:bg-[var(--sand-600)] disabled:opacity-60">
           Send today&apos;s batch now
         </button>
       </div>
 
-      <div className="mt-5 flex flex-wrap gap-3 text-sm">
+      <div className="flex flex-wrap gap-3 text-sm">
         {["total", "active", "replied", "unsubscribed", "done"].map((k) => (
           <span key={k} className="rounded-full border border-[var(--border)] bg-white px-4 py-1.5">
             <b className="text-[var(--sea)]">{counts[k] || 0}</b> <span className="text-[var(--muted)]">{k}</span>
@@ -175,6 +188,8 @@ export default function OutreachAdmin() {
           </tbody>
         </table>
       </div>
+      </div>
+      )}
     </div>
   );
 }

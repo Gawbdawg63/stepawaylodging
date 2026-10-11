@@ -233,3 +233,132 @@ export function countByStatus(leads: Lead[]): Record<string, number> {
   for (const l of leads) c[l.status] = (c[l.status] || 0) + 1;
   return c;
 }
+
+// ============================================================================
+// Newsletter — a separate list of people who opted in on the website, plus a
+// one-off composer that sends to all of them through the same Outlook mailbox.
+// ============================================================================
+export type Subscriber = {
+  id: string;
+  email: string;
+  firstName: string;
+  status: "active" | "unsubscribed";
+  source: string;
+  addedAt: string;
+  lastSentAt?: string;
+  lastError?: string;
+};
+const SUBS_PATH = "newsletter/subscribers.json";
+
+export async function loadSubscribers(): Promise<Subscriber[]> {
+  const token = blobToken();
+  if (!token) return [];
+  try {
+    const res = await get(SUBS_PATH, { access: "private", token, useCache: false });
+    if (!res) return [];
+    return JSON.parse(await new Response(res.stream).text()) as Subscriber[];
+  } catch {
+    return [];
+  }
+}
+export async function saveSubscribers(subs: Subscriber[]): Promise<void> {
+  const token = blobToken();
+  if (!token) throw new Error("No blob token");
+  await put(SUBS_PATH, JSON.stringify(subs, null, 2), {
+    access: "private",
+    token,
+    contentType: "application/json",
+    allowOverwrite: true,
+    addRandomSuffix: false,
+  });
+}
+
+// Add an opt-in email (from the website signup). Returns true if newly added.
+export async function addSubscriber(email: string, firstName = "", source = "website"): Promise<boolean> {
+  const e = email.trim().toLowerCase();
+  if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(e)) return false;
+  const subs = await loadSubscribers();
+  const existing = subs.find((s) => s.email.toLowerCase() === e);
+  if (existing) {
+    if (existing.status === "unsubscribed") {
+      existing.status = "active";
+      await saveSubscribers(subs);
+    }
+    return false;
+  }
+  subs.push({
+    id: (globalThis.crypto?.randomUUID?.() ?? String(Date.now() + Math.random())).toString(),
+    email: e,
+    firstName: firstName.trim(),
+    status: "active",
+    source,
+    addedAt: new Date().toISOString(),
+  });
+  await saveSubscribers(subs);
+  return true;
+}
+
+export function subUnsubUrl(email: string): string {
+  return `${BASE}/api/outreach/unsubscribe?e=${encodeURIComponent(email)}&t=${unsubToken(email)}&l=news`;
+}
+
+function renderNewsletter(body: string, sub: Subscriber): string {
+  const txt = body
+    .replace(/\{\{\s*first_name\s*\}\}/g, sub.firstName || "there")
+    .replace(/\{\{\s*name\s*\}\}/g, sub.firstName || "there");
+  const paragraphs = txt
+    .split(/\n{2,}/)
+    .map((p) => `<p style="margin:0 0 14px;line-height:1.55">${p.replace(/\n/g, "<br>")}</p>`)
+    .join("");
+  const footer =
+    `<p style="margin:22px 0 0;color:#888;font-size:12px;line-height:1.5">` +
+    `${process.env.OUTREACH_ADDRESS || "Step Away Lodging, Lincoln City, OR 97367"}<br>` +
+    `You're receiving this because you signed up at stepawaylodging.com. ` +
+    `<a href="${subUnsubUrl(sub.email)}">Unsubscribe</a>.</p>`;
+  return `<div style="font-family:Arial,Helvetica,sans-serif;font-size:15px;color:#222;max-width:600px">${paragraphs}${footer}</div>`;
+}
+
+// Send a newsletter to all active subscribers (or a single test address).
+export async function runNewsletter(
+  subject: string,
+  body: string,
+  opts?: { testTo?: string }
+): Promise<{ sent: number; skipped?: string; total: number }> {
+  const subs = await loadSubscribers();
+  const total = subs.filter((s) => s.status === "active").length;
+  if (!graphConfigured()) return { sent: 0, skipped: "Microsoft 365 not connected yet.", total };
+  let token: string;
+  try {
+    token = await graphToken();
+  } catch (e) {
+    return { sent: 0, skipped: `Graph auth failed: ${(e as Error).message}`, total };
+  }
+
+  if (opts?.testTo) {
+    const sample: Subscriber = { id: "test", email: opts.testTo, firstName: "", status: "active", source: "test", addedAt: "" };
+    await sendEmail(token, opts.testTo, subject, renderNewsletter(body, sample));
+    return { sent: 1, total };
+  }
+
+  let sent = 0;
+  const now = new Date().toISOString();
+  for (const s of subs) {
+    if (s.status !== "active") continue;
+    if (sent >= 450) break; // safety cap per send
+    try {
+      await sendEmail(token, s.email, subject, renderNewsletter(body, s));
+      s.lastSentAt = now;
+      sent++;
+    } catch (e) {
+      s.lastError = (e as Error).message;
+    }
+  }
+  await saveSubscribers(subs);
+  return { sent, total };
+}
+
+export function countSubs(subs: Subscriber[]): Record<string, number> {
+  const c: Record<string, number> = { total: subs.length };
+  for (const s of subs) c[s.status] = (c[s.status] || 0) + 1;
+  return c;
+}

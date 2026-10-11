@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { owners, brand } from "@/lib/content";
+import { brand } from "@/lib/content";
 
 export default function EmailSignup() {
   const [status, setStatus] = useState<"idle" | "sending" | "done" | "error">("idle");
@@ -9,16 +9,12 @@ export default function EmailSignup() {
   async function submit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const email = new FormData(e.currentTarget).get("email");
-    if (!owners.formEndpoint) {
-      window.location.href = `mailto:${brand.email}?subject=${encodeURIComponent("Add me to the list")}&body=${encodeURIComponent(String(email || ""))}`;
-      return;
-    }
     setStatus("sending");
     try {
-      const res = await fetch(owners.formEndpoint, {
+      const res = await fetch("/api/newsletter/subscribe", {
         method: "POST",
-        headers: { Accept: "application/json", "Content-Type": "application/json" },
-        body: JSON.stringify({ email, _subject: "New newsletter signup — Step Away Lodging" }),
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
       });
       if (!res.ok) throw new Error();
       setStatus("done");
