@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
+import Image from "next/image";
 import type { Photo } from "@/lib/content";
 
 const VISIBLE = 12;
@@ -64,8 +65,13 @@ export default function Gallery({
             }`}
             aria-label={`View ${p.alt}`}
           >
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={`/${p.file}`} alt={p.alt} loading="lazy" decoding="async" className="h-full w-full object-cover transition duration-500 group-hover:scale-105" />
+            <Image
+              src={`/${p.file}`}
+              alt={p.alt}
+              fill
+              sizes={i === 0 ? "(max-width: 768px) 100vw, 50vw" : "(max-width: 768px) 50vw, 25vw"}
+              className="object-cover transition duration-500 group-hover:scale-105"
+            />
           </button>
         ))}
       </div>

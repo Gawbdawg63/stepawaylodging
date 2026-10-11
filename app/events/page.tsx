@@ -32,7 +32,7 @@ export default function EventsPage() {
               href={`/events/${e.slug}`}
               className="group flex flex-col overflow-hidden rounded-2xl border border-[var(--border)] bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-md"
             >
-              <EventCover event={e} className="h-44 w-full" />
+              <EventCover event={e} className="h-44 w-full" sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 420px" />
               <div className="flex flex-1 flex-col p-5">
                 <div className="text-sm font-semibold text-[var(--sand-600)]">{e.dateLabel}</div>
                 <h2 className="mt-1 font-display text-xl text-[var(--sea)]">{e.title}</h2>

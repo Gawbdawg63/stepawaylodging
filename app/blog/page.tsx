@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import Image from "next/image";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import PageHero from "@/components/PageHero";
@@ -26,8 +27,9 @@ export default function BlogPage() {
           {postsByDate.map((p) => (
             <Link key={p.slug} href={`/blog/${p.slug}`} className="group flex flex-col overflow-hidden rounded-2xl border border-[var(--border)] bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-md">
               {p.cover ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img src={`/${p.cover}`} alt={p.title} loading="lazy" decoding="async" className="h-48 w-full object-cover" />
+                <div className="relative h-48 w-full overflow-hidden">
+                  <Image src={`/${p.cover}`} alt={p.title} fill sizes="(max-width: 640px) 100vw, 50vw" className="object-cover" />
+                </div>
               ) : (
                 <div className="h-48 w-full" style={{ background: "linear-gradient(140deg, var(--sea) 0%, var(--sea-700) 100%)" }} />
               )}

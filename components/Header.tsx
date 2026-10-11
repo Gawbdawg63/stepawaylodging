@@ -2,7 +2,9 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { brand } from "@/lib/content";
+import logo from "../public/logo.png";
 
 export type NavLink = { href: string; label: string };
 
@@ -52,8 +54,7 @@ export default function Header({
       <div className="mx-auto flex max-w-6xl items-center justify-between px-5 py-4">
         <Link href="/" className="flex items-center leading-none text-white">
           {brand.logo ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img src={`/${brand.logo}`} alt={brand.name} style={{ width: brand.logoWidth }} className="h-auto" />
+            <Image src={logo} alt={brand.name} priority sizes="210px" style={{ width: brand.logoWidth, height: "auto" }} />
           ) : (
             <span className="flex flex-col">
               <span className="font-display text-lg font-semibold tracking-wide">{brand.name}</span>

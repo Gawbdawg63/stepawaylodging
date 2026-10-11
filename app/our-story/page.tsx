@@ -1,10 +1,12 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import Image from "next/image";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import PageHero from "@/components/PageHero";
 import Gallery from "@/components/Gallery";
 import { brand, story, storyGallery } from "@/lib/content";
+import heroPhoto from "../../public/hero.jpg";
 
 export const metadata: Metadata = {
   title: `Our Story — ${brand.name}`,
@@ -27,8 +29,7 @@ export default function OurStoryPage() {
               <p key={i}>{p}</p>
             ))}
           </div>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/hero.jpg" alt="The Oregon Coast at sunset" className="min-h-[320px] w-full rounded-3xl object-cover shadow-sm" />
+          <Image src={heroPhoto} alt="The Oregon Coast at sunset" sizes="(max-width: 768px) 100vw, 50vw" className="h-auto min-h-[320px] w-full rounded-3xl object-cover shadow-sm" />
         </div>
 
         <p className="mx-auto mt-14 max-w-3xl text-center font-display text-2xl leading-snug text-[var(--sea)] sm:text-3xl">

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import Image from "next/image";
 import { notFound } from "next/navigation";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -58,8 +59,9 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
       <article className="mx-auto max-w-3xl px-5 py-12 sm:py-16">
         <Link href="/blog" className="text-sm text-[var(--sand-600)] transition hover:text-[var(--sea)]">← All posts</Link>
         {p.cover && (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img src={`/${p.cover}`} alt={p.title} fetchPriority="high" decoding="async" className="mt-6 max-h-[60vh] w-full rounded-2xl object-cover" />
+          <div className="relative mt-6 aspect-[16/9] w-full overflow-hidden rounded-2xl">
+            <Image src={`/${p.cover}`} alt={p.title} fill priority sizes="(max-width: 768px) 100vw, 768px" className="object-cover" />
+          </div>
         )}
         <div className="mt-8 space-y-5 text-lg leading-relaxed text-[var(--foreground)]/90">
           {p.body.map((para, i) => <p key={i}>{para}</p>)}

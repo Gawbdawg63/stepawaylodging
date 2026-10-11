@@ -55,7 +55,7 @@ export default async function EventPage({ params }: { params: Promise<{ slug: st
       <article>
         {/* Cover */}
         <div className="relative h-[46vh] min-h-[320px] w-full overflow-hidden">
-          <EventCover event={e} className="h-full w-full" />
+          <EventCover event={e} className="h-full w-full" priority sizes="100vw" />
           <div className="absolute inset-0" style={{ background: "linear-gradient(180deg, rgba(11,42,43,0.55) 0%, rgba(11,42,43,0.15) 40%, rgba(11,42,43,0.65) 100%)" }} />
           <div className="absolute inset-x-0 bottom-0 mx-auto max-w-3xl px-5 pb-10 text-white">
             <Link href="/events" className="text-sm text-white/80 transition hover:text-white">← All events</Link>

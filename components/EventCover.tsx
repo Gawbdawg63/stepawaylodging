@@ -1,3 +1,4 @@
+import Image from "next/image";
 import type { LcEvent } from "@/lib/events";
 
 // A themed cover for an event: a real photo if provided, otherwise a tasteful
@@ -27,13 +28,20 @@ function Motif({ icon }: { icon: string }) {
 export default function EventCover({
   event,
   className = "",
+  priority = false,
+  sizes = "(max-width: 768px) 100vw, 400px",
 }: {
   event: LcEvent;
   className?: string;
+  priority?: boolean;
+  sizes?: string;
 }) {
   if (event.photo) {
-    // eslint-disable-next-line @next/next/no-img-element
-    return <img src={`/${event.photo}`} alt={event.title} className={`object-cover ${className}`} />;
+    return (
+      <div className={`relative overflow-hidden ${className}`}>
+        <Image src={`/${event.photo}`} alt={event.title} fill priority={priority} sizes={sizes} className="object-cover" />
+      </div>
+    );
   }
   return (
     <div
