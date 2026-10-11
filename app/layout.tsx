@@ -3,6 +3,7 @@ import { Fraunces, Inter } from "next/font/google";
 import Script from "next/script";
 import "./globals.css";
 import { Analytics } from "@vercel/analytics/next";
+import TawkChat from "@/components/TawkChat";
 import { brand } from "@/lib/content";
 
 const GA_ID = "G-E330B0PCKV";
@@ -64,6 +65,8 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       <body className="min-h-full flex flex-col">
         {children}
         <Analytics />
+        {/* Live chat (tawk.to) — off until a widget ID is set in TawkChat.tsx */}
+        <TawkChat />
         {/* Google Analytics (GA4) */}
         <Script src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`} strategy="afterInteractive" />
         <Script id="ga4-init" strategy="afterInteractive">
