@@ -37,6 +37,17 @@ function strip(s: string): string {
 
 const EMPTY: ReviewsData = { average: null, count: null, reviews: [] };
 
+// Reviews to hide from our own site (they still exist on the source platform).
+// Each entry is matched on the author plus a distinctive phrase from the body,
+// so it only ever hides the one intended review. To hide another, add a row.
+const HIDDEN: { author: RegExp; contains: RegExp }[] = [
+  { author: /^toni/i, contains: /fine print|party crashers/i },
+];
+
+function isHidden(author: string, body: string): boolean {
+  return HIDDEN.some((h) => h.author.test(author.trim()) && h.contains.test(body));
+}
+
 export async function getReviews(): Promise<ReviewsData> {
   try {
     const res = await fetch(REVIEWS_URL, { next: { revalidate: 3600 } });
@@ -65,7 +76,7 @@ export async function getReviews(): Promise<ReviewsData> {
       const date = bm ? bm[3].trim() : "";
       const body = strip((b.match(/review-item-body"[^>]*>([\s\S]*?)<\/div>/) || [, ""])[1]);
 
-      if (body) reviews.push({ author, property, date, stars, title, body });
+      if (body && !isHidden(author, body)) reviews.push({ author, property, date, stars, title, body });
     }
 
     return { average, count, reviews };
