@@ -282,6 +282,23 @@ export const posts: BlogPost[] = [
       "However you spend the day in Newport, there's a hot tub waiting for you back in Lincoln City when you return. Browse our homes and book direct at stepawaylodging.com for your next central Oregon coast getaway.",
     ],
   },
+  {
+    slug: "razor-clamming-oregon-coast-guide",
+    title: "Razor Clamming on the Oregon Coast: A Beginner's Guide",
+    date: "2026-10-12",
+    author: "Step Away Lodging",
+    excerpt:
+      "As the big fall and winter minus tides roll in, razor clamming season turns the beach into a treasure hunt of its own. Here's how to dig your first limit.",
+    cover: "photos/photo-15.jpg",
+    body: [
+      "Once the glass-float hunters and sandcastle builders thin out for the season, a different crowd starts showing up on the beach at odd hours, armed with shovels, clam guns, and mesh bags. They're after razor clams — one of the Oregon coast's great low-tech, high-reward outdoor traditions, and a genuinely fun thing to try during a fall or winter stay.",
+      "Razor clams live just beneath the sand on open, sandy beaches up and down the coast, and they're most accessible during a 'minus tide' — a low tide that drops below the average low-water line, exposing more beach than usual. Fall and winter bring the year's biggest minus tides, which is why clamming season picks up right as the crowds thin out. Check a tide table before you go and plan to be on the sand an hour or two before the lowest point of the tide.",
+      "You'll need a shellfish license (Oregon requires one for anyone 14 and older) and either a clam gun — a tube-shaped digger made for this exact job — or a narrow, long-handled shovel. Watch the sand near the waterline for a small dimple or 'show,' which is the clam's neck pulling down as it senses you approaching; dig quickly and gently alongside it, since razor clams can burrow surprisingly fast. It takes a few tries to get the knack, so don't be discouraged on your first outing.",
+      "Before you dig anywhere on the Oregon coast, check the Oregon Department of Fish and Wildlife's shellfish safety page or hotline. Clamming beaches are tested regularly for marine biotoxins like domoic acid, and ODFW closes specific beaches whenever levels run too high — rules and limits can also change beach by beach and season by season, so it's always worth a quick look before you head out.",
+      "Bring a bucket of seawater to keep your clams cold and happy until you get home, and clean them as soon as you can — a quick online search turns up plenty of simple cleaning guides if it's your first time. From there, a classic pan-fry in butter or a pot of chowder is about as good as a coastal dinner gets, especially eaten with the sound of the surf still in your ears.",
+      "A clamming morning pairs perfectly with a slow coastal stay: an early start on the beach, a hot shower back at the house, and a soak in your private hot tub while dinner simmers on the stove. Browse our homes and book direct at stepawaylodging.com for your next Oregon coast adventure.",
+    ],
+  },
 ];
 
 export const postsByDate = [...posts].sort((a, b) => (a.date < b.date ? 1 : -1));
