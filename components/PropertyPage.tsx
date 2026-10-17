@@ -4,6 +4,7 @@ import Gallery from "@/components/Gallery";
 import OwnerRezWidget from "@/components/OwnerRezWidget";
 import Reviews from "@/components/Reviews";
 import Footer from "@/components/Footer";
+import LocationMap from "@/components/LocationMap";
 import { type Property } from "@/lib/content";
 import { getReviews, reviewMatchesHome } from "@/lib/reviews";
 
@@ -141,12 +142,10 @@ export default async function PropertyPage({ property }: { property: Property })
           <h2 className="mt-2 font-display text-3xl text-[var(--sea)] sm:text-4xl">Where you&apos;ll be</h2>
           <p className="mt-3 text-[var(--muted)]">{property.location}</p>
           <div className="mt-8 overflow-hidden rounded-2xl border border-[var(--border)]">
-            <iframe
-              title={`Map of ${property.name}`}
-              src={`https://www.google.com/maps?q=${encodeURIComponent(property.mapQuery ?? property.location)}&z=15&output=embed`}
-              className="h-[360px] w-full sm:h-[420px]"
-              loading="lazy"
-              referrerPolicy="no-referrer-when-downgrade"
+            <LocationMap
+              query={property.mapQuery ?? property.location}
+              title={`Map of the ${property.name} area`}
+              className="block h-[360px] w-full sm:h-[420px]"
             />
           </div>
           <p className="mt-3 text-xs text-[var(--muted)]">
