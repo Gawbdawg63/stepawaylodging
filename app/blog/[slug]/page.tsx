@@ -7,8 +7,9 @@ import Footer from "@/components/Footer";
 import PageHero from "@/components/PageHero";
 import JsonLd from "@/components/JsonLd";
 import { posts, getPost } from "@/lib/blog";
-import { brand } from "@/lib/content";
+import { brand, getProperty, type Property } from "@/lib/content";
 import { abs, breadcrumbJsonLd } from "@/lib/seo";
+import PropertyCard from "@/components/PropertyCard";
 
 export function generateStaticParams() {
   return posts.map((p) => ({ slug: p.slug }));
@@ -18,11 +19,13 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const { slug } = await params;
   const p = getPost(slug);
   if (!p) return { title: brand.name };
+  const metaTitle = p.seoTitle ? `${p.seoTitle} | ${brand.name}` : `${p.title} — ${brand.name}`;
+  const metaDescription = p.seoDescription ?? p.excerpt;
   return {
-    title: `${p.title} — ${brand.name}`,
-    description: p.excerpt,
+    title: metaTitle,
+    description: metaDescription,
     alternates: { canonical: `/blog/${p.slug}` },
-    openGraph: { title: p.title, description: p.excerpt, url: `/blog/${p.slug}`, type: "article", ...(p.cover ? { images: [`/${p.cover}`] } : {}) },
+    openGraph: { title: metaTitle, description: metaDescription, url: `/blog/${p.slug}`, type: "article", ...(p.cover ? { images: [`/${p.cover}`] } : {}) },
   };
 }
 
@@ -33,6 +36,10 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
   const { slug } = await params;
   const p = getPost(slug);
   if (!p) notFound();
+
+  const related = (p.relatedHomes ?? [])
+    .map((s) => getProperty(s))
+    .filter((h): h is Property => Boolean(h));
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -66,6 +73,15 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
         <div className="mt-8 space-y-5 text-lg leading-relaxed text-[var(--foreground)]/90">
           {p.body.map((para, i) => <p key={i}>{para}</p>)}
         </div>
+
+        {related.length > 0 && (
+          <div className="mt-12">
+            <h2 className="font-display text-2xl text-[var(--sea)]">Homes featured in this guide</h2>
+            <div className="mt-6 grid gap-6 sm:grid-cols-2">
+              {related.map((home) => <PropertyCard key={home.slug} p={home} />)}
+            </div>
+          </div>
+        )}
 
         <div className="mt-12 rounded-2xl border border-[var(--border)] bg-white p-7 text-center shadow-sm">
           <h2 className="font-display text-2xl text-[var(--sea)]">Plan your coastal escape</h2>

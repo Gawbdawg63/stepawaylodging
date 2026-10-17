@@ -3,6 +3,8 @@ import { brand } from "@/lib/content";
 
 const footerLinks = [
   { href: "/homes", label: "Our Homes" },
+  { href: "/lincoln-city-vacation-rentals", label: "Lincoln City Rentals" },
+  { href: "/lincoln-beach-vacation-rentals", label: "Lincoln Beach Rentals" },
   { href: "/our-story", label: "Our Story" },
   { href: "/events", label: "Events" },
   { href: "/blog", label: "Blog" },

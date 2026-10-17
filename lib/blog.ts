@@ -11,6 +11,9 @@ export type BlogPost = {
   excerpt: string;
   cover?: string;
   body: string[]; // paragraphs
+  seoTitle?: string; // overrides the search <title> (on-page title is unchanged)
+  seoDescription?: string; // overrides the search meta description
+  relatedHomes?: string[]; // property slugs to feature at the end of the post
 };
 
 export const posts: BlogPost[] = [
@@ -174,6 +177,10 @@ export const posts: BlogPost[] = [
     author: "Step Away Lodging",
     excerpt:
       "Family reunion, friends' trip, or a multi-generation getaway? Here's how to pick a coast home that fits everyone — comfortably.",
+    seoTitle: "Best Oregon Coast Vacation Rentals for Large Groups (Sleeps 8–10)",
+    seoDescription:
+      "Planning a family reunion or friends' trip on the Oregon coast? Compare our large-group vacation rentals that sleep 8–10 near Lincoln City — big kitchens, multiple decks, and a private hot tub. Book direct.",
+    relatedHomes: ["ocean-peak-ridge", "americana", "ebb-and-flow", "barefoot-bungalow"],
     cover: "photos/photo-13.jpg",
     body: [
       "There's something special about getting everyone together on the coast — the whole family under one roof, meals around a big table, and the beach out the door. Booking for a large group just takes a little more planning, and the right home makes all the difference between cramped and carefree.",
@@ -238,6 +245,10 @@ export const posts: BlogPost[] = [
     author: "Step Away Lodging",
     excerpt:
       "When the fall rains return, the forests behind Lincoln City come alive with mushrooms. Here's a beginner-friendly guide to foraging season on the Oregon coast.",
+    seoTitle: "Fall Mushroom Foraging on the Oregon Coast: A Beginner's Guide",
+    seoDescription:
+      "Chanterelle season on the central Oregon coast — where and when to forage near Lincoln City, beginner safety tips, and how to cook your finds. Plan a cozy fall stay with a hot tub.",
+    relatedHomes: ["ebb-and-flow", "ocean-peak-ridge"],
     cover: "photos/photo-09.jpg",
     body: [
       "There's a particular kind of magic that settles over the coast once the fall rains arrive. The crowds thin out, the light turns soft and golden in the afternoons, and just inland, the damp forest floor along the Coast Range starts to wake up. For anyone who loves a reason to get outside in the cooler months, mushroom season is one of the central coast's best-kept secrets.",

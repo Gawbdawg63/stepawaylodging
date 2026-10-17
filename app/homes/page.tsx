@@ -11,8 +11,9 @@ import { brand } from "@/lib/content";
 import { getReviews } from "@/lib/reviews";
 
 export const metadata: Metadata = {
-  title: `Our Homes — ${brand.name}`,
-  description: "Browse all Step Away Lodging vacation homes and suites on the Oregon Coast. Search availability and book direct.",
+  title: "Oregon Coast Vacation Rentals with Hot Tubs | Step Away Lodging",
+  description:
+    "Browse all 7 Step Away Lodging vacation homes and suites near Lincoln City on the Oregon Coast — each with a private hot tub. Check live availability and book direct.",
   alternates: { canonical: "/homes" },
 };
 

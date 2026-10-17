@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
 import Header from "@/components/Header";
@@ -14,10 +15,26 @@ import { brand, properties } from "@/lib/content";
 import { siteJsonLd, faqJsonLd } from "@/lib/seo";
 import { getReviews } from "@/lib/reviews";
 
+export const metadata: Metadata = {
+  title: "Oregon Coast Vacation Rentals in Lincoln City | Step Away Lodging",
+  description:
+    "Hand-picked Oregon Coast vacation rentals in and around Lincoln City — each with a private hot tub. Book direct with a local, family-owned team for better rates and no platform fees.",
+  alternates: { canonical: "/" },
+  openGraph: {
+    title: "Oregon Coast Vacation Rentals in Lincoln City | Step Away Lodging",
+    description:
+      "Hand-picked coastal homes and suites near Lincoln City, each with a hot tub. Browse our homes and book direct.",
+    url: `https://${brand.domain}`,
+    type: "website",
+  },
+};
+
 const num = (n: number) => (Number.isInteger(n) ? String(n) : n.toFixed(1));
 
 const explore = [
   { href: "/homes", title: "Our Homes", text: "Browse all 7 coastal homes and suites, each with a hot tub." },
+  { href: "/lincoln-city-vacation-rentals", title: "Lincoln City Rentals", text: "Homes in Olivia Beach and on Siletz Bay, each with a hot tub." },
+  { href: "/lincoln-beach-vacation-rentals", title: "Lincoln Beach Rentals", text: "Cozy cottages and family homes toward Depoe Bay." },
   { href: "/events", title: "Lincoln City Events", text: "Kite festivals, glass-float hunts, and more all year long." },
   { href: "/central-oregon", title: "Central Oregon", text: "We're expanding inland — and looking for homes to manage." },
   { href: "/blog", title: "The Journal", text: "Local guides and tips for the central Oregon coast." },
