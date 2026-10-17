@@ -6,6 +6,7 @@ import HomesGrid from "@/components/HomesGrid";
 import SearchBar from "@/components/SearchBar";
 import TrustStrip from "@/components/TrustStrip";
 import HomesMap from "@/components/HomesMap";
+import BrowseBy from "@/components/BrowseBy";
 import MobileCTA from "@/components/MobileCTA";
 import { brand } from "@/lib/content";
 import { getReviews } from "@/lib/reviews";
@@ -38,6 +39,7 @@ export default async function HomesPage() {
       </section>
 
       <HomesGrid />
+      <BrowseBy />
       <HomesMap />
       <Footer subtitle={brand.tagline} />
       <MobileCTA />

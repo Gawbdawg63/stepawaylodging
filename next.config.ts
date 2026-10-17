@@ -27,9 +27,11 @@ const nextConfig: NextConfig = {
       { source: "/properties", destination: "/homes", permanent: true },
       { source: "/availability", destination: "/homes", permanent: true },
       { source: "/book", destination: "/homes", permanent: true },
-      { source: "/oregon-coast-:id", destination: "/homes", permanent: true },
-      { source: "/central-oregon-:id", destination: "/central-oregon", permanent: true },
-      { source: "/list-with-step-away-:id", destination: "/owners", permanent: true },
+      // Numeric-only (\d+) so these old CMS URLs don't swallow real keyword pages
+      // like /oregon-coast-rentals-with-hot-tub.
+      { source: "/oregon-coast-:id(\\d+)", destination: "/homes", permanent: true },
+      { source: "/central-oregon-:id(\\d+)", destination: "/central-oregon", permanent: true },
+      { source: "/list-with-step-away-:id(\\d+)", destination: "/owners", permanent: true },
     ];
   },
 };
