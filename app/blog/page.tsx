@@ -13,6 +13,9 @@ export const metadata: Metadata = {
   alternates: { canonical: "/blog" },
 };
 
+// Re-render hourly so scheduled posts appear in the list promptly on their date.
+export const revalidate = 3600;
+
 const fmt = (iso: string) =>
   new Date(iso + "T00:00:00").toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" });
 

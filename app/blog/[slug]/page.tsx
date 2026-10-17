@@ -6,13 +6,16 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import PageHero from "@/components/PageHero";
 import JsonLd from "@/components/JsonLd";
-import { posts, getPost } from "@/lib/blog";
+import { publishedPosts, getPost } from "@/lib/blog";
 import { brand, getProperty, type Property } from "@/lib/content";
 import { abs, breadcrumbJsonLd } from "@/lib/seo";
 import PropertyCard from "@/components/PropertyCard";
 
+// Re-check hourly so a scheduled post becomes reachable promptly on its date.
+export const revalidate = 3600;
+
 export function generateStaticParams() {
-  return posts.map((p) => ({ slug: p.slug }));
+  return publishedPosts.map((p) => ({ slug: p.slug }));
 }
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {

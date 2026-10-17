@@ -310,10 +310,140 @@ export const posts: BlogPost[] = [
       "A clamming morning pairs perfectly with a slow coastal stay: an early start on the beach, a hot shower back at the house, and a soak in your private hot tub while dinner simmers on the stove. Browse our homes and book direct at stepawaylodging.com for your next Oregon coast adventure.",
     ],
   },
+  {
+    slug: "best-beaches-lincoln-city-oregon",
+    title: "The Best Beaches in Lincoln City, Oregon",
+    date: "2026-10-16",
+    author: "Step Away Lodging",
+    excerpt:
+      "Seven miles of public sand, and every stretch has its own character. Here are the best beaches in Lincoln City and what makes each one worth a visit.",
+    seoTitle: "Best Beaches in Lincoln City, Oregon: A Local's Guide",
+    seoDescription:
+      "From the D River wayside to Roads End and Siletz Bay — a local's guide to the best beaches in Lincoln City, Oregon, what to do at each, and where to stay nearby.",
+    relatedHomes: ["ocean-peak-ridge", "ebb-and-flow"],
+    cover: "photos/photo-06.jpg",
+    body: [
+      "Lincoln City runs for seven miles along the central Oregon coast, and thanks to Oregon's 1967 Beach Bill, every inch of that shoreline is public land — free to walk, explore, and enjoy. It's all 'the beach,' but each stretch has its own personality, from busy central access points to quiet headlands and a calm, seal-dotted bay. Here's how we'd help you pick your spot.",
+      "For easy access and plenty of room, head to the D River State Recreation Site, smack in the middle of town where the short D River meets the sea. There's a big parking lot right off Highway 101, restrooms, and a wide, flat beach that's perfect for kite-flying — it's also the home of Lincoln City's famous Summer and Fall Kite Festivals. It's the most convenient beach in town and a great default when you just want sand underfoot quickly.",
+      "For something quieter and more dramatic, drive to the north end and the Roads End State Recreation Site. At low tide you can walk north toward the headland and explore tide pools full of sea stars and anemones, and even reach a hidden 'secret' cove when the tide cooperates (always check a tide table first and keep an eye on the water so you don't get cut off). It's a favorite for beachcombing and a noticeably calmer scene than the central beaches.",
+      "At the south end, the shoreline softens into Siletz Bay, where the surf gives way to calmer water, driftwood, and a sandbar where harbor seals often haul out to rest. The nearby Olivia Beach and Taft neighborhoods offer gentle, walkable sand that's great for young kids and sunset strolls. This is also prime glass-float territory — hand-blown floats are hidden along the beach year-round for finders to keep.",
+      "A few universal tips: check a tide table before you go (low tide opens up tide pools and firm walking sand), bring layers because the coast is breezy even on sunny days, and never turn your back on the ocean — sneaker waves are a real hazard on this coast. Whichever beach becomes your favorite, every Step Away Lodging home is a short drive or walk from the sand, with a private hot tub waiting for when you get back. Browse our homes and book direct at stepawaylodging.com.",
+    ],
+  },
+  {
+    slug: "things-to-do-lincoln-city-when-raining",
+    title: "Things to Do in Lincoln City When It Rains",
+    date: "2026-10-23",
+    author: "Step Away Lodging",
+    excerpt:
+      "Rain is part of the coast's charm — and Lincoln City has plenty to do when the weather turns. Here's how to have a great rainy day.",
+    seoTitle: "Rainy Day in Lincoln City? The Best Indoor Things to Do",
+    seoDescription:
+      "Rain on the Oregon coast is part of the charm. The best indoor things to do in Lincoln City — blow your own glass float, the casino, museums, chowder, and cozy nights in.",
+    relatedHomes: ["barefoot-bungalow", "beach-bungalow-by-the-sea"],
+    cover: "photos/photo-12.jpg",
+    body: [
+      "Let's be honest: it rains on the Oregon coast, especially from late fall through spring. But a rainy day here is part of the magic — the beaches go moody and dramatic, the crowds disappear, and there's a whole list of cozy, indoor things to do in Lincoln City to fill the hours between squalls. Here's how we'd spend a wet one.",
+      "Top of our list: make your own glass art. At the Jennifer Sears Glass Art Studio in the Taft district, you can book a session and blow your own glass float, ornament, or paperweight with the help of a resident artist — a genuinely memorable, hands-on souvenir and a perfect rainy-afternoon activity for all ages. It ties right into Lincoln City's famous Finders Keepers glass-float tradition.",
+      "For more under one roof, Chinook Winds Casino Resort sits right on the beach with gaming, an arcade, dining, and regular live entertainment — you can watch the waves crash while you stay perfectly dry. History buffs can duck into the North Lincoln County Historical Museum, and browsers will love the town's antique and vintage shops (they take over Lincoln City entirely during February's Retro Expo).",
+      "Rain is also the perfect excuse to eat well. Clam chowder is the coast's signature comfort food, and a steaming bowl at Mo's or another local spot is exactly what a gray afternoon calls for. Pick up fresh seafood from a market to cook back at the house, linger over coffee at a local roaster, or browse the Lincoln City Outlets if the group is in a shopping mood.",
+      "Honestly, though, our favorite rainy-day plan is the simplest: stay in. Every Step Away Lodging home has a full kitchen, a cozy living room, and a private hot tub — and there's little better than soaking in warm water with the rain tapping overhead and the surf in the distance. Browse our homes and book direct at stepawaylodging.com for your next cozy coast escape.",
+    ],
+  },
+  {
+    slug: "lincoln-city-with-kids-family-guide",
+    title: "Lincoln City with Kids: A Family-Friendly Guide",
+    date: "2026-10-30",
+    author: "Step Away Lodging",
+    excerpt:
+      "Glass-float hunts, kite flying, tide pools, and go-karts — Lincoln City is a dream for families. Here's how to plan a trip the kids will remember.",
+    seoTitle: "Lincoln City with Kids: Family-Friendly Things to Do",
+    seoDescription:
+      "Beaches, glass floats, kite flying, tide pools, and more — a family-friendly guide to the best things to do in Lincoln City, Oregon with kids of all ages.",
+    relatedHomes: ["americana", "ebb-and-flow"],
+    cover: "events/kite-festival.jpg",
+    body: [
+      "Lincoln City is one of those rare spots that keeps every age happy, from toddlers to teenagers to the grandparents who came along. The beach does most of the heavy lifting, but there's plenty more to fill a few days — and the best part is how much of it is free and outdoors. Here's how we'd plan a family trip.",
+      "Start on the sand. The beach is the main event: building driftwood forts, splashing in the shallows, and hunting for the hand-blown glass floats hidden along the shore year-round as part of the Finders Keepers program — kids are usually the best spotters. Kite-flying is practically a local sport thanks to the steady coastal wind, and the wide beach at the D River wayside is the perfect launch pad. At low tide, drive up to Roads End to explore tide pools full of sea stars, crabs, and anemones.",
+      "When everyone needs a change of pace, Devil's Lake, right in town, is a freshwater playground for paddling, swimming, and easy shoreline fun. There are go-karts, mini-golf, and an arcade in town for the classic beach-vacation afternoon, plus the arcade and family dining at Chinook Winds. Rainy day? Book a session to blow your own glass float at the Jennifer Sears Glass Art Studio — a hands-on activity kids talk about long after the trip.",
+      "A few tips from hosting lots of families: pack layers and rain jackets no matter the forecast, keep a tide table handy so beach walks and tide-pooling line up with low water, and always keep an eye on the ocean, since sneaker waves can catch little ones off guard. Mornings on the beach and afternoons for activities (or naps) tends to be the winning rhythm.",
+      "It helps to have a home with room to spread out, too. Several of our homes are built for families — Americana even comes with four beach cruisers, and Ebb and Flow has beach bikes, kayaks, and a ping-pong table — and every one has a private hot tub for warming up chilly kids after the beach. Browse our homes and book direct at stepawaylodging.com.",
+    ],
+  },
+  {
+    slug: "oregon-coast-in-winter-off-season-guide",
+    title: "Oregon Coast in Winter: Why Off-Season Is the Best Season",
+    date: "2026-11-06",
+    author: "Step Away Lodging",
+    excerpt:
+      "Fewer crowds, dramatic surf, migrating whales, and cozy nights by the fire — here's the case for visiting the Oregon coast in winter.",
+    seoTitle: "Oregon Coast in Winter: Why the Off-Season Is the Best Season",
+    seoDescription:
+      "Storm watching, whale migration, razor clamming, empty beaches, and cozy nights by the fire — why winter might be the best time to visit the Oregon coast and Lincoln City.",
+    relatedHomes: ["ocean-peak-ridge", "ebb-and-flow"],
+    cover: "photos/photo-14.jpg",
+    body: [
+      "Most people picture the Oregon coast in summer — blue skies, kites, bare feet in the sand. But ask the locals, and plenty of us will tell you winter is the real secret. The crowds vanish, the coast turns wild and cinematic, and some of the year's best experiences only happen in the cooler months. Here's the case for an off-season coast trip.",
+      "First, the drama. Winter storms roll in off the Pacific and put on a show — towering surf, wind-whipped spray, and the biggest tides of the year. 'Storm watching' is a genuine coastal pastime: you bundle up for a walk when the weather breaks, or simply watch the surf from a warm window with a cup of coffee. The 'king tides' of winter push the ocean higher than any other time of year, reshaping the beach overnight.",
+      "Winter is also prime time for wildlife and foraging. Gray whales migrate past the Oregon coast by the thousands, and the state's organized Whale Watch Weeks around the late-December and spring breaks station volunteers at headlands to help you spot them. The year's biggest minus tides open up razor clamming and tide-pooling, and a good storm often reworks the sand to turn up fresh agates, driftwood, and the occasional glass float.",
+      "Then there's the simple math of a quieter coast: lower rates, easy restaurant tables, empty beaches that feel like your own, and a slower pace everywhere you go. The towns stay open and welcoming — Lincoln City's chowder, shops, casino, and glass-art studio are all happy to see you in January — without the summer bustle.",
+      "Of course, winter on the coast is best enjoyed with a cozy home base. A fireplace, a full kitchen for chowder nights, and a private hot tub to soak in while the rain comes down turn a stormy evening into the whole point of the trip — and every Step Away Lodging home has all three. Browse our homes and book direct at stepawaylodging.com for your off-season escape.",
+    ],
+  },
+  {
+    slug: "lincoln-city-kite-festivals-guide",
+    title: "Lincoln City Kite Festivals: A Guide to Summer & Fall",
+    date: "2026-11-13",
+    author: "Step Away Lodging",
+    excerpt:
+      "Twice a year the sky over Lincoln City fills with giant show kites. Here's your guide to the Summer and Fall Kite Festivals.",
+    seoTitle: "Lincoln City Kite Festivals: Summer & Fall Guide",
+    seoDescription:
+      "Lincoln City is the kite capital of the Oregon coast. A guide to the Summer and Fall Kite Festivals at the D River beach — what to expect, when they happen, and how to plan.",
+    relatedHomes: ["ocean-peak-ridge", "americana"],
+    cover: "photos/photo-16.jpg",
+    body: [
+      "Lincoln City calls itself the kite capital of the Oregon coast, and it has earned the title. The steady ocean wind and the wide, flat beach at the D River wayside make it one of the best places in the Northwest to fly a kite — and twice a year, the town throws a festival that fills the sky with enormous, jaw-dropping show kites.",
+      "The tradition runs to two big weekends: the Summer Kite Festival, typically held in late June, and the Fall Kite Festival, usually in early October. Both center on the D River State Recreation Site right in the middle of town, and both are free to watch. Professional kite teams come from around the region to launch giant inflatable creatures — octopuses, whales, dragons, and geometric show kites the size of a house — while choreographed stunt-kite teams fly in formation to music.",
+      "You don't need to do anything but show up and look up. Bring beach chairs, blankets, and layers (it's breezy by definition on a good kite day), and settle in for a few hours of pure spectacle. There are usually running demonstrations, kite-making activities for kids, and vendors on hand — and the festival atmosphere spills happily onto the surrounding sand.",
+      "A couple of practical notes: parking near the D River wayside fills up fast on festival mornings, so arrive early or plan to walk a bit, and check the Explore Lincoln City events calendar before your trip to confirm the exact dates for the year, since they shift slightly each season. And if you catch the bug, Lincoln City's kite shops can set you up to fly your own any day of the year — the wind is almost always obliging.",
+      "Festival weekends are popular, so book your stay early. Our homes put you minutes from the D River beach, with a private hot tub to unwind in after a day in the wind. Browse our homes and book direct at stepawaylodging.com to plan your kite-festival weekend.",
+    ],
+  },
+  {
+    slug: "devils-lake-lincoln-city-guide",
+    title: "Devil's Lake, Lincoln City: Kayaking, Paddleboarding & More",
+    date: "2026-11-20",
+    author: "Step Away Lodging",
+    excerpt:
+      "Minutes from the surf, Devil's Lake is Lincoln City's freshwater playground — paddle, swim, fish, and soak up calm water with a view.",
+    seoTitle: "Devil's Lake, Lincoln City: Kayaking, Paddleboarding & Swimming",
+    seoDescription:
+      "Just off the beach in Lincoln City, Devil's Lake is a freshwater playground for kayaking, paddleboarding, swimming, and fishing. Here's how to make the most of it.",
+    relatedHomes: ["ebb-and-flow", "ocean-peak-ridge"],
+    cover: "homes/ebb-and-flow.jpg",
+    body: [
+      "Everyone comes to Lincoln City for the ocean, but tucked right behind town is a quieter kind of water worth knowing about: Devil's Lake, a freshwater lake ringed by homes, parks, and forest. When the surf is too cold or too rough for the kids, the lake's calm, warmer water is the perfect plan B — and a destination in its own right.",
+      "Paddling is the main draw. The lake's sheltered water is ideal for kayaking and stand-up paddleboarding, whether you bring your own or rent from an outfitter in town. You can spend a lazy afternoon exploring the shoreline, gliding past lily pads and waterfowl, with none of the waves or currents you'd face on the ocean — a great way for beginners and kids to get comfortable on the water.",
+      "In the warmer months, Devil's Lake is also one of the few places on the immediate coast where you can comfortably swim. Regatta Grounds Park and East Devil's Lake State Recreation Area offer day-use access, grassy picnic spots, and boat ramps, and the state recreation area is a popular launch point for a day on the water. Anglers do well here too — the lake holds trout, bass, catfish, and panfish, and it's an easy, relaxed spot to drop a line.",
+      "As for the name, local legend tells of a creature that once lived in the lake's depths — a story passed down from the area's Indigenous history. These days the only thing lurking is the occasional jumping trout, but the name gives the place a bit of fun folklore to share with the kids on the dock.",
+      "Devil's Lake is minutes from any Step Away Lodging home, and some of ours make a day on the water especially easy — Ebb and Flow comes with kayaks and sits right on the water at nearby Siletz Bay. Paddle in the morning, beach in the afternoon, and finish with a soak in your private hot tub. Browse our homes and book direct at stepawaylodging.com.",
+    ],
+  },
 ];
 
-export const postsByDate = [...posts].sort((a, b) => (a.date < b.date ? 1 : -1));
+const nowDate = () => new Date();
+
+// A post is live only once its date has arrived — this powers the scheduled
+// "drip" so future-dated posts publish automatically on their day.
+function isPublished(p: BlogPost): boolean {
+  return new Date(p.date + "T00:00:00") <= nowDate();
+}
+
+export const publishedPosts = posts.filter(isPublished);
+
+export const postsByDate = [...publishedPosts].sort((a, b) => (a.date < b.date ? 1 : -1));
 
 export function getPost(slug: string): BlogPost | undefined {
-  return posts.find((p) => p.slug === slug);
+  return publishedPosts.find((p) => p.slug === slug);
 }
