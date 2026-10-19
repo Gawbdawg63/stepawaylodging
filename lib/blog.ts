@@ -430,6 +430,27 @@ export const posts: BlogPost[] = [
       "Devil's Lake is minutes from any Step Away Lodging home, and some of ours make a day on the water especially easy — Ebb and Flow comes with kayaks and sits right on the water at nearby Siletz Bay. Paddle in the morning, beach in the afternoon, and finish with a soak in your private hot tub. Browse our homes and book direct at stepawaylodging.com.",
     ],
   },
+  {
+    slug: "crabbing-siletz-bay-oregon-coast-guide",
+    title: "Crabbing on Siletz Bay: A Beginner's Guide to Dungeness Crab",
+    date: "2026-10-19",
+    author: "Step Away Lodging",
+    excerpt:
+      "No boat required — Siletz Bay is one of the easiest places on the Oregon coast to catch your own Dungeness crab for dinner. Here's how to get started.",
+    seoTitle: "Crabbing on Siletz Bay, Lincoln City: A Beginner's Guide",
+    seoDescription:
+      "How to catch Dungeness crab from the dock on Siletz Bay near Lincoln City — gear, bait, tides, and Oregon's shellfish rules. Stay at a Siletz Bay home with crab traps included.",
+    relatedHomes: ["ebb-and-flow"],
+    cover: "photos/photo-10.jpg",
+    body: [
+      "Of all the ways to bring home dinner from the Oregon coast, crabbing has to be the most approachable. You don't need a boat, a fishing rod, or much skill at all to start — just a dock, a ring or a trap, and a little patience. On the south end of Lincoln City, the calm, sheltered water of Siletz Bay makes it one of the friendliest spots on the whole coast to give it a try.",
+      "Dungeness crab is the prize here, named for the Washington harbor where it was first commercially caught and prized ever since for its sweet, tender meat. Unlike ocean crabbing, which usually means a boat and open water, bay crabbing is wonderfully simple: drop a baited ring or pot off a dock or jetty, let it sink to the bottom, and wait. Crab rings (a flat, collapsible hoop of mesh) and box-style pots both work well in a bay like Siletz; a long-handled dip net is an old-fashioned backup for grabbing crab you spot in shallow water near the shoreline.",
+      "Bait is the easy part — crab aren't picky. A chicken leg or two, a fish carcass, or a bit of oily bait tied or clipped inside the ring is usually enough to draw them in. Lower your ring to the bottom, give it a few minutes to work, then pull up quickly and steadily so the crab doesn't have time to climb out before it clears the surface. An incoming tide, especially the couple of hours before and after high tide, tends to bring the best action, since that's when crab move with the water in search of food.",
+      "Before you drop a single ring, it's worth a quick check of Oregon Department of Fish and Wildlife's current shellfish regulations. Rules cover who needs a shellfish license, which crab you're allowed to keep (size and sex limits apply, and only male Dungeness crab of legal size may be harvested), and how many you can take per day. ODFW also tests for marine biotoxins from time to time, so it's always worth a look at their shellfish safety page before you head out, the same way you would before a razor-clamming trip.",
+      "Once you've got a bucket of keepers, the fun continues at the house. A big pot of boiling water, a few minutes per crab, and you're cracking fresh Dungeness on the deck with butter and lemon — about as coastal a dinner as it gets. Our Ebb and Flow cottage sits right on Siletz Bay and comes stocked with crab traps and instructions, so you can walk straight from the back door to your first ring of the trip.",
+      "Ready to try your luck on the bay? Browse our homes and book direct at stepawaylodging.com for your next Oregon coast crabbing trip.",
+    ],
+  },
 ];
 
 const nowDate = () => new Date();
