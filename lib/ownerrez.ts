@@ -321,9 +321,13 @@ export type QuoteOutcome =
   | { status: "unavailable" }
   | { status: "failed"; detail: string };
 
-// Phrases OwnerRez uses when the dates genuinely cannot be booked. Anything
-// outside this list is treated as a fault on our side, not a full calendar.
-const UNAVAILABLE = /not available|unavailable|already booked|conflict|blocked|overlap|no availability|minimum stay|min stay|too short|cannot be booked/i;
+// Phrases OwnerRez uses when the dates are genuinely TAKEN (a real conflict).
+// Minimum-stay / "too short" rejections are deliberately NOT here: the home is
+// open, the requested stay is just shorter than the home's minimum. Those flow
+// to the "could not price" path, which tells the guest the real minimum (and
+// still offers the homes that ARE free for those dates) instead of the false
+// "already booked".
+const UNAVAILABLE = /not available|unavailable|already booked|conflict|blocked|overlap|no availability/i;
 
 export async function createQuote(input: {
   slug: string;
