@@ -41,15 +41,19 @@ async function accessToken(): Promise<string> {
   if (!CLIENT_ID) throw new Error("Outlook not configured: missing MS_CLIENT_ID");
 
   const form = new URLSearchParams({ client_id: CLIENT_ID });
-  if (CLIENT_SECRET) form.set("client_secret", CLIENT_SECRET);
 
   if (REFRESH_TOKEN) {
+    // The device-code refresh token is issued to a PUBLIC client. Redeeming it
+    // with a client_secret makes Azure reject the grant (AADSTS70000 "invalid
+    // or malformed"), so never attach the secret on this path — even when
+    // MS_CLIENT_SECRET is set for the app-only outreach sender.
     form.set("grant_type", "refresh_token");
     form.set("refresh_token", REFRESH_TOKEN);
     form.set("scope", "https://graph.microsoft.com/Mail.ReadWrite https://graph.microsoft.com/Mail.Send offline_access");
   } else {
     if (!CLIENT_SECRET) throw new Error("Outlook not configured: app-only auth needs MS_CLIENT_SECRET");
     if (!MAILBOX) throw new Error("Outlook not configured: app-only auth needs MS_MAILBOX");
+    form.set("client_secret", CLIENT_SECRET);
     form.set("grant_type", "client_credentials");
     form.set("scope", "https://graph.microsoft.com/.default");
   }
