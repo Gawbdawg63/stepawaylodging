@@ -1,4 +1,4 @@
-import { brand, getProperty } from "@/lib/content";
+import { brand, getProperty, properties } from "@/lib/content";
 import { bookingRequestUrl, nightsBetween, type CreatedQuote } from "@/lib/ownerrez";
 import type { ParsedInquiry } from "@/lib/inquiry";
 
@@ -205,6 +205,41 @@ export function composeTooManyGuestsReply(
   const searchUrl =
     `https://${brand.domain}/search?arrival=${inquiry.arrival}&departure=${inquiry.departure}&adults=${Math.max(party, 1)}`;
 
+  // The largest home we have, and how many it would take to cover the group.
+  // Both are arithmetic over our own capacities, so both are safe to state —
+  // unlike "homes big enough shown first", which the search page never did.
+  const capacities = properties.map((p) => p.stats.sleeps).sort((a, b) => b - a);
+  const largest = capacities[0] ?? 0;
+  let covered = 0;
+  let homesNeeded = 0;
+  while (covered < party && homesNeeded < capacities.length) covered += capacities[homesNeeded++];
+
+  // No single home can take this group. Saying "here are the ones big enough"
+  // would be a promise nothing on the site can keep.
+  if (party > largest) {
+    return shell(`<p ${P}>Hi ${escapeHtml(firstName(inquiry.guestName))},</p>
+
+<p ${P}>Thanks so much for your inquiry about <strong>${escapeHtml(name)}</strong>, and for thinking of us for
+a group of <strong>${party}</strong>.</p>
+
+<p ${P}>I should be straight with you: our largest home sleeps <strong>${largest}</strong>, so there
+isn&rsquo;t a single place of ours that would take all ${party} of you.${
+      covered >= party
+        ? ` ${homesNeeded === 2 ? "Two" : homesNeeded === 3 ? "Three" : String(homesNeeded)} of our homes together would cover the group comfortably, and that is something we arrange often for reunions and big family weeks.`
+        : ""
+    }</p>
+
+<p ${P}>If that suits you, reply and tell me a little about the group — how many need their own room,
+whether you want everyone together in the evenings — and I&rsquo;ll put a combination together for your
+dates with the full pricing, so you can see it in one place.</p>
+
+<p ${P}>You can also browse what&rsquo;s open for ${longDate(inquiry.arrival!)}&ndash;${longDate(inquiry.departure!)} here:</p>
+
+<p ${P}><a href="${searchUrl}" style="display:inline-block;background:#14494a;color:#fff;text-decoration:none;padding:11px 22px;border-radius:6px;font-weight:600;">See what&rsquo;s available</a></p>
+
+<p ${P}>A real person reads every one of these, so just hit reply.</p>`);
+  }
+
   const fits = opts.alternatives.length
     ? `<p ${P}>These homes of ours do fit ${party} and are free for your dates:</p>
 <ul style="margin:0 0 16px;padding-left:20px;">${opts.alternatives
@@ -220,7 +255,7 @@ export function composeTooManyGuestsReply(
         .filter(Boolean)
         .join("\n")}</ul>
 <p ${P}>Every price above is the full total to pay &mdash; rent, fees and taxes included.${depositLine()}</p>`
-    : `<p ${P}>Here is everything we have open for your dates, with the ones big enough for ${party} shown first:</p>
+    : `<p ${P}>Here is everything we have open for your dates &mdash; the listing shows what each home sleeps:</p>
 <p ${P}><a href="${searchUrl}" style="display:inline-block;background:#14494a;color:#fff;text-decoration:none;padding:11px 22px;border-radius:6px;font-weight:600;">See what&rsquo;s available</a></p>`;
 
   return shell(`<p ${P}>Hi ${escapeHtml(firstName(inquiry.guestName))},</p>
