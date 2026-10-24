@@ -245,6 +245,24 @@ export default function ListingIntakeForm() {
     if (uploaded.length) payload["Uploaded photos"] = uploaded.join("\n");
     const who = (form.propertyName as string) || (form.city as string) || (form.ownerName as string) || "New owner";
 
+    // One consolidated, copy-paste-ready block ordered the way OwnerRez's
+    // listing setup flows, so the team can build the OwnerRez property straight
+    // down it. (OwnerRez has no API to create a property, so setup is manual —
+    // this makes it copy-paste instead of re-typing.)
+    const sheet: string[] = ["OWNERREZ LISTING SETUP SHEET", "", `For: ${who}`];
+    for (const section of SECTIONS) {
+      const rows = section.fields
+        .map((field) => {
+          const v = form[field.name];
+          const str = Array.isArray(v) ? v.join(", ") : (v ?? "");
+          return str ? `  • ${field.label}: ${str}` : "";
+        })
+        .filter(Boolean);
+      if (rows.length) sheet.push("", `── ${section.title.toUpperCase()} ──`, ...rows);
+    }
+    if (uploaded.length) sheet.push("", "── PHOTOS (uploaded) ──", ...uploaded.map((u) => `  • ${u}`));
+    payload["⬇ OwnerRez Setup Sheet (copy/paste)"] = sheet.join("\n");
+
     if (!owners.formEndpoint) {
       const body = encodeURIComponent(Object.entries(payload).map(([k, v]) => `${k}: ${v}`).join("\n"));
       window.location.href = `mailto:${brand.email}?subject=${encodeURIComponent(`New home intake — ${who}`)}&body=${body}`;
