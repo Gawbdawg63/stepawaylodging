@@ -11,6 +11,7 @@ const USERNAME = process.env.OWNERREZ_USERNAME || "lisa@bellabeachrentals.com";
 // slug -> OwnerRez numeric property id (from GET /v2/properties)
 const PROPERTY_IDS: Record<string, number> = {
   "ocean-peak-ridge": 479343,
+  "searenity-now": 500317,
   americana: 426111,
   "americanas-paris-suite": 469208,
   "barefoot-bungalow": 426113,
