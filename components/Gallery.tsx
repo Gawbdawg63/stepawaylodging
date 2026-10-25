@@ -4,7 +4,9 @@ import { useCallback, useEffect, useState } from "react";
 import Image from "next/image";
 import type { Photo } from "@/lib/content";
 
-const VISIBLE = 12;
+// The first photo renders as a 2x2 tile (4 cells), so the preview count is kept
+// at (4-col rows x 4) - 3 = 13 to fill the grid exactly with no empty corner.
+const VISIBLE = 13;
 
 export default function Gallery({
   photos,
