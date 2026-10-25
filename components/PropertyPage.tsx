@@ -135,6 +135,33 @@ export default async function PropertyPage({ property }: { property: Property })
         </section>
       )}
 
+      {/* PRICE + BOOK */}
+      <section id="book" className="mx-auto max-w-3xl px-5 py-20 text-center sm:py-24">
+        <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[var(--sand-600)]">Reserve your stay</p>
+        <h2 className="mt-2 font-display text-3xl text-[var(--sea)] sm:text-4xl">Check dates & book {property.name}</h2>
+        <p className="mx-auto mt-5 max-w-xl text-[var(--muted)]">
+          Enter your dates to see the price, then book instantly or send an inquiry — all handled securely through our reservation system.
+        </p>
+
+        <div className="mx-auto mt-10 flex w-full max-w-md justify-center rounded-2xl border border-[var(--border)] bg-white p-4 shadow-sm sm:p-6">
+          <OwnerRezWidget widget={property.ownerRez} />
+        </div>
+
+        {/* Book-direct trust signals */}
+        <div className="mx-auto mt-8 flex max-w-2xl flex-wrap items-center justify-center gap-x-7 gap-y-2 text-sm text-[var(--foreground)]/80">
+          {["No service fees", "Best rate, booking direct", "Secure checkout", "A local family to help"].map((t) => (
+            <span key={t} className="inline-flex items-center gap-1.5">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--sand)" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"><path d="M20 6 9 17l-5-5" /></svg>
+              {t}
+            </span>
+          ))}
+        </div>
+        <p className="mx-auto mt-4 text-sm text-[var(--muted)]">
+          Check-in 4:00 PM · Check-out 11:00 AM ·{" "}
+          <Link href="/policies" className="font-medium text-[var(--sand-600)] underline-offset-2 hover:underline">See our full policies</Link>
+        </p>
+      </section>
+
       {/* LOCATION */}
       <section id="location" className="bg-white">
         <div className="mx-auto max-w-6xl px-5 py-16 sm:py-20">
@@ -172,33 +199,6 @@ export default async function PropertyPage({ property }: { property: Property })
           </div>
         </section>
       )}
-
-      {/* PRICE + BOOK */}
-      <section id="book" className="mx-auto max-w-3xl px-5 py-20 text-center sm:py-24">
-        <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[var(--sand-600)]">Reserve your stay</p>
-        <h2 className="mt-2 font-display text-3xl text-[var(--sea)] sm:text-4xl">Check dates & book {property.name}</h2>
-        <p className="mx-auto mt-5 max-w-xl text-[var(--muted)]">
-          Enter your dates to see the price, then book instantly or send an inquiry — all handled securely through our reservation system.
-        </p>
-
-        <div className="mx-auto mt-10 w-full max-w-md rounded-2xl border border-[var(--border)] bg-white p-4 text-left shadow-sm sm:p-6">
-          <OwnerRezWidget widget={property.ownerRez} />
-        </div>
-
-        {/* Book-direct trust signals */}
-        <div className="mx-auto mt-8 flex max-w-2xl flex-wrap items-center justify-center gap-x-7 gap-y-2 text-sm text-[var(--foreground)]/80">
-          {["No service fees", "Best rate, booking direct", "Secure checkout", "A local family to help"].map((t) => (
-            <span key={t} className="inline-flex items-center gap-1.5">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--sand)" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"><path d="M20 6 9 17l-5-5" /></svg>
-              {t}
-            </span>
-          ))}
-        </div>
-        <p className="mx-auto mt-4 text-sm text-[var(--muted)]">
-          Check-in 4:00 PM · Check-out 11:00 AM ·{" "}
-          <Link href="/policies" className="font-medium text-[var(--sand-600)] underline-offset-2 hover:underline">See our full policies</Link>
-        </p>
-      </section>
 
       {/* REVIEWS — this home's reviews (falls back to recent collection reviews) */}
       <Reviews
