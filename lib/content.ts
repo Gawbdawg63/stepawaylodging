@@ -218,7 +218,7 @@ export const properties: Property[] = [
       widgetId: "881752c91ee142148d60d00de7eeaf72",
       widgetType: "Searenity Now Popup - Booking/Inquiry",
     },
-    photos: gallery("searenity-now", 32, "Searenity Now, a Cape Cod–style vacation home in Olivia Beach, Lincoln City"),
+    photos: gallery("searenity-now", 52, "Searenity Now, a Cape Cod–style vacation home in Olivia Beach, Lincoln City"),
   },
   {
     slug: "americana",
