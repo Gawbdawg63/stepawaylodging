@@ -451,6 +451,27 @@ export const posts: BlogPost[] = [
       "Ready to try your luck on the bay? Browse our homes and book direct at stepawaylodging.com for your next Oregon coast crabbing trip.",
     ],
   },
+  {
+    slug: "hiking-cascade-head-trail-guide",
+    title: "Hiking Cascade Head: Wildflower Meadows & Ocean Views Near Lincoln City",
+    date: "2026-10-26",
+    author: "Step Away Lodging",
+    excerpt:
+      "Just north of Lincoln City, Cascade Head climbs from old-growth forest to windswept wildflower meadows with some of the best views on the coast. Here's how to plan the hike.",
+    seoTitle: "Hiking Cascade Head Near Lincoln City: Trail Guide & Tips",
+    seoDescription:
+      "A guide to hiking Cascade Head near Lincoln City, Oregon — old-growth forest, rare wildflower meadows, seasonal trail closures, and views over the Salmon River estuary.",
+    relatedHomes: ["ocean-peak-ridge", "ebb-and-flow"],
+    cover: "photos/photo-08.jpg",
+    body: [
+      "A few minutes' drive north of Lincoln City, past the mouth of the Salmon River, a steep green headland rises straight out of the Pacific — Cascade Head. It's one of the most striking natural areas on this stretch of coast, protected as a U.S. Forest Service Scenic-Research Area and, on its upper slopes, by The Nature Conservancy. If you're looking for a hike that trades sand for forest and finishes with one of the best views on the central coast, this is it.",
+      "The trail climbs through a hushed old-growth forest of Sitka spruce and western hemlock, the ground carpeted in ferns and moss, before breaking out onto open, grassy headland balds high above the water. It's a real change of scenery from the beach — cool and green below, then suddenly wide open, with the wind picking up and the Pacific spread out in every direction. On a clear day you can see well up and down the coastline and look straight down over the Salmon River estuary, where the river winds out to meet the ocean.",
+      "Those open meadows are rare and worth protecting: they're one of the last remaining patches of native coastal prairie on the Oregon coast, home to wildflowers and grasses found almost nowhere else, along with habitat for a rare, federally protected butterfly, the Oregon silverspot. Because of that, the upper meadow trail is closed seasonally — generally from the start of the year into mid-summer — to give the butterflies and the blooming wildflowers a chance to do their thing undisturbed. It's worth checking current trail status before you plan your visit, especially if that headland meadow view is the whole point of the trip. Dogs typically aren't allowed on this upper stretch either, even when it's open.",
+      "If the upper trail is closed, don't scrap the hike altogether — a lower forest route through the old growth is typically open year-round and still delivers a beautiful walk beneath the big trees, even without the meadow payoff at the top. Either way, come prepared: the trail can be steep, root-covered, and muddy depending on the season, so wear real hiking shoes, bring layers for the wind once you're up top, and pack some water. Give yourself a couple of hours, more if you want to linger at the viewpoints.",
+      "It's a wonderful change of pace from a beach-and-chowder kind of day, and it's close enough to fold into any Lincoln City stay — pair it with a stop to look down over the Salmon River estuary, or simply treat it as your one real hike of the trip. Either way, you'll earn the soak that follows.",
+      "Come back to a warm home and a private hot tub waiting in every Step Away Lodging property — the perfect way to loosen up tired legs after a morning on the headland. Browse our homes and book direct at stepawaylodging.com for your next Oregon coast getaway.",
+    ],
+  },
 ];
 
 const nowDate = () => new Date();
