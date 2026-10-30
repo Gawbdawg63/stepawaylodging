@@ -46,7 +46,10 @@ export default function Footer({ subtitle }: { subtitle?: string }) {
       </div>
       <div className="border-t border-white/10">
         <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-2 px-5 py-4 text-xs text-white/50 sm:flex-row">
-          <span>© {brand.name}. All rights reserved.</span>
+          <span>
+            © {brand.name}. All rights reserved. · Website created by{" "}
+            <a href="https://gigiwebdesign.com" target="_blank" rel="noopener noreferrer" className="underline-offset-2 hover:text-white hover:underline">gigiwebdesign.com</a>
+          </span>
           <span className="flex gap-4">
             {brand.phone && <a href={`tel:${brand.phone}`} className="hover:text-white">{brand.phone}</a>}
             {brand.email && <a href={`mailto:${brand.email}`} className="hover:text-white">{brand.email}</a>}
