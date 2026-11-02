@@ -472,6 +472,26 @@ export const posts: BlogPost[] = [
       "Come back to a warm home and a private hot tub waiting in every Step Away Lodging property — the perfect way to loosen up tired legs after a morning on the headland. Browse our homes and book direct at stepawaylodging.com for your next Oregon coast getaway.",
     ],
   },
+  {
+    slug: "depoe-bay-day-trip-whale-watching-spouting-horn",
+    title: "A Day Trip to Depoe Bay: Whale Watching, the Spouting Horn & the World's Smallest Harbor",
+    date: "2026-11-02",
+    author: "Step Away Lodging",
+    excerpt:
+      "Just south of Lincoln City, Depoe Bay packs whale watching, a dramatic spouting horn, and the world's smallest navigable harbor into one easy afternoon.",
+    seoTitle: "Depoe Bay Day Trip from Lincoln City: Whale Watching & the Spouting Horn",
+    seoDescription:
+      "A local's guide to a Depoe Bay day trip from Lincoln City — the free Whale Watching Center, the Spouting Horn, nearby scenic viewpoints, and where to eat on the seawall.",
+    cover: "photos/photo-04.jpg",
+    body: [
+      "If you've got half a day free during a Lincoln City stay, point the car south on Highway 101 and make for Depoe Bay. It's a short, scenic drive — call it fifteen minutes — and it packs some of the central coast's biggest highlights into one tiny town you can walk from end to end.",
+      "Depoe Bay is famous for its harbor, often called the smallest navigable harbor in the world. Boats squeeze through a narrow channel cut into the basalt seawall to reach the open ocean, and on a day with any swell at all, the real show happens right at the seawall itself: the Spouting Horn, a natural crevice in the rock that catches incoming waves and shoots spray — sometimes dramatically high — into the air. It's one of those simple, free things that never gets old, for kids or grown-ups.",
+      "Depoe Bay has long called itself the whale-watching capital of the Oregon coast, and it backs up the claim. The free Whale Watching Center, run by Oregon State Parks, sits right on the seawall with interpretive displays and, often, a volunteer on hand to help you spot a spout on the water. If you'd rather get out on the water yourself, whale-watching charter boats depart straight from the harbor for a closer look. Prefer to stay on dry land? Boiler Bay State Scenic Viewpoint, just north of town, and Rocky Creek State Scenic Viewpoint, just south, are both easy pull-offs for scanning the horizon without needing a boat at all.",
+      "The seawall itself is made for a slow wander. It's lined with little shops selling the fudge and saltwater taffy Depoe Bay is known for, along with casual seafood spots where you can eat with a harbor view and watch the fishing and crabbing boats come and go. Low tide also exposes tide pools along the rocky shoreline near the bay, worth a careful look if you're willing to watch your footing on the basalt.",
+      "Depoe Bay pairs easily with a bigger loop down the coast — continue on to Newport for the aquarium and the historic bayfront, or save it as a stop on the way back from a day exploring farther south. However you work it in, bring layers; the wind off that seawall can be brisk even on a sunny day, and the spray from the Spouting Horn has a way of finding you if you get too close.",
+      "However you spend your afternoon in Depoe Bay, there's a warm home and a private hot tub waiting back in Lincoln City. Browse our homes and book direct at stepawaylodging.com for your next central Oregon coast getaway.",
+    ],
+  },
 ];
 
 const nowDate = () => new Date();
