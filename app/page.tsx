@@ -65,7 +65,7 @@ export default async function Home() {
 
       {/* HERO */}
       <section className="relative flex min-h-[90vh] items-center justify-center overflow-hidden">
-        <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: "url('/hero.jpg'), url('/homes/ocean-peak-ridge.jpg')" }} />
+        <Image src="/hero.jpg" alt="" fill priority sizes="100vw" className="object-cover" />
         <div className="absolute inset-0" style={{ background: "linear-gradient(165deg, rgba(11,42,43,0.72) 0%, rgba(15,56,57,0.5) 45%, rgba(20,73,74,0.72) 100%)" }} />
         <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-[var(--background)] to-transparent" />
 
