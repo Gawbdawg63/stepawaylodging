@@ -492,6 +492,26 @@ export const posts: BlogPost[] = [
       "However you spend your afternoon in Depoe Bay, there's a warm home and a private hot tub waiting back in Lincoln City. Browse our homes and book direct at stepawaylodging.com for your next central Oregon coast getaway.",
     ],
   },
+  {
+    slug: "things-to-do-in-bend-oregon-central-oregon-guide",
+    title: "Things to Do in Bend, Oregon: A Guide to Oregon's High Desert Playground",
+    date: "2026-11-09",
+    author: "Step Away Lodging",
+    excerpt:
+      "Sunshine, volcanic rock, and the Deschutes River running right through town — here's a local-style guide to Bend, Oregon, as we expand into Central Oregon.",
+    seoTitle: "Things to Do in Bend, Oregon: A Central Oregon Travel Guide",
+    seoDescription:
+      "Planning a Bend, Oregon trip? A guide to the Old Mill District, floating the Deschutes, Smith Rock State Park, Mt. Bachelor, and the Bend Ale Trail — from Step Away Lodging's Central Oregon expansion.",
+    cover: "bend.jpg",
+    body: [
+      "After more than thirty years on the Oregon coast, we're excited to be putting down roots on the other side of the Cascades too, in and around Bend. It's a different Oregon out there — sunnier, drier, and built around volcanic rock and a famous river — but it has that same easy, outdoor-first personality we love about the coast. If you haven't spent time in Bend yet, here's a local-style starting point.",
+      "Start in town, right along the Deschutes River. The Old Mill District, a former lumber-mill site turned shopping and dining hub, sits along the water with walking paths, patios, and views of the old smokestacks that still mark the skyline. A little upstream, Drake Park anchors downtown Bend with green lawns and a calm stretch of river known as Mirror Pond — a favorite for a picnic or an easy stroll. In summer, floating the Deschutes is practically a rite of passage: rent a tube or paddle a raft and drift lazily right through the middle of town.",
+      "For bigger scenery, Smith Rock State Park is a short drive north near Terrebonne. Its orange-red rhyolite cliffs rise dramatically over a bend in the Crooked River, and it's considered one of the birthplaces of American sport climbing — you'll see climbers dotting the cliff faces most days of the year. Even if you don't climb, the rim-top trails offer some of the best views in Central Oregon, and golden eagles are a common sight overhead.",
+      "Bend is also an outdoor basecamp in every season. In winter, Mt. Bachelor delivers some of the best skiing and snowboarding in the Pacific Northwest, with a long season thanks to its elevation. Come summer, the Cascade Lakes Scenic Byway strings together a chain of alpine lakes — Elk Lake, Sparks Lake, and more — perfect for hiking, paddling, and fishing with the Cascades as a backdrop. History and families alike tend to gravitate toward the High Desert Museum, with its live-animal exhibits and exhibits on the region's natural and cultural history, and toward Newberry National Volcanic Monument south of town, where you can walk into real lava tube caves and climb Lava Butte for a 360-degree view of the Cascade peaks.",
+      "And then there's the beer. Bend has one of the highest concentrations of breweries per capita anywhere in the country, and the self-guided Bend Ale Trail is a fun way to sample your way through downtown, the Old Mill, and beyond — pick up a passport and collect a stamp at each stop if you want to make a game of it.",
+      "Step Away Lodging is growing into Central Oregon — Bend, Sunriver, Redmond, and Sisters — so you'll soon be able to get the same personal, locally-managed hospitality on the high-desert side of the state that you already know from our coast homes. Explore our Central Oregon page to see what's coming, and browse our homes to plan the ocean half of an Oregon trip that truly has it all.",
+    ],
+  },
 ];
 
 const nowDate = () => new Date();
