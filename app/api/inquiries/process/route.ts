@@ -26,7 +26,7 @@ type Outcome = {
   messageId: string;
   subject: string;
   guest: string | null;
-  action: "quoted" | "offered-alternatives" | "needs-review" | "blocked" | "error";
+  action: "quoted" | "offered-alternatives" | "needs-review" | "blocked" | "region" | "error";
   slug?: string | null;
   arrival?: string | null;
   departure?: string | null;
@@ -149,6 +149,23 @@ async function handle(
       action: "blocked",
       sent,
       error: reply.detail,
+      ...(dryRun ? { html: reply.html } : {}),
+    };
+  }
+
+  // A coast-wide inquiry gets a helpful drafted reply — the homes open for
+  // their dates — but never an automatic send: these routinely carry special
+  // requests (accessibility, a specific view) a person should speak to before
+  // it goes out, so it is always left as a draft and flagged.
+  if (reply.kind === "region") {
+    if (!dryRun) {
+      await saveDraftReply(message.id, reply.html, inquiry.guestEmail ?? undefined);
+      await flagForReview(message.id, CATEGORY_REVIEW);
+    }
+    return {
+      ...base,
+      action: "region",
+      sent: false,
       ...(dryRun ? { html: reply.html } : {}),
     };
   }

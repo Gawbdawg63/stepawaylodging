@@ -176,6 +176,60 @@ export function composeAlternativesReply(
 ${body}`);
 }
 
+// A coast-wide inquiry names no single home, so there is nothing to quote —
+// the honest, useful answer is the set of homes actually open for their dates
+// and party, with real totals and booking links. Special requests (an ocean
+// view, accessibility) are acknowledged but never asserted: the robot cannot
+// verify them, and this reply is always drafted for a person to finish.
+export function composeRegionReply(
+  inquiry: ParsedInquiry,
+  homes: { slug: string; total: number }[],
+  opts: { searched: boolean } = { searched: true }
+): string {
+  const list = homes
+    .map((h) => {
+      const p = getProperty(h.slug);
+      if (!p) return "";
+      return `<li style="margin-bottom:12px;">
+<a href="${stayLink(p.slug, inquiry)}" style="color:#14494a;font-weight:600;">${escapeHtml(p.name)}</a>
+— ${escapeHtml(p.location)}<br>
+<span style="color:#5c6a68;">Sleeps ${p.stats.sleeps} · ${money(h.total)} total for your dates</span><br>
+<a href="${stayLink(p.slug, inquiry)}" style="color:#14494a;font-size:14px;">Book these dates &rarr;</a></li>`;
+    })
+    .filter(Boolean)
+    .join("\n");
+
+  const dates = `${longDate(inquiry.arrival!)}–${longDate(inquiry.departure!)}`;
+  const searchUrl = `https://${brand.domain}/search?arrival=${inquiry.arrival}&departure=${inquiry.departure}&adults=${Math.max(inquiry.adults + inquiry.children, 1)}`;
+
+  // Gently acknowledge anything they asked for, without claiming a home meets
+  // it — the person finishing the draft confirms the specifics.
+  const needs: string[] = [];
+  if (inquiry.pets) needs.push("you mentioned bringing a pet, so tell me and I&rsquo;ll confirm which of these welcome pets");
+  const needsLine = needs.length
+    ? `<p ${P}>Also — ${needs.join("; ")}.</p>`
+    : "";
+  const specifics = `<p ${P}>If a particular need matters most — an ocean view, accessibility, anything at all — just reply and I&rsquo;ll point you to the home that fits it best.</p>`;
+
+  const body = homes.length
+    ? `<p ${P}>Thanks for reaching out about a stay on the Oregon coast! Here are the homes of ours that are open for ${dates}, with the full total for your dates:</p>
+<ul style="margin:0 0 16px;padding-left:20px;">${list}</ul>
+<p ${P}>Every price above is everything to pay — rent, fees and taxes included.${depositLine()}</p>
+${needsLine}${specifics}`
+    : opts.searched
+      ? `<p ${P}>Thanks for reaching out about a stay on the Oregon coast! Unfortunately our homes are all booked for ${dates}.</p>
+<p ${P}>If your dates have any flexibility, tell me roughly when works and I${"'"}ll find you something — we often get cancellations, and I${"'"}m glad to keep an eye out for you.</p>
+${needsLine}`
+      : `<p ${P}>Thanks for reaching out about a stay on the Oregon coast! Rather than guess, here${"'"}s everything we have genuinely open for ${dates}:</p>
+<p ${P}><a href="${searchUrl}" style="display:inline-block;background:#14494a;color:#fff;text-decoration:none;padding:11px 22px;border-radius:6px;font-weight:600;">See what&rsquo;s available</a></p>
+<p ${P}>Or just reply with the dates you have in mind and I${"'"}ll sort it out personally.</p>
+${needsLine}`;
+
+  return shell(`<p ${P}>Hi ${escapeHtml(firstName(inquiry.guestName))},</p>
+
+${body}`);
+}
+
 function escapeHtml(s: string): string {
   return s
     .replace(/&/g, "&amp;")

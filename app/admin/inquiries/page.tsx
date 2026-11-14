@@ -12,7 +12,7 @@ type Outcome = {
   messageId: string;
   subject: string;
   guest: string | null;
-  action: "quoted" | "offered-alternatives" | "needs-review" | "blocked" | "error";
+  action: "quoted" | "offered-alternatives" | "needs-review" | "blocked" | "region" | "error";
   slug?: string | null;
   arrival?: string | null;
   departure?: string | null;
@@ -35,6 +35,7 @@ type Parsed = {
   arrival: string | null;
   departure: string | null;
   adults: number;
+  region?: boolean;
   missing: string[];
 };
 
@@ -240,7 +241,9 @@ function OutcomeCard({ outcome, accessKey }: { outcome: Outcome; accessKey: stri
           ? { label: "Needs you", cls: "bg-[#fdf1e0] text-[var(--sand-600)]" }
           : outcome.action === "blocked"
             ? { label: "Couldn't price it", cls: "bg-[#fbe9e9] text-[#9b3232]" }
-            : { label: "Error", cls: "bg-[#fbe9e9] text-[#9b3232]" };
+            : outcome.action === "region"
+              ? { label: "Coast-wide — would draft homes", cls: "bg-[#fdf1e0] text-[var(--sand-600)]" }
+              : { label: "Error", cls: "bg-[#fbe9e9] text-[#9b3232]" };
 
   return (
     <div className="rounded-xl border border-[var(--border)] p-4">
@@ -250,7 +253,7 @@ function OutcomeCard({ outcome, accessKey }: { outcome: Outcome; accessKey: stri
       </div>
 
       <dl className="mt-3 grid gap-x-6 gap-y-1 text-sm sm:grid-cols-2">
-        <Row label="Home" value={outcome.slug ?? "— not recognized —"} />
+        <Row label="Home" value={outcome.slug ?? (outcome.action === "region" ? "Whole Oregon coast" : "— not recognized —")} />
         <Row label="Guest" value={outcome.guest ?? "— not found —"} />
         <Row label="Arriving" value={outcome.arrival ?? "— not found —"} />
         <Row label="Leaving" value={outcome.departure ?? "— not found —"} />
@@ -498,7 +501,7 @@ function EmailTester({ accessKey }: { accessKey: string }) {
             {data.wouldSend ? "It understood this one." : "It would leave this one for you."}
           </p>
           <dl className="mt-3 grid gap-x-6 gap-y-1 text-sm sm:grid-cols-2">
-            <Row label="Home" value={data.parsed.slug ?? "— not recognized —"} />
+            <Row label="Home" value={data.parsed.slug ?? (data.parsed.region ? "Whole Oregon coast" : "— not recognized —")} />
             <Row label="Guest" value={data.parsed.guestEmail ?? "— not found —"} />
             <Row label="Arriving" value={data.parsed.arrival ?? "— not found —"} />
             <Row label="Leaving" value={data.parsed.departure ?? "— not found —"} />

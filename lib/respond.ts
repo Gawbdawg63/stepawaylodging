@@ -7,6 +7,7 @@ import {
   composeNeedsInfoReply,
   composeCouldNotPriceReply,
   composeTooManyGuestsReply,
+  composeRegionReply,
 } from "@/lib/reply";
 import { brand } from "@/lib/content";
 
@@ -16,6 +17,15 @@ import { brand } from "@/lib/content";
 
 export type Reply =
   | { kind: "needs-info"; inquiry: ParsedInquiry; html: string; quote: null; alternatives: [] }
+  // A whole-coast inquiry with no single home named: answered with the homes
+  // actually open for the dates, and always left as a draft for a person.
+  | {
+      kind: "region";
+      inquiry: ParsedInquiry;
+      html: string;
+      quote: null;
+      alternatives: { slug: string; total: number }[];
+    }
   // OwnerRez would not price the stay. The guest still gets an answer — one
   // that never claims the dates are booked, and never invents a policy — and
   // the inquiry is still flagged for a person.
@@ -43,6 +53,26 @@ export async function buildReply(subject: string, body: string, senderDomain: st
   // wrong week reaching a guest is far worse than a slow answer.
   if (inquiry.missing.length) {
     return { kind: "needs-info", inquiry, html: composeNeedsInfoReply(inquiry), quote: null, alternatives: [] };
+  }
+
+  // A coast-wide inquiry names no single home, so there is nothing to quote.
+  // Offer whatever is genuinely open for the dates and party instead — each
+  // home is priced for this exact stay, so anything listed also fits them.
+  if (inquiry.region && !inquiry.slug) {
+    const search = await searchAvailability(inquiry.arrival!, inquiry.departure!, inquiry.adults);
+    const homes = search.ok
+      ? search.rows
+          .filter((r) => r.available && r.total !== null)
+          .map((r) => ({ slug: r.slug, total: r.total as number }))
+          .sort((a, b) => a.total - b.total)
+      : [];
+    return {
+      kind: "region",
+      inquiry,
+      html: composeRegionReply(inquiry, homes, { searched: search.ok }),
+      quote: null,
+      alternatives: homes,
+    };
   }
 
   const outcome = await createQuote({

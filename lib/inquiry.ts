@@ -21,8 +21,16 @@ export type ParsedInquiry = {
   children: number;
   pets: boolean;
   note: string | null; // the guest's own message, if present
+  region: boolean; // a whole-coast inquiry (no single home) rather than one listing
   missing: string[]; // what could not be read — empty means safe to auto-reply
 };
+
+// Beachcombers NW also runs a coast-wide inquiry form that it fans out to every
+// manager and owner, with no single listing attached. Those arrive with their
+// own unmistakable wording, so they can be answered with "here is what's open"
+// instead of being bounced to a human for a property we were never given.
+const REGION =
+  /oregon coast inquiry|new oregon coast|every (?:manager|owner)|oregon-coast-vacation-rentals|from the oregon coast page|looking for a stay on the oregon coast/i;
 
 // Names the directory (or a guest) may use that do not match our own spelling.
 // The OwnerRez widget for Ocean Peak Ridge is itself titled "Ocean Peek Ridge",
@@ -268,14 +276,16 @@ export function parseInquiry(
     children,
     pets,
     note: field(body, ["message", "comments", "comment", "notes", "question", "additional info"]),
+    region: REGION.test(text),
     missing: [],
   };
 
-  // Only these three gate an automatic reply: without them the quote would be
-  // for the wrong home, the wrong dates, or unsendable.
+  // Only these gate a reply: without them it would be for the wrong dates or
+  // unsendable. A coast-wide inquiry legitimately names no single home, so a
+  // missing property is only a blocker when it is NOT a coast-wide one.
   if (!parsed.arrival) parsed.missing.push("arrival date");
   if (!parsed.departure) parsed.missing.push("departure date");
-  if (!parsed.slug) parsed.missing.push("property");
+  if (!parsed.slug && !parsed.region) parsed.missing.push("property");
   if (!parsed.guestEmail) parsed.missing.push("guest email");
   if (parsed.arrival && parsed.departure && parsed.departure <= parsed.arrival) {
     parsed.missing.push("valid date range");

@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { parseInquiry } from "@/lib/inquiry";
 import { htmlToText } from "@/lib/outlook";
-import { composeQuoteReply, composeAlternativesReply, composeNeedsInfoReply } from "@/lib/reply";
-import { getQuote } from "@/lib/ownerrez";
+import { composeQuoteReply, composeAlternativesReply, composeNeedsInfoReply, composeRegionReply } from "@/lib/reply";
+import { getQuote, searchAvailability } from "@/lib/ownerrez";
 
 export const dynamic = "force-dynamic";
 
@@ -41,6 +41,24 @@ export async function POST(req: NextRequest) {
       wouldSend: false,
       reason: `missing ${inquiry.missing.join(", ")} — would save a draft and flag for review`,
       html: composeNeedsInfoReply(inquiry),
+    });
+  }
+
+  // A coast-wide inquiry: no single home to price, so show the drafted reply
+  // that lists whatever is genuinely open for the dates and party.
+  if (inquiry.region && !inquiry.slug) {
+    const search = await searchAvailability(inquiry.arrival!, inquiry.departure!, inquiry.adults);
+    const homes = search.ok
+      ? search.rows
+          .filter((r) => r.available && r.total !== null)
+          .map((r) => ({ slug: r.slug, total: r.total as number }))
+          .sort((a, b) => a.total - b.total)
+      : [];
+    return NextResponse.json({
+      parsed: inquiry,
+      wouldSend: false,
+      reason: `coast-wide inquiry — would draft a reply offering ${homes.length} open home${homes.length === 1 ? "" : "s"} and flag for review`,
+      html: composeRegionReply(inquiry, homes, { searched: search.ok }),
     });
   }
 
