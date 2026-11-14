@@ -75,7 +75,7 @@ export default async function Home() {
       <JsonLd data={faqJsonLd(faqs.map((f) => ({ q: f.q, a: f.a })))} />
       <Header />
 
-      {/* HERO — scroll walks from one home's hero photo to the next */}
+      {/* HERO — a short tour of every home that plays after the first scroll */}
       <HomesWalkHero homes={walkHomes}>
         <p className="mb-4 text-sm font-medium uppercase tracking-[0.28em] text-white/70">Vacation Homes · Oregon Coast</p>
         <h1 className="font-display text-5xl leading-[1.05] sm:text-6xl md:text-7xl">Step Away Lodging</h1>
