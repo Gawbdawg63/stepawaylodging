@@ -11,6 +11,7 @@ import BookDirect from "@/components/BookDirect";
 import EmailSignup from "@/components/EmailSignup";
 import MobileCTA from "@/components/MobileCTA";
 import LastMinute from "@/components/LastMinute";
+import HomesWalkHero, { type WalkHome } from "@/components/HomesWalkHero";
 import { brand, properties } from "@/lib/content";
 import { siteJsonLd, faqJsonLd } from "@/lib/seo";
 import { getReviews } from "@/lib/reviews";
@@ -55,6 +56,15 @@ const faqs = [
 
 export default async function Home() {
   const featured = properties.slice(0, 3);
+  const walkHomes: WalkHome[] = properties.map((p) => ({
+    slug: p.slug,
+    name: p.name,
+    location: p.location,
+    photo: p.photos[0]?.file ?? p.card,
+    sleeps: p.stats.sleeps,
+    bedrooms: p.stats.bedrooms,
+    bathrooms: p.stats.bathrooms,
+  }));
   const { average, count, reviews } = await getReviews();
 
   return (
@@ -63,32 +73,26 @@ export default async function Home() {
       <JsonLd data={faqJsonLd(faqs.map((f) => ({ q: f.q, a: f.a })))} />
       <Header />
 
-      {/* HERO */}
-      <section className="relative flex min-h-[90vh] items-center justify-center overflow-hidden">
-        <Image src="/hero.jpg" alt="" fill priority sizes="100vw" className="object-cover" />
-        <div className="absolute inset-0" style={{ background: "linear-gradient(165deg, rgba(11,42,43,0.72) 0%, rgba(15,56,57,0.5) 45%, rgba(20,73,74,0.72) 100%)" }} />
-        <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-[var(--background)] to-transparent" />
-
-        <div className="relative mx-auto max-w-3xl px-5 pt-24 text-center text-white">
-          <p className="mb-4 text-sm font-medium uppercase tracking-[0.28em] text-white/70">Vacation Homes · Oregon Coast</p>
-          <h1 className="font-display text-5xl leading-[1.05] sm:text-6xl md:text-7xl">Step Away Lodging</h1>
-          <p className="mx-auto mt-6 max-w-xl text-lg text-white/85">
-            Hand-picked coastal homes and suites — each with a hot tub, all along Oregon&apos;s central coast. Book direct.
-          </p>
-          {average && count && (
-            <div className="mt-6 inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-1.5 text-sm font-medium text-white ring-1 ring-white/20 backdrop-blur">
-              <span className="text-[var(--sand)]">★★★★★</span>
-              <span>{average} from {count} guest reviews</span>
-            </div>
-          )}
-          <div className="mt-10">
-            <SearchBar />
+      {/* HERO — scroll walks from one home's hero photo to the next */}
+      <HomesWalkHero homes={walkHomes}>
+        <p className="mb-4 text-sm font-medium uppercase tracking-[0.28em] text-white/70">Vacation Homes · Oregon Coast</p>
+        <h1 className="font-display text-5xl leading-[1.05] sm:text-6xl md:text-7xl">Step Away Lodging</h1>
+        <p className="mx-auto mt-6 max-w-xl text-lg text-white/85">
+          Hand-picked coastal homes and suites — each with a hot tub, all along Oregon&apos;s central coast. Book direct.
+        </p>
+        {average && count && (
+          <div className="mt-6 inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-1.5 text-sm font-medium text-white ring-1 ring-white/20 backdrop-blur">
+            <span className="text-[var(--sand)]">★★★★★</span>
+            <span>{average} from {count} guest reviews</span>
           </div>
-          <div className="mt-5">
-            <Link href="/homes" className="text-sm font-semibold text-white/85 underline-offset-4 transition hover:text-white hover:underline">or browse all {properties.length} homes →</Link>
-          </div>
+        )}
+        <div className="mt-10">
+          <SearchBar />
         </div>
-      </section>
+        <div className="mt-5">
+          <Link href="/homes" className="text-sm font-semibold text-white/85 underline-offset-4 transition hover:text-white hover:underline">or browse all {properties.length} homes →</Link>
+        </div>
+      </HomesWalkHero>
 
       <TrustStrip average={average} count={count} />
 
