@@ -56,7 +56,9 @@ const faqs = [
 
 export default async function Home() {
   const featured = properties.slice(0, 3);
-  const walkHomes: WalkHome[] = properties.map((p) => ({
+  // Ebb and Flow leads the hero walk; the rest follow in their usual order.
+  const walkOrder = [...properties].sort((a, b) => Number(b.slug === "ebb-and-flow") - Number(a.slug === "ebb-and-flow"));
+  const walkHomes: WalkHome[] = walkOrder.map((p) => ({
     slug: p.slug,
     name: p.name,
     location: p.location,

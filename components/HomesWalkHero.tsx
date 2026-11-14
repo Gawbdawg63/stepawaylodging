@@ -15,7 +15,7 @@ export type WalkHome = {
 };
 
 // How much scrolling each home takes, in screen heights.
-const SCREENS_PER_HOME = 0.85;
+const SCREENS_PER_HOME = 1.1;
 // Share of each home's scroll spent zooming through into the next one.
 const BLEND = 0.34;
 
@@ -155,7 +155,7 @@ export default function HomesWalkHero({ homes, children }: { homes: WalkHome[]; 
       return total > 0 ? Math.min(clamp(-r.top / total) * N, N - 0.0001) : 0;
     };
     const tick = () => {
-      cur += (target - cur) * 0.14;
+      cur += (target - cur) * 0.1;
       if (Math.abs(target - cur) < 0.0005) cur = target;
       draw(cur);
       raf = cur !== target ? requestAnimationFrame(tick) : 0;
