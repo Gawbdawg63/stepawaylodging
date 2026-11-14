@@ -1,6 +1,8 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  // 90 is used for the full-screen homepage hero photo; everything else stays at the default 75.
+  images: { qualities: [75, 90] },
   // 301/308 redirects from old-site URLs (previous OwnerRez/CMS slugs) to their
   // current equivalents, so migrated links keep their SEO value and no visitor
   // lands on a 404. The `-orp5:id` wildcard matches each home's old URL no

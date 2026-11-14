@@ -56,13 +56,15 @@ const faqs = [
 
 export default async function Home() {
   const featured = properties.slice(0, 3);
+  // Sharper, hero-only versions of a home's main photo, where we have one.
+  const heroPhotos: Record<string, string> = { "searenity-now": "homes/searenity-now/hero.jpg" };
   // Ebb and Flow leads the hero walk; the rest follow in their usual order.
   const walkOrder = [...properties].sort((a, b) => Number(b.slug === "ebb-and-flow") - Number(a.slug === "ebb-and-flow"));
   const walkHomes: WalkHome[] = walkOrder.map((p) => ({
     slug: p.slug,
     name: p.name,
     location: p.location,
-    photo: p.photos[0]?.file ?? p.card,
+    photo: heroPhotos[p.slug] ?? p.photos[0]?.file ?? p.card,
     sleeps: p.stats.sleeps,
     bedrooms: p.stats.bedrooms,
     bathrooms: p.stats.bathrooms,

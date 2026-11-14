@@ -1,6 +1,6 @@
 "use client";
 
-import Image, { getImageProps } from "next/image";
+import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useSyncExternalStore } from "react";
 
@@ -27,21 +27,10 @@ const num = (n: number) => (Number.isInteger(n) ? String(n) : n.toFixed(1));
 // Camera moves alternate so the tour feels like turning from home to home:
 // [centre x, centre y, zoom] at the start and end of each home (0–1 of the photo).
 const CAMERAS: [number[], number[]][] = [
-  [[0.42, 0.55, 1.0], [0.56, 0.5, 1.22]],
-  [[0.6, 0.52, 1.02], [0.44, 0.5, 1.24]],
-  [[0.5, 0.58, 1.0], [0.5, 0.48, 1.26]],
+  [[0.44, 0.55, 1.0], [0.54, 0.51, 1.1]],
+  [[0.58, 0.52, 1.0], [0.46, 0.5, 1.1]],
+  [[0.5, 0.56, 1.0], [0.5, 0.5, 1.12]],
 ];
-
-// Pick the smallest optimized image in a srcSet that still covers the screen.
-function pickSrc(srcSet: string, fallback: string, need: number) {
-  const options = srcSet
-    .split(",")
-    .map((s) => s.trim().split(/\s+/))
-    .map(([url, w]) => ({ url, w: parseInt(w, 10) }))
-    .filter((o) => o.url && o.w)
-    .sort((a, b) => a.w - b.w);
-  return (options.find((o) => o.w >= need) ?? options[options.length - 1])?.url ?? fallback;
-}
 
 const REDUCED = () => window.matchMedia("(prefers-reduced-motion: reduce)");
 function subscribeMotion(cb: () => void) {
@@ -74,12 +63,11 @@ export default function HomesWalkHero({ homes, children }: { homes: WalkHome[]; 
     const STEP = HOME_SECONDS - BLEND_SECONDS;
     const TOTAL = (N - 1) * STEP + HOME_SECONDS; // last home holds under the end card
 
-    const need = Math.min(3840, Math.round(Math.max(window.innerWidth, window.innerHeight * 1.5) * Math.min(2, window.devicePixelRatio || 1)));
+    // Load the original photos, not re-compressed copies: the tour is full screen, so every pixel counts.
     const imgs = homes.map((h) => {
-      const { props } = getImageProps({ src: `/${h.photo}`, alt: "", fill: true, sizes: "100vw", quality: 75 });
       const im = new window.Image();
       im.decoding = "async";
-      im.src = pickSrc(props.srcSet ?? "", props.src, need);
+      im.src = `/${h.photo}`;
       im.onload = () => draw(t);
       return im;
     });
@@ -117,7 +105,7 @@ export default function HomesWalkHero({ homes, children }: { homes: WalkHome[]; 
       const local = t - i * STEP;
       const blend = i < N - 1 ? clamp((local - (HOME_SECONDS - BLEND_SECONDS)) / BLEND_SECONDS) : 0;
       const kMove = smooth(clamp(local / (i === N - 1 ? HOME_SECONDS + 2 : HOME_SECONDS)));
-      shot(i, kMove, 1 + 0.22 * blend * blend, 1);
+      shot(i, kMove, 1 + 0.1 * blend * blend, 1);
       if (blend > 0) shot(i + 1, 0, 1, smooth(blend));
 
       // Intro copy and search fade away as the tour begins; the tint lightens so the homes show.
@@ -157,6 +145,8 @@ export default function HomesWalkHero({ homes, children }: { homes: WalkHome[]; 
       W = canvas.clientWidth; H = canvas.clientHeight;
       canvas.width = Math.round(W * dpr); canvas.height = Math.round(H * dpr);
       g.setTransform(dpr, 0, 0, dpr, 0, 0);
+      g.imageSmoothingEnabled = true;
+      g.imageSmoothingQuality = "high";
       draw(t);
     }
 
@@ -230,7 +220,7 @@ export default function HomesWalkHero({ homes, children }: { homes: WalkHome[]; 
   return (
     <section ref={sectionRef} aria-label="Step Away Lodging homes" className="relative h-[100svh] min-h-[560px] overflow-hidden">
       {/* First home as a real image: fast first paint, and what shows without the animation */}
-      <Image src={`/${first.photo}`} alt={`${first.name}, ${first.location}`} fill priority sizes="100vw" className="object-cover" />
+      <Image src={`/${first.photo}`} alt={`${first.name}, ${first.location}`} fill priority sizes="100vw" quality={90} className="object-cover" />
       <canvas ref={canvasRef} aria-hidden="true" className={`absolute inset-0 h-full w-full ${animated ? "" : "hidden"}`} />
 
       <div ref={tintRef} className="pointer-events-none absolute inset-0" style={{ background: "linear-gradient(165deg, rgba(11,42,43,0.72) 0%, rgba(15,56,57,0.5) 45%, rgba(20,73,74,0.72) 100%)" }} />
