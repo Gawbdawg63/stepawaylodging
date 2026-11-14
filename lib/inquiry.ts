@@ -37,6 +37,12 @@ const ALIASES: Record<string, string> = {
   "beach bungalow": "beach-bungalow-by-the-sea",
   "ebb & flow": "ebb-and-flow",
   "ebb flow": "ebb-and-flow",
+  // "Searenity Now" is a sea/serenity pun; guests and the directory routinely
+  // drop the extra "a" and write the ordinary spelling, which would otherwise
+  // never match the property name or slug.
+  "serenity now": "searenity-now",
+  "serenity": "searenity-now",
+  "searenity": "searenity-now",
 };
 
 // What can sit between the two halves of a date range. Beachcombers NW uses a
