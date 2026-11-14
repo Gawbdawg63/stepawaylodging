@@ -104,7 +104,10 @@ async function quoteTotal(
         Accept: "application/json",
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ property_id: propertyId, arrival, departure, adults }),
+      // `test: true` prices the stay without persisting a quote or needing a
+      // guest_id (OwnerRez rejects a real quote POST with 400 otherwise), and
+      // `generate_charges: true` is what makes it return the priced charges.
+      body: JSON.stringify({ property_id: propertyId, arrival, departure, adults, generate_charges: true, test: true }),
       cache: "no-store",
     });
     if (!res.ok) return null; // unavailable dates or validation error
@@ -169,7 +172,9 @@ export async function getQuote(
     const res = await fetch(`${BASE}/v2/quotes`, {
       method: "POST",
       headers: { Authorization: auth, Accept: "application/json", "Content-Type": "application/json" },
-      body: JSON.stringify({ property_id: id, arrival, departure, adults }),
+      // `test: true` prices read-only without creating a quote or a guest_id
+      // (OwnerRez 400s otherwise); `generate_charges: true` returns the charges.
+      body: JSON.stringify({ property_id: id, arrival, departure, adults, generate_charges: true, test: true }),
       cache: "no-store",
     });
     if (!res.ok) return { available: false, total: null, nights, charges: [] };
