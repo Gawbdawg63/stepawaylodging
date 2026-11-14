@@ -29,6 +29,46 @@ export const brand = {
   },
 };
 
+// Seasonal specials shown on /specials. Nothing here is applied automatically —
+// a guest calls to book and the special is applied by hand, so these are plain
+// editable copy. Adjust the offers, dates and fine print to match the current
+// season; remove an item to hide it.
+export const specials = {
+  intro: `Please call ${brand.phone} before making a reservation to receive any special.`,
+  items: [
+    {
+      season: "Last-minute reservations",
+      headline: "10% off",
+      body: "Reserve a home within 72 hours of arrival and receive 10% off the nightly rate.",
+    },
+    {
+      season: "Spring & fall",
+      headline: "Fourth night free",
+      body: "Reserve three nights and receive the fourth night free. Spring runs April 13–May 6; fall runs October 12–November 19.",
+    },
+    {
+      season: "Winter",
+      headline: "Third night free",
+      body: "Reserve two nights and receive the third night free, for reservations December 1–February 6, excluding Winter Break (December 18–January 3).",
+    },
+    {
+      season: "Midweek",
+      headline: "10% off",
+      body: "Stay midweek in the off-season — Monday, Tuesday or Wednesday nights — and receive 10% off the nightly rate.",
+    },
+  ],
+  gift: {
+    heading: "Gift certificates",
+    body: `Looking for the perfect gift for that special family member or friend? Call ${brand.phone} for gift certificates, and a few minutes later we’ll email a personalized gift certificate.`,
+  },
+  // Each line renders as its own paragraph of fine print. Confirm the blackout
+  // dates and any excluded homes before relying on this.
+  finePrint: [
+    "Specials apply to new reservations only and cannot be combined with other offers.",
+    "Blackout dates and restrictions apply, including but not limited to: MLK Weekend, Valentine’s Day, President’s Day, Newport Seafood & Wine Festival, Easter Weekend, Mother’s Day, OR/WA/ID Spring Break, Winter Break (December 21–January 2) including Christmas and New Year’s, and other major holidays. Kite festivals and the summer season (starting in June) are excluded from most specials.",
+  ],
+};
+
 export const ownerRezScript = "https://app.ownerrez.com/widget.js";
 
 // Brand story shown on /our-story (the owner's own copy).
