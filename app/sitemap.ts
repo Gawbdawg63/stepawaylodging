@@ -11,7 +11,7 @@ export const revalidate = 86400;
 export default function sitemap(): MetadataRoute.Sitemap {
   const base = `https://${brand.domain}`;
   const now = new Date();
-  const staticPaths = ["", "/homes", "/our-story", "/central-oregon", "/owners", "/list-your-home", "/events", "/blog", "/policies"];
+  const staticPaths = ["", "/homes", "/specials", "/our-story", "/central-oregon", "/owners", "/list-your-home", "/events", "/blog", "/policies"];
 
   const entry = (path: string, priority: number) => ({
     url: `${base}${path}`,
