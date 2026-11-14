@@ -62,6 +62,7 @@ export default function HomesWalkHero({ homes, children }: { homes: WalkHome[]; 
     let W = 0, H = 0;
     const STEP = HOME_SECONDS - BLEND_SECONDS;
     const TOTAL = (N - 1) * STEP + HOME_SECONDS; // last home holds under the end card
+    const PLAY_END = TOTAL + 1.5; // keep running so the end card finishes popping in
 
     // Load the original photos, not re-compressed copies: the tour is full screen, so every pixel counts.
     const imgs = homes.map((h) => {
@@ -153,13 +154,13 @@ export default function HomesWalkHero({ homes, children }: { homes: WalkHome[]; 
     // Playback: starts on the visitor's first scroll, pauses while the hero is off screen.
     let t = 0, playing = false, started = false, last = 0, raf = 0, onScreen = true;
     const frame = (now: number) => {
-      t = Math.min(TOTAL, t + (last ? (now - last) / 1000 : 0));
+      t = Math.min(PLAY_END, t + (last ? (now - last) / 1000 : 0));
       last = now;
       draw(t);
-      if (t >= TOTAL) { playing = false; raf = 0; replayRef.current?.removeAttribute("hidden"); return; }
+      if (t >= PLAY_END) { playing = false; raf = 0; replayRef.current?.removeAttribute("hidden"); return; }
       raf = requestAnimationFrame(frame);
     };
-    const play = () => { if (playing || t >= TOTAL || !onScreen) return; playing = true; last = 0; raf = requestAnimationFrame(frame); };
+    const play = () => { if (playing || t >= PLAY_END || !onScreen) return; playing = true; last = 0; raf = requestAnimationFrame(frame); };
     const pause = () => { playing = false; cancelAnimationFrame(raf); raf = 0; };
     const start = () => {
       if (started) return;
