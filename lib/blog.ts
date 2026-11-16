@@ -512,6 +512,27 @@ export const posts: BlogPost[] = [
       "Step Away Lodging is growing into Central Oregon — Bend, Sunriver, Redmond, and Sisters — so you'll soon be able to get the same personal, locally-managed hospitality on the high-desert side of the state that you already know from our coast homes. Explore our Central Oregon page to see what's coming, and browse our homes to plan the ocean half of an Oregon trip that truly has it all.",
     ],
   },
+  {
+    slug: "tide-pooling-oregon-coast-guide",
+    title: "Tide Pooling on the Oregon Coast: A Family Guide",
+    date: "2026-11-16",
+    author: "Step Away Lodging",
+    excerpt:
+      "A falling tide turns the rocky stretches of the central coast into a living aquarium. Here's how to time it right and what you'll find.",
+    seoTitle: "Tide Pooling on the Oregon Coast Near Lincoln City: A Family Guide",
+    seoDescription:
+      "When and where to go tide pooling on the central Oregon coast near Lincoln City — what you'll find, viewing etiquette, and safety tips for the whole family.",
+    relatedHomes: ["ocean-peak-ridge", "ebb-and-flow"],
+    cover: "photos/photo-06.jpg",
+    body: [
+      "There's a particular kind of quiet thrill in crouching over a rocky tide pool and watching it slowly reveal itself — a sea star tucked in a crevice, a crab skittering for cover, an anemone closing up tight at the touch of a shadow. Tide pooling is one of the simplest, most rewarding things to do on the Oregon coast, and it costs nothing more than good timing and a willingness to get your shoes wet.",
+      "Timing is everything. Tide pools are only exposed as the water pulls back, so the best hunting happens in the hour or two around low tide, and especially during a 'minus tide' — a low tide that drops below the average low-water line and exposes far more of the rocky shoreline than usual. Check a tide table before you head out, and aim to arrive while the tide is still falling, so you have a window to explore before the water starts creeping back in.",
+      "Once you're down among the rocks, slow down and look closely. Ochre sea stars in shades of purple and burnt orange cling to crevices, giant green anemones wait with their tentacles retracted until the water returns, and hermit crabs shuffle between pools faster than you'd expect. Look for chitons and limpets grazing on the rock surface, barnacles clamped tight to anything stationary, and the occasional small sculpin darting between shadows — patient eyes tend to spot the most.",
+      "On the central coast near Lincoln City, the north end of town is a good place to start: at low tide, Roads End State Recreation Site opens up tide pools around its headland that are full of sea stars and anemones. Worth the half-hour drive south is Yaquina Head Outstanding Natural Area in Newport, where the rocky shelf at the base of Oregon's tallest lighthouse holds some of the richest tide pools on this stretch of coast.",
+      "A little etiquette goes a long way toward keeping these spots special. Step on bare rock rather than on mussels, barnacles, or anemones, and resist the urge to pry anything loose or take a sea star home — these are living creatures in a fragile habitat, and they do best left exactly where you found them. Wear shoes with real grip, since wet rock and seaweed get slick fast, and keep a steady eye on the ocean itself; never turn your back on the surf, and keep track of the incoming tide so you don't get cut off from shore.",
+      "A morning spent tide pooling pairs perfectly with a slow coastal stay — cold hands and sandy shoes are easily fixed with a warm house and a soak in your private hot tub once you're back. Browse our homes and book direct at stepawaylodging.com for your next Oregon coast adventure.",
+    ],
+  },
 ];
 
 const nowDate = () => new Date();
