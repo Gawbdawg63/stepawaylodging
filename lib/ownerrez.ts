@@ -28,6 +28,7 @@ const PROPERTY_IDS: Record<string, number> = {
 // this in; any slug missing here simply falls back to the website page.
 const PROPERTY_TOKENS: Record<string, string> = {
   "ocean-peak-ridge": "orp5b7506fx",
+  "heron-house": "orp5b7adbax",
   // The rest fall back to the website page until their tokens are added.
   // Make one in OwnerRez (Bookings -> +Quote -> Public Link) and take the
   // property= value off the link; the dates used to make it do not matter.
