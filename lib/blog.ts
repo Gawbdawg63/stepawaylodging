@@ -533,6 +533,26 @@ export const posts: BlogPost[] = [
       "A morning spent tide pooling pairs perfectly with a slow coastal stay — cold hands and sandy shoes are easily fixed with a warm house and a soak in your private hot tub once you're back. Browse our homes and book direct at stepawaylodging.com for your next Oregon coast adventure.",
     ],
   },
+  {
+    slug: "romantic-getaway-oregon-coast-couples-guide",
+    title: "Planning a Romantic Getaway on the Oregon Coast: A Couples' Guide",
+    date: "2026-11-23",
+    author: "Step Away Lodging",
+    excerpt:
+      "From a cozy suite with a private hot tub to a slow sunset walk on the sand, here's how to plan an unforgettable romantic escape in Lincoln City.",
+    seoTitle: "Romantic Oregon Coast Getaway: A Couples' Guide to Lincoln City",
+    seoDescription:
+      "Planning a honeymoon, anniversary, or just a weekend away together? A local's guide to a romantic Oregon coast getaway in Lincoln City — where to stay, when to go, and what to do.",
+    relatedHomes: ["americanas-paris-suite", "barefoot-carriage-house"],
+    cover: "photos/photo-02.jpg",
+    body: [
+      "There's a reason so many couples choose the Oregon coast for a honeymoon, an anniversary, or simply a weekend to reconnect. The scenery does a lot of the work on its own — long stretches of empty sand, dramatic headlands, and a sky that puts on a different show every evening. Add a quiet little home of your own, and you've got the makings of a genuinely memorable trip together.",
+      "The first decision that matters most is the home itself. A couple doesn't need ten bedrooms and a big group kitchen — a small, private space often makes for the more romantic stay. Americana's Paris Suite tucks a king bed, a fireplace, and a kitchenette into a cozy retreat with its own private deck, while the Barefoot Carriage House offers a similarly intimate setup with a queen bed and a private entrance. Both share hot tub access with their main houses, so it's worth checking in with us on dates and availability as you plan, since each books alongside the main home it sits beside.",
+      "Timing is entirely up to the mood you're after. Summer brings long evenings for sunset walks on the sand and the steady coastal wind that makes flying a kite together surprisingly fun for two. The off-season has its own quiet romance: fewer crowds, moody gray skies, and the kind of stormy night that's made for watching the surf from a warm window before slipping out to the hot tub. Either way, the coast rewards a slower pace — there's no wrong season for a couple's getaway here.",
+      "Keep the days simple. A long beach walk at low tide, a bowl of chowder shared at a table with a water view, a slow afternoon browsing the little shops in town — none of it needs to be elaborate to feel special. Save the evening for the parts that are easy to take for granted elsewhere: no phone, no schedule, just the sound of the surf and a soak under the stars.",
+      "If you'd rather not choose between the suites, just ask — we know both of these little retreats personally and are glad to help you find the right fit for your dates. Browse our homes and book direct at stepawaylodging.com for your next Oregon coast getaway, just the two of you.",
+    ],
+  },
 ];
 
 const nowDate = () => new Date();
