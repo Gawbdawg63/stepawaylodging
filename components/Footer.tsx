@@ -43,6 +43,14 @@ export default function Footer({ subtitle }: { subtitle?: string }) {
           {footerLinks.map((l) => (
             <Link key={l.href} href={l.href} className="text-white/75 transition hover:text-white">{l.label}</Link>
           ))}
+          <a
+            href="https://app.ownerrez.com/login"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-white/75 transition hover:text-white"
+          >
+            Owner Login
+          </a>
         </nav>
       </div>
       <div className="border-t border-white/10">
